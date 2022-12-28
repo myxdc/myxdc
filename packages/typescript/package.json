@@ -1,0 +1,22 @@
+{
+  "name": "@myxdc/typescript-config",
+  "version": "0.1.0",
+  "description": "MyXDC TypeScript Config",
+  "keywords": [
+    "typescript",
+    "config"
+  ],
+  "repository": {
+    "type": "git",
+    "directory": "packages/config/typescript"
+  },
+  "license": "MIT",
+  "files": [
+    "base.json",
+    "hardhat.json",
+    "nextjs.json",
+    "node14.json",
+    "node16.json",
+    "react-library.json"
+  ]
+}

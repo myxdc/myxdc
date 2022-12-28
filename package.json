@@ -1,0 +1,33 @@
+{
+  "name": "myxdc",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --no-cache --parallel --continue",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "devDependencies": {
+    "@myxdc/eslint-config": "workspace:*",
+    "@myxdc/prettier-config": "workspace:*",
+    "@typescript-eslint/eslint-plugin": "^5.47.1",
+    "@typescript-eslint/parser": "^5.47.1",
+    "eslint": "8.30.0",
+    "eslint-config-next": "^13.1.1",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-turbo": "^0.0.7",
+    "eslint-plugin-simple-import-sort": "^8.0.0",
+    "eslint-plugin-testing-library": "^5.9.1",
+    "eslint-plugin-unused-imports": "^2.0.0",
+    "prettier": "^2.8.1",
+    "sort-package-json": "2.1.0",
+    "ts-node": "10.9.1",
+    "turbo": "^1.6.3"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "pnpm": ">=7.x"
+  },
+  "packageManager": "pnpm@7.20.0"
+}

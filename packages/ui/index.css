@@ -1,0 +1,11 @@
+@tailwind base;
+
+@import '@fontsource/manrope/variable.css';
+
+@tailwind components;
+@tailwind utilities;
+
+
+body {
+    background: red !important;
+}

@@ -1,0 +1,8 @@
+.next
+dist
+
+.graphclient
+generated
+typechain
+
+node_modules
