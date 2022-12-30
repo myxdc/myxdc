@@ -6,7 +6,7 @@ const nextConfig = {
     appDir: true,
     serverComponentsExternalPackages: ['@myxdc/ui'],
   },
-  // transpilePackages: ['@myxdc/ui'],
+  transpilePackages: ['@myxdc/ui'],
 }
 
 export default nextConfig
