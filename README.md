@@ -13,6 +13,7 @@ This turborepo uses [pnpm](https://pnpm.io) as a package manager. It includes th
 - `@myxdc/hooks`: a React hook library for the MyXDC project
 - `@myxdc/utils`: a utility library for the MyXDC project
 - `@myxdc/constants`: a constants library for the MyXDC project
+- `@myxdc/widgets`: a fork of the [Uniswap](https://uniswap.org/) widgets library
 - `eslint`, `prettier`, `typescript`: shared configuration for linting, formatting, and type checking
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
