@@ -5,7 +5,34 @@
 @tailwind components;
 @tailwind utilities;
 
+@import 'react-loading-skeleton/dist/skeleton.css';
+
+/* use colors from tailwind */
+.react-loading-skeleton {
+  --base-color: theme('colors.primary.200');
+  --highlight-color: theme('colors.primary.100');
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
 
 body {
-    background: red !important;
+  min-height: 100vh;
+  background: linear-gradient(rgba(232, 250, 255, 0.767) 0%, rgba(215, 224, 255, 0.603) 100%);
+  color: black;
+  font-family: 'Manrope', sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
 }

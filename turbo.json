@@ -9,15 +9,27 @@
     ".prettierrc.js",
     "tsconfig.json"
   ],
+  "globalEnv": [
+    "NEXT_PUBLIC_RPC_URL",
+    "NEXT_PUBLIC_CHAIN_ID",
+    "NEXT_PUBLIC_ROUTER_ADDRESS",
+    "NEXT_PUBLIC_FACTORY_ADDRESS",
+    "NEXT_PUBLIC_INIT_CODE_HASH"
+  ],
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**"]
+      "outputs": ["dist/**", ".next/**"],
+      "env": [
+        "NEXT_PUBLIC_RPC_URL",
+        "NEXT_PUBLIC_CHAIN_ID",
+        "NEXT_PUBLIC_ROUTER_ADDRESS",
+        "NEXT_PUBLIC_FACTORY_ADDRESS",
+        "NEXT_PUBLIC_INIT_CODE_HASH"
+      ]
     },
     "lint": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "outputs": []
     },
     "dev": {

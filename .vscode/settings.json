@@ -50,5 +50,6 @@
     "plaintext": false,
     "yaml": false
   },
-  "cSpell.allowCompoundWords": true
+  "cSpell.allowCompoundWords": true,
+  "workbench.colorTheme": "Tokyo Night"
 }

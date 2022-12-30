@@ -1,0 +1,11 @@
+{
+  "name": "@myxdc/constants",
+  "version": "0.0.0",
+  "description": "Useful constants for XDC",
+  "main": "index.js",
+  "scripts": {
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

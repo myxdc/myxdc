@@ -1,0 +1,8 @@
+{
+    "extends": "@myxdc/typescript-config/node16.json",
+    "include": ["."],
+    "exclude": ["node_modules"],
+    "compilerOptions": {
+    }
+  }
+  

@@ -1,0 +1,22 @@
+{
+  "name": "@myxdc/utils",
+  "version": "0.0.1",
+  "description": "",
+  "main": "./index.ts",
+  "source": "./index.ts",
+  "scripts": {},
+  "keywords": [
+    "xdc",
+    "utils",
+    "myxdc"
+  ],
+  "author": "",
+  "devDependencies": {
+    "@myxdc/typescript-config": "workspace:*",
+    "ethers": "^5.7.2",
+    "web3": "^1.8.1"
+  },
+  "dependencies": {
+    "web3-utils": "^1.8.1"
+  }
+}

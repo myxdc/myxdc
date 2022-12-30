@@ -9,7 +9,6 @@
     "react",
     "components"
   ],
-  "license": "MIT",
   "sideEffects": false,
   "main": "./index.ts",
   "source": "./index.ts",
@@ -21,21 +20,23 @@
     "lint": "TIMING=1 eslint ./**/*.ts* --fix"
   },
   "dependencies": {
-    "@fontsource/manrope": "^4.5.12"
+    "@fontsource/manrope": "^4.5.12",
+    "react-loading-skeleton": "^3.1.0"
   },
   "devDependencies": {
-    "postcss": "^8.4.20", 
-    "autoprefixer": "^10.4.13",
-    "tailwindcss": "^3.2.4",
     "@myxdc/eslint-config": "workspace:*",
     "@myxdc/prettier-config": "workspace:*",
     "@myxdc/typescript-config": "workspace:*",
+    "@myxdc/utils": "workspace:^0.0.1",
     "@types/react": "^18.0.26",
     "@types/react-dom": "^18.0.10",
+    "autoprefixer": "^10.4.13",
     "eslint": "8.30.0",
     "next": "13.0.7",
+    "postcss": "^8.4.20",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "tailwindcss": "^3.2.4",
     "tsup": "6.5.0",
     "typescript": "4.9.4"
   }
