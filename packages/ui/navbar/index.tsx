@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 
+import { Button } from '../button'
 import { Container } from '../container'
 import { AccountSelector, AccountSelectorProps } from './AccountSelector'
 
@@ -22,14 +23,14 @@ export const Navbar = ({ linkComponent, activeLink, accounts, onAccountSelected,
     'block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-primary-700 md:p-0 '
 
   return (
-    <nav className="fixed top-0 left-0 z-20 w-full px-2 py-3 bg-white border-b border-gray-200 sm:px-4 ">
+    <nav className="fixed relative top-0 left-0 z-20 w-full px-2 py-3 bg-white border-b border-gray-200 sm:px-4">
       <Container>
         <div className="container flex flex-wrap items-center justify-between mx-auto">
           <LinkComponent href="/" className="flex items-center flex-1">
             <img src="https://www.svgrepo.com/show/10349/circle.svg" className="h-8 mr-3 sm:h-9" alt="MyXDC Logo" />
             <span className="self-center hidden text-xl font-semibold whitespace-nowrap md:block">MyXDC</span>
           </LinkComponent>
-          <div className="flex md:order-2">
+          <div className="flex justify-end flex-1 md:order-2">
             {accounts && accounts.length > 0 ? (
               <AccountSelector
                 accounts={accounts}
@@ -46,12 +47,13 @@ export const Navbar = ({ linkComponent, activeLink, accounts, onAccountSelected,
                   Import
                   <span className="hidden sm:inline"> Existing Account</span>
                 </LinkComponent>
-                <LinkComponent
+                <Button
+                  as={LinkComponent}
                   href="/wallet/create"
                   className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center sm:mr-3 md:mr-0 "
                 >
                   Create Account
-                </LinkComponent>
+                </Button>
               </>
             )}
             <button
@@ -79,11 +81,11 @@ export const Navbar = ({ linkComponent, activeLink, accounts, onAccountSelected,
           </div>
           <div
             id="navbar-sticky"
-            className={`flex-1 items-center justify-between w-full md:flex md:w-auto md:order-1 ${
+            className={`absolute md:relative top-full left-0 right-0 flex-1 items-center justify-center w-full md:flex md:w-auto md:order-1 shadow-xl border md:shadow-none md:border-0 ${
               navbarOpen ? 'block' : 'hidden'
             }`}
           >
-            <ul className="flex flex-col p-4 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white ">
+            <ul className="flex flex-col p-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white ">
               <li>
                 <LinkComponent
                   href="/wallet"

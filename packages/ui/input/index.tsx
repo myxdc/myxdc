@@ -1,6 +1,7 @@
 interface InputProps {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
   className?: string
+  containerClassName?: string
   children?: React.ReactNode
   label?: string
   placeholder?: string
@@ -12,6 +13,7 @@ interface InputProps {
 export const Input = ({
   onChange,
   className = '',
+  containerClassName = '',
   children,
   placeholder,
   label,
@@ -20,7 +22,7 @@ export const Input = ({
   ...props
 }: InputProps) => {
   return (
-    <div className="relative">
+    <div className={'relative ' + containerClassName}>
       <label htmlFor={'input/' + label} className="sr-only">
         {label}
       </label>

@@ -2,9 +2,9 @@
   "name": "@myxdc/constants",
   "version": "0.0.0",
   "description": "Useful constants for XDC",
-  "main": "index.js",
-  "scripts": {
-  },
+  "main": "index.ts",
+  "source": "index.ts",
+  "scripts": {},
   "keywords": [],
   "author": "",
   "license": "ISC"

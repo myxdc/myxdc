@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 const CHAIN_ID = Number(process.env.NEXT_PUBLIC_CHAIN_ID)
 
 async function getAccountNFTs(address: string, page: number) {
-  address = 'xdc18edfe1e49ca89157384832482c66e95ea9b0fca'
+  // address = 'xdc18edfe1e49ca89157384832482c66e95ea9b0fca'
   const res = await fetch(
     CHAIN_ID === 51
       ? `https://explorer.apothem.network/api/tokens/holding/xrc721/${address}?page=${page}&limit=10`

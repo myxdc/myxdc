@@ -25,7 +25,7 @@ export interface Account {
   balance?: string
 }
 
-interface TxData {
+export interface TxData {
   to: string
   value: string
   data: string

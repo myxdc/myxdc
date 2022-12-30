@@ -14,7 +14,7 @@ export const toChecksumAddress = (address: string) => {
  * Convert from checksum address to XDC address
  */
 export const toXDCAddress = (address: string) => {
-  if (address === null) return null
+  if (address === null) return undefined
   if (address.substring(0, 2) === '0x') {
     address = 'xdc' + address.substring(2)
   }

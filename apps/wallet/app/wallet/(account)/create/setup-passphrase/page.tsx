@@ -21,8 +21,9 @@ export default function Page() {
   }
   function handleVerify() {
     // @ts-ignore
-    const input = document.querySelector('#word-input')?.value || ''
-    if (input.trim() === phrase.split(' ')[word - 1].trim()) {
+    const input = (document.querySelector('#word-input')?.value || '').trim().toLowerCase()
+
+    if (input.trim() === phrase.split(' ')[word - 1].trim().toLowerCase()) {
       handleSuccess()
     } else {
       setError(true)
@@ -31,8 +32,8 @@ export default function Page() {
   }
   function handleSuccess() {
     wallet.importFromMnemonic(phrase)
-    toast.success('Successfully created account')
     router.push('/wallet')
+    toast.success('Successfully created account')
   }
 
   function generateNew() {
@@ -103,6 +104,7 @@ export default function Page() {
                 handleVerify()
               }
             }}
+            id="word-input"
           />
 
           <Button className="w-full" onClick={handleVerify}>

@@ -21,7 +21,8 @@
   },
   "dependencies": {
     "@fontsource/manrope": "^4.5.12",
-    "react-loading-skeleton": "^3.1.0"
+    "react-loading-skeleton": "^3.1.0",
+    "react-qr-code": "^2.0.11"
   },
   "devDependencies": {
     "@myxdc/eslint-config": "workspace:*",

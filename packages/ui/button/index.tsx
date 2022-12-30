@@ -25,7 +25,7 @@ export const Button = ({
 }: ButtonProps) => {
   const buttonClasses = `flex items-center justify-center gap-2 px-4 py-2 rounded-md transition duration-200 ease-in-out ${
     variant === 'primary'
-      ? 'bg-primary-500 text-white hover:bg-primary-600'
+      ? 'bg-gradient-to-br from-primary-700 to-primary-600 text-white hover:opacity-90'
       : variant === 'secondary'
       ? 'rounded-full text-primary-600 bg-primary-100 hover:bg-primary-200'
       : variant === 'tertiary'

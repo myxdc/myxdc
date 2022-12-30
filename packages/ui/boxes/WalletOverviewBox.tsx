@@ -38,7 +38,7 @@ export const WalletOverviewBox = ({
             linkComponent={linkComponent}
           />
           <IconButton
-            href="/wallet/topup"
+            href="/wallet/top-up"
             label="Top Up"
             icon={<CreditCardIcon className="w-full h-full" />}
             linkComponent={linkComponent}
