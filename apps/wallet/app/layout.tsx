@@ -13,7 +13,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head />
       <body>
         <WalletProvider>
-          <div className="h-10 mb-4 md:h-16">
+          <div className="mb-4 h-14 md:h-16">
             <Navbar />
           </div>
           <TokensProvider>{children}</TokensProvider>

@@ -39,13 +39,13 @@ importers:
   apps/wallet:
     specifiers:
       '@babel/core': ^7.20.7
-      '@myxdc/constants': workspace:^0.0.0
+      '@myxdc/constants': workspace:*
       '@myxdc/eslint-config': workspace:*
       '@myxdc/hooks': workspace:*
       '@myxdc/prettier-config': workspace:*
       '@myxdc/typescript-config': workspace:*
       '@myxdc/ui': workspace:*
-      '@myxdc/utils': workspace:^0.0.1
+      '@myxdc/utils': workspace:*
       '@types/node': ^18.11.18
       '@types/react': ^18.0.26
       '@types/react-dom': ^18.0.10

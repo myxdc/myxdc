@@ -23,10 +23,10 @@ export const Navbar = ({ linkComponent, activeLink, accounts, onAccountSelected,
     'block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-primary-700 md:p-0 '
 
   return (
-    <nav className="fixed relative top-0 left-0 z-20 w-full px-2 py-3 bg-white border-b border-gray-200 sm:px-4">
+    <nav className="fixed relative top-0 left-0 z-20 w-full py-3 bg-white border-b border-gray-200 sm:px-4">
       <Container>
         <div className="container flex flex-wrap items-center justify-between mx-auto">
-          <LinkComponent href="/" className="flex items-center flex-1">
+          <LinkComponent href="/" className="flex items-center lg:flex-1">
             <img src="https://www.svgrepo.com/show/10349/circle.svg" className="h-8 mr-3 sm:h-9" alt="MyXDC Logo" />
             <span className="self-center hidden text-xl font-semibold whitespace-nowrap md:block">MyXDC</span>
           </LinkComponent>
@@ -41,18 +41,18 @@ export const Navbar = ({ linkComponent, activeLink, accounts, onAccountSelected,
             ) : (
               <>
                 <LinkComponent
-                  href="/wallet/import"
+                  href="/wallet/create"
                   className="text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200  font-medium rounded-lg text-sm px-5 py-2.5 text-center sm:mr-3"
                 >
-                  Import
-                  <span className="hidden sm:inline"> Existing Account</span>
+                  Create Account
                 </LinkComponent>
                 <Button
                   as={LinkComponent}
-                  href="/wallet/create"
+                  href="/wallet/import"
                   className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center sm:mr-3 md:mr-0 "
                 >
-                  Create Account
+                  Import Account
+                  <span className="hidden sm:inline"></span>
                 </Button>
               </>
             )}
