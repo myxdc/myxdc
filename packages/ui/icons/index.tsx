@@ -1,5 +1,6 @@
 export * from './arrowdown'
 export * from './arrowupright'
+export * from './close'
 export * from './copy'
 export * from './creditcard'
 export * from './down'

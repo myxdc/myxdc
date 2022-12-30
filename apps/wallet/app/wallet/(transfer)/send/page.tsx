@@ -5,14 +5,14 @@ import { default_tokens } from '@myxdc/constants/xdcnetwork'
 import { useTokens } from '@myxdc/hooks/useTokens'
 import type { TxData } from '@myxdc/hooks/useWallet'
 import { useWallet } from '@myxdc/hooks/useWallet'
-import { Button, Currency, Input, Spinner, Typography } from '@myxdc/ui'
+import { Button, Currency, Input, Spinner, TokenSelector, Typography } from '@myxdc/ui'
 import { fromWei, isAddress, toChecksumAddress, toWei } from '@myxdc/utils/web3'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 
 const CHAIN_ID = Number(process.env.NEXT_PUBLIC_CHAIN_ID)
 
-const EXPLORER_URL = CHAIN_ID === 51 ? 'https://explorer.apothem.network/' : 'https://explorer.xinfin.network/'
+const EXPLORER_URL = CHAIN_ID === 51 ? 'https://explorer.apothem.network' : 'https://explorer.xinfin.network'
 
 export default function Page() {
   const [to, setTo] = useState('')
@@ -31,8 +31,8 @@ export default function Page() {
     balance: '',
   })
 
-  const { account, web3, signThenSend } = useWallet()
-  const { updateXDCBalance } = useTokens()
+  const { account, web3, signThenSend, updateAccountsBalances } = useWallet()
+  const { updateXDCBalance, tokens, customTokens } = useTokens()
 
   useEffect(() => {
     if (!account?.address) return
@@ -42,7 +42,7 @@ export default function Page() {
   function updateAvailable() {
     if (token.symbol === 'XDC') {
       web3.eth.getBalance(account?.address).then((balance: any) => {
-        setAvailable(balance)
+        setAvailable(Number(fromWei(balance)) >= 0.001 ? Number(fromWei(balance)) - 0.001 : 0)
       })
     } else {
       if (token.address === '' || !isAddress(token?.address)) return
@@ -51,7 +51,7 @@ export default function Page() {
         .balanceOf(account?.address)
         .call()
         .then((balance: any) => {
-          setAvailable(Number(fromWei(balance)))
+          setAvailable(Number(fromWei(balance)) || 0)
         })
     }
   }
@@ -59,10 +59,10 @@ export default function Page() {
   function handleMax() {
     if (!available || available <= 0) return
     if (token.symbol === 'XDC') {
-      setAmount(Number(fromWei(available)) - 0.0003)
+      setAmount(available)
       return
     }
-    setAmount(Number(fromWei(available | 0)))
+    setAmount(available)
   }
 
   function clearInput() {
@@ -72,7 +72,7 @@ export default function Page() {
 
   async function handleSubmit() {
     setErrors({ to: false, amount: false })
-
+    console.log(to, amount, token, available)
     if (isAddress(to) == false) {
       setErrors({ ...errors, to: 'Invalid Address' })
       return
@@ -119,6 +119,7 @@ export default function Page() {
         setTimeout(() => {
           updateXDCBalance()
           updateAvailable()
+          updateAccountsBalances()
         }, 5000)
         toast.success(
           <>
@@ -134,7 +135,6 @@ export default function Page() {
           </>,
           {
             duration: 10000,
-            position: 'bottom-center',
             style: {
               maxWidth: '500px',
             },
@@ -144,7 +144,6 @@ export default function Page() {
       .catch((err) => {
         toast.error(err.message, {
           duration: 5000,
-          position: 'bottom-center',
         })
         setLoading(false)
         console.error(err)
@@ -166,12 +165,7 @@ export default function Page() {
   }
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault()
-        handleSubmit()
-      }}
-    >
+    <div>
       <Typography variant="base" className="mb-4" weight={600}>
         Send Amount
       </Typography>
@@ -183,7 +177,7 @@ export default function Page() {
           placeholder="0.00"
           min="0"
           max="100000000000"
-          value={amount}
+          value={amount || ''}
           onChange={(e) => setAmount(Number(e.target.value))}
         />
         <button
@@ -200,19 +194,22 @@ export default function Page() {
             </>
           )}
         </button>
-        {/* {openSelect && (
-        <TokenSelector
-          onSelect={(token) => {
-            setToken(token)
-            setOpenSelect(false)
-          }}
-          onClose={() => setOpenSelect(false)}
-        />
-      )} */}
+        {openSelect && (
+          <TokenSelector
+            tokens={tokens}
+            onSelect={(token) => {
+              console.log(token)
+
+              setToken(token)
+              setOpenSelect(false)
+            }}
+            onClose={() => setOpenSelect(false)}
+          />
+        )}
       </div>
       <div className="flex items-center mt-2">
         <p className="text-sm text-gray-600">
-          Available: {Number(fromWei(available || 0)) - 0.0003} {token.symbol}
+          Available: {available} {token.symbol}
         </p>
         <button onClick={handleMax} className="ml-2 font-semibold text-primary-600" type="button">
           Max
@@ -244,9 +241,9 @@ export default function Page() {
       </div>
       {errors.to && <p className="mt-2 text-base text-red-600">{errors.to}</p>}
       {errors.amount && <p className="mt-2 text-base text-red-600">{errors.amount}</p>}
-      <Button className="w-full mt-10 form-btn" role="submit">
+      <Button className="w-full mt-10 form-btn" role="submit" onClick={handleSubmit}>
         Send
       </Button>
-    </form>
+    </div>
   )
 }

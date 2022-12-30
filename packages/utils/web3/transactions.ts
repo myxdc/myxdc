@@ -32,7 +32,7 @@ export const completeTxObject = (txObject) => {
 }
 
 const toHex = (str) => {
-  return web3.utils.toHex(str)
+  return Utils.toHex(str)
 }
 
 /**

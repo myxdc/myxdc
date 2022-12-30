@@ -65,6 +65,14 @@ function WalletProvider({ children }: { children: React.ReactNode }) {
     loadAccounts()
   }, [])
 
+  // when account changes, save to localStorage
+  useEffect(() => {
+    if (account?.address && accounts?.length > 0) {
+      localStorage.setItem('myxdc:accounts', JSON.stringify(accounts))
+      localStorage.setItem('myxdc:activeAccount', account.address || '')
+    }
+  }, [account])
+
   function importFromPrivateKey(privateKey: string) {
     const newAccount = web3.eth.accounts.privateKeyToAccount(privateKey)
     // push to accounts if not already there
@@ -82,8 +90,6 @@ function WalletProvider({ children }: { children: React.ReactNode }) {
       signerType: 'privateKey',
     })
     setAccounts(accountsList)
-    // save accounts to localStorage
-    saveAccounts()
     // update balances
     updateAccountsBalances()
     return newAccount
@@ -127,8 +133,6 @@ function WalletProvider({ children }: { children: React.ReactNode }) {
     setAccount(newAccount)
     setAccounts(accounts)
 
-    // save accounts to localStorage
-    saveAccounts()
     // update balances
     updateAccountsBalances()
     return newAccount
@@ -156,8 +160,6 @@ function WalletProvider({ children }: { children: React.ReactNode }) {
     }
     setAccount(newAccount)
     setAccounts(accounts)
-    // save accounts to localStorage
-    saveAccounts()
     // update balances
     updateAccountsBalances()
     return newAccount
@@ -168,26 +170,17 @@ function WalletProvider({ children }: { children: React.ReactNode }) {
     const newAccount = accounts.find((acc) => acc.address.toLowerCase() == address.toLowerCase())
     if (!newAccount) return
     setAccount(newAccount)
-    // update localStorage
-    localStorage.setItem('myxdc:activeAccount', address)
-    // update balances
-    updateAccountsBalances()
   }
 
   // remove account from accounts
   function removeAccount(address: string) {
     const newAccounts = accounts.filter((acc) => acc.address.toLowerCase() !== address.toLowerCase())
     setAccounts(newAccounts)
-    // save accounts to localStorage
-    saveAccounts(newAccounts)
-    // update balances
-    updateAccountsBalances()
-  }
-
-  // save accounts to localStorage
-  function saveAccounts(newAccounts?: Account[]) {
-    localStorage.setItem('myxdc:accounts', JSON.stringify(newAccounts || accounts))
-    localStorage.setItem('myxdc:activeAccount', account.address || '')
+    if (account.address.toLowerCase() === address.toLowerCase()) {
+      if (newAccounts.length > 0) {
+        setAccount(newAccounts[0])
+      }
+    }
   }
 
   // load accounts from localStorage
@@ -213,6 +206,7 @@ function WalletProvider({ children }: { children: React.ReactNode }) {
   // returns txHash
   async function signThenSend(tx: TxData) {
     tx = toHexTxObj(completeTxObject(tx))
+
     if (account.signerType === 'privateKey') {
       if (!account.privateKey) throw new Error('No private key found for account, please import account again')
       const signedTx = await web3.eth.accounts.signTransaction(tx, account.privateKey)
@@ -266,9 +260,10 @@ function WalletProvider({ children }: { children: React.ReactNode }) {
 
   // update accounts balances
   async function updateAccountsBalances() {
-    const newAccounts = await Promise.all(accounts.map((acc) => getAccountBalance(acc, web3)))
-    setAccounts(newAccounts)
-    saveAccounts(newAccounts)
+    await Promise.all(accounts.map((acc) => getAccountBalance(acc, web3))).then((newAccounts) => {
+      setAccounts(newAccounts)
+      setAccount(newAccounts.find((acc) => acc.address.toLowerCase() === account.address.toLowerCase())!)
+    })
   }
 
   const wallet: WalletContext = {

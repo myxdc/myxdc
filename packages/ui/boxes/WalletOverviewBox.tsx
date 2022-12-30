@@ -1,3 +1,4 @@
+import { Skeleton } from '../animated'
 import { ArrowDownIcon } from '../icons'
 import { ArrowUpRightIcon } from '../icons/arrowupright'
 import { CreditCardIcon } from '../icons/creditcard'
@@ -5,24 +6,24 @@ import { SwapIcon } from '../icons/swap'
 import { Typography } from '../typography'
 
 interface WalletOverviewBoxProps {
-  balance: string
+  balance?: string
   balanceDecimals?: string
   linkComponent?: React.ElementType
 }
 
-export const WalletOverviewBox = ({
-  balance = '$414',
-  balanceDecimals = '.00',
-  linkComponent,
-}: WalletOverviewBoxProps) => {
+export const WalletOverviewBox = ({ balance, balanceDecimals, linkComponent }: WalletOverviewBoxProps) => {
   return (
     <div className="px-6 py-12 shadow-lg rounded-3xl bg-gradient-to-br from-primary-700 to-primary-600">
       <div>
-        <Typography variant="hero" className="text-center text-white" weight={700}>
-          {balance}
-          <Typography as="span" variant="h4" className="text-primary-200" weight={700}>
-            {balanceDecimals}
-          </Typography>
+        <Typography variant="hero" className="flex items-end justify-center text-white" weight={700}>
+          {balance || <Skeleton inline={true} width={100} height={38} className="opacity-60" />}
+          {balanceDecimals ? (
+            <Typography as="span" variant="h4" className="text-primary-200" weight={700}>
+              {balanceDecimals}
+            </Typography>
+          ) : (
+            <Skeleton inline={true} width={50} height={20} className="ml-1 opacity-60" />
+          )}
         </Typography>
         <div className="flex items-center justify-center gap-6 mt-8">
           <IconButton

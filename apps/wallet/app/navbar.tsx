@@ -8,10 +8,10 @@ export default function Navbar() {
 
   const accountsForNavbar = accounts?.map((a) => {
     return {
-      active: a.address === account.address,
-      type: a.signerType,
-      address: a?.address?.substring(0, 2) === '0x' ? 'xdc' + a?.address.substring(2) : a.address,
-      balance: a.balance,
+      active: a?.address === account?.address,
+      type: a?.signerType,
+      address: a?.address?.substring(0, 2) === '0x' ? 'xdc' + a?.address?.substring(2) : a?.address,
+      balance: a?.balance,
     }
   })
 

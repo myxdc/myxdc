@@ -1,5 +1,5 @@
 'use client'
-import { abi as XRC20_ABI } from '@myxdc/constants/artifacts/XRC20.json'
+import XRC20 from '@myxdc/constants/artifacts/XRC20.json'
 import { fromWei, toChecksumAddress } from '@myxdc/utils/web3'
 import { createContext, createElement, useContext, useEffect, useState } from 'react'
 
@@ -17,7 +17,6 @@ type Token = {
 
 type TokensContext = {
   xdc: Token | undefined
-  usdTotal: number
   tokens: Token[]
   customTokens: Token[]
   addCustomToken: (address: string, symbol: string, name: string, decimals: number) => void
@@ -80,7 +79,7 @@ function TokensProvider({ children }: { children: React.ReactNode }) {
     if (tokenExists) return
 
     // Fetch token info
-    const contract = new web3.eth.Contract(XRC20_ABI as any, toChecksumAddress(address))
+    const contract = new web3.eth.Contract(XRC20.abi as any, toChecksumAddress(address))
     const promises = [
       symbol ? Promise.resolve(symbol) : contract.methods.symbol().call(),
       name ? Promise.resolve(name) : contract.methods.name().call(),
@@ -111,16 +110,10 @@ function TokensProvider({ children }: { children: React.ReactNode }) {
     setCustomTokens(newCustomTokens)
   }
 
-  const usdTotal = tokens.reduce((acc, token) => {
-    if (!token.balance || !token.price) return acc
-    return acc + token.balance * token.price
-  }, 0)
-
   const xdc = tokens.find((token) => token.symbol === 'XDC')
 
   const value = {
     xdc,
-    usdTotal,
     tokens,
     customTokens,
     addCustomToken,
@@ -160,7 +153,7 @@ async function fetchTokenBalance(token: Token, web3: any, account: Account) {
   if (token.symbol === 'XDC') {
     token.balance = Number(fromWei(await web3.eth.getBalance(toChecksumAddress(account?.address))))
   } else {
-    const contract = new web3.eth.Contract(XRC20_ABI, toChecksumAddress(token?.address))
+    const contract = new web3.eth.Contract(XRC20.abi, toChecksumAddress(token?.address))
     const balance = await contract.methods.balanceOf(toChecksumAddress(account?.address)).call()
     token.balance = Number(fromWei(balance))
   }

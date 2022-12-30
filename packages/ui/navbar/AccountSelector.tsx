@@ -52,7 +52,8 @@ export const AccountSelector = ({ accounts, onSelected, onRemove, linkComponent 
   }, [isOpen])
 
   // sort accounts to have active account the first account in the array
-  accounts = accounts?.sort((a) => (a.active ? -1 : 1))
+  // accounts = accounts?.sort((a) => (a.active ? -1 : 1))
+  const activeAccount = accounts?.find((a) => a.active)
 
   return (
     <div className="sm:relative account-selector">
@@ -63,9 +64,9 @@ export const AccountSelector = ({ accounts, onSelected, onRemove, linkComponent 
         title="Account Selector"
       >
         <div className="items-center hidden p-2 mr-2 text-black bg-white rounded-full lg:flex">
-          <Price amount={accounts?.[0]?.balance || 0} />
+          <Price amount={activeAccount?.balance || 0} />
         </div>
-        <div className="truncate ... max-w-[6rem] md:max-w-[8rem]">{accounts?.[0].address}</div>
+        <div className="truncate ... max-w-[6rem] md:max-w-[8rem]">{activeAccount?.address}</div>
         <div className="flex items-center justify-center w-8 h-8 ml-2 text-gray-800 bg-gray-200 rounded-full">
           <DownIcon height="1.22em" width="1.22em" />
         </div>
@@ -103,11 +104,11 @@ export const AccountSelector = ({ accounts, onSelected, onRemove, linkComponent 
                 >
                   <div className="p-4">
                     <h5 className="text-xs text-gray-400">address</h5>
-                    <span className="block text-sm font-medium truncate max-w-[12rem] sm:max-w-none">
+                    <span className="block text-sm font-normal truncate max-w-[12rem] sm:max-w-none">
                       {account.address}
                     </span>
                     <h5 className="mt-3 text-xs text-gray-400">type</h5>
-                    <span className="block text-sm font-medium">{account.type}</span>
+                    <span className="block text-sm font-normal">{account.type}</span>
                     <h5 className="mt-3 text-xs font-medium text-gray-400">balance</h5>
                     <span className="block text-sm">
                       <Price

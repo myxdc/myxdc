@@ -28,8 +28,8 @@ body {
 body {
   min-height: 100vh;
   background: linear-gradient(rgba(232, 250, 255, 0.767) 0%, rgba(215, 224, 255, 0.603) 100%);
-  color: black;
   font-family: 'Manrope', sans-serif;
+  @apply text-gray-900;
 }
 
 a {

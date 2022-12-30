@@ -31,7 +31,9 @@ export const Button = ({
       : variant === 'tertiary'
       ? 'bg-transparent text-gray-700 hover:bg-gray-100'
       : ''
-  } ${size === 'small' ? 'text-sm' : size === 'medium' ? 'text-base' : size === 'large' ? 'text-lg' : ''} ${className}`
+  } ${size === 'small' ? 'text-sm' : size === 'medium' ? 'text-base' : size === 'large' ? 'text-lg' : ''} 
+  ${disabled ? 'opacity-50 cursor-not-allowed hover:opacity-50' : ''}
+  ${className}`
 
   return React.createElement(
     as,

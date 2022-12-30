@@ -12,7 +12,7 @@ export const Currency = ({ currency, ...rest }: CurrencyProps) => {
   const url = `https://raw.githubusercontent.com/XinFinOrg/xdc-network-token-lists/main/tokens/${currency?.toUpperCase()}.png`
 
   useEffect(() => {
-    if (!currency) return
+    if (!currency || currency?.toLowerCase() == 'xdc' || currency?.toLowerCase() == 'unknown') return
     fetch(url)
       .then((res) => {
         if (res.ok) {

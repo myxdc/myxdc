@@ -5,16 +5,22 @@ import React from 'react'
 
 const wallet_options = [
   {
+    id: 'ledger',
+    link: '/wallet/import/ledger',
+    title: 'Ledger Hardware Wallet (Most Secure)',
+    description: 'A physical wallet that you can use to store your XDC tokens and assets safe from internet threats',
+  },
+  {
     id: 'mnemonic',
     link: '/wallet/create/setup-passphrase',
-    title: 'Secure Passphrase',
+    title: 'Secure Passphrase (Most Convenient)',
     description: 'A 12-word passphrase that you can write down and store in a safe place',
   },
   {
-    id: 'ledger',
-    link: '/wallet/import/ledger',
-    title: 'Ledger Hardware Wallet',
-    description: 'A physical wallet that you can use to store your XDC tokens and assets safe from internet threats',
+    id: 'metamask',
+    link: '/wallet/import/metamask',
+    title: 'Metamask ',
+    description: 'A browser extension that you can use to store your XDC tokens and assets',
   },
 ]
 export default function Page() {

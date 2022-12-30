@@ -4,6 +4,7 @@ import Utils from 'web3-utils'
  * Convert from XDC address to checksum address
  */
 export const toChecksumAddress = (address: string) => {
+  if (!isAddress(address)) return address
   if (address.substring(0, 3) === 'xdc') {
     address = '0x' + address.substring(3)
   }

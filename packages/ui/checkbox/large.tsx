@@ -19,8 +19,8 @@ export const LargeCheckBox = ({
 }: LargeCheckBoxProps) => {
   return (
     <label
-      className={`flex w-full py-4 rounded-lg cursor-pointer bg-gray-100 border bordor-gray-300 transition duration-200 ease-in-out ${
-        checked ? 'bg-primary-200 border-primary-300' : 'hover:bg-gray-200'
+      className={`flex w-full py-6 rounded-lg cursor-pointer bg-gray-100  transition duration-200 ease-in-out ${
+        checked ? 'bg-primary-200' : 'hover:bg-gray-200'
       } ${className}`}
     >
       <input
@@ -35,10 +35,10 @@ export const LargeCheckBox = ({
         className="w-8 ml-4 mr-4"
       />
       <div className="pr-4">
-        <Typography variant="h6" weight={500}>
+        <Typography variant="h6" weight={500} className="text-gray-800">
           {title}
         </Typography>
-        <Typography variant="p" className="mt-2 text-gray-500">
+        <Typography variant="p" className="mt-3 text-gray-500" weight={300}>
           {description}
         </Typography>
       </div>

@@ -11,7 +11,7 @@ export default function Page() {
   if (!account?.address) return null
   const address = account?.address ? toXDCAddress(account?.address) : undefined
   return (
-    <div className="text-center card">
+    <div className="text-center">
       <Typography variant="h5" weight={600}>
         My Public Address
       </Typography>

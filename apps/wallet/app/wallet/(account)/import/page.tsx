@@ -6,28 +6,28 @@ import React from 'react'
 
 const wallet_options = [
   {
-    id: 'mnemonic',
-    link: '/wallet/import/passphrase',
-    title: 'Secure Passphrase',
-    description: 'A 12-word passphrase that you can write down and store in a safe place',
-  },
-  {
-    id: 'private-key',
-    link: '/wallet/import/private-key',
-    title: 'Private Key',
-    description: 'The private key of your XDC account. Can be exported from other wallets',
-  },
-  {
     id: 'ledger',
     link: '/wallet/import/ledger',
-    title: 'Ledger Hardware Wallet',
+    title: 'Ledger Hardware Wallet (Most Secure)',
     description: 'A hardware wallet that you can use to store your XDC tokens and assets',
   },
   {
     id: 'metamask',
     link: '/wallet/import/metamask',
-    title: 'Metamask',
+    title: 'Metamask (Recommended)',
     description: 'A browser extension that you can use to store your XDC tokens and assets',
+  },
+  {
+    id: 'mnemonic',
+    link: '/wallet/import/passphrase',
+    title: 'Secure Passphrase (Only for small accounts)',
+    description: 'A 12-word passphrase that you can write down and store in a safe place',
+  },
+  {
+    id: 'private-key',
+    link: '/wallet/import/private-key',
+    title: 'Private Key (Only for small accounts)',
+    description: 'The private key of your XDC account. Can be exported from other wallets',
   },
 ]
 
@@ -43,11 +43,11 @@ export default function Page() {
         MyXDC Wallet is a secure wallet and account manager for your accounts on the XDC network. You can import your
         existing XDC accounts or connect to another wallet.
       </Typography>
-      <form action="" className="p-6 mt-6 mb-0 space-y-4 bg-white rounded-lg shadow-2xl">
+      <form action="" className="p-6 mt-6 mb-0 space-y-6 bg-white rounded-lg shadow-2xl">
         <Typography as="h3" variant="h4" weight={500} className="mb-6">
           Select a method to import your wallet.
         </Typography>
-        <div className="flex flex-col items-center justify-center w-full h-full gap-4">
+        <div className="flex flex-col items-center justify-center w-full h-full gap-6">
           {wallet_options.map((option) => (
             <LargeCheckBox
               title={option.title}
