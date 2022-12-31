@@ -9,8 +9,16 @@ import { CloseIcon } from '../icons'
 import { Input } from '../input'
 import { Typography } from '../typography'
 
-interface TokenSelectorProps {
-  tokens?: any[]
+export interface TokenType {
+  symbol?: string
+  address?: string
+  name?: string
+  price?: number
+  balance?: number
+}
+
+export interface TokenSelectorProps {
+  tokens?: TokenType[]
   onSelect?: (token: any) => void
   onClose?: () => void
 }
@@ -27,9 +35,12 @@ export function TokenSelector({ tokens, onSelect = () => {}, onClose = () => {} 
   useEffect(() => {
     if (!tokens || input === '') return setFilteredTokens(undefined)
     const searchResults = tokens?.filter((token) => {
-      if (token.symbol.toLowerCase().startsWith(input.trim().toLowerCase())) return true
-      if (token.name.toLowerCase().startsWith(input.trim().toLowerCase())) return true
-      if (toChecksumAddress(token.address.toLowerCase()).startsWith(toChecksumAddress(input.trim().toLowerCase())))
+      if (token.symbol && token.symbol.toLowerCase().startsWith(input.trim().toLowerCase())) return true
+      if (token.name && token.name.toLowerCase().startsWith(input.trim().toLowerCase())) return true
+      if (
+        token.address &&
+        toChecksumAddress(token.address.toLowerCase()).startsWith(toChecksumAddress(input.trim().toLowerCase()))
+      )
         return true
       return false
     })

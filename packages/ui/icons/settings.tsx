@@ -1,6 +1,6 @@
 import { SVGProps } from 'react'
 
-const SettingsIcon = (props: SVGProps<SVGSVGElement>) => (
+export const SettingsIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <g stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
       <path d="M11.144 17.883H4.67" />
@@ -16,5 +16,3 @@ const SettingsIcon = (props: SVGProps<SVGSVGElement>) => (
     </g>
   </svg>
 )
-
-export default SettingsIcon
