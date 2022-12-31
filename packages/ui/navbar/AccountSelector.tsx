@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react'
 
-import { CopyIcon, DownIcon, LogoutIcon } from '../icons'
+import { CopyIcon, LogoutIcon } from '../icons'
+import { ChevronDownIcon } from '../icons/chevrondown'
 import { Price } from '../price'
 
 export interface accountType {
@@ -58,7 +59,7 @@ export const AccountSelector = ({ accounts, onSelected, onRemove, linkComponent 
   return (
     <div className="sm:relative account-selector">
       <button
-        className="flex items-center py-1 pl-4 pr-2 ml-2 text-sm font-medium text-gray-700 transition duration-150 ease-in-out bg-gray-300 rounded-full hover:bg-gray-200 lg:pl-1"
+        className="flex items-center py-1 pl-4 pr-2 ml-2 text-sm font-medium text-gray-700 transition duration-150 ease-in-out bg-gray-200 rounded-full hover:bg-gray-300 lg:pl-1"
         onClick={toggle}
         type="button"
         title="Account Selector"
@@ -67,12 +68,12 @@ export const AccountSelector = ({ accounts, onSelected, onRemove, linkComponent 
           <Price amount={activeAccount?.balance || 0} />
         </div>
         <div className="truncate ... max-w-[6rem] md:max-w-[8rem]">{activeAccount?.address}</div>
-        <div className="flex items-center justify-center w-8 h-8 ml-2 text-gray-800 bg-gray-200 rounded-full">
-          <DownIcon height="1.22em" width="1.22em" />
+        <div className="flex items-center justify-center w-8 h-8 ml-2 text-gray-800 bg-gray-100 rounded-full">
+          <ChevronDownIcon height="1.22em" width="1.22em" />
         </div>
       </button>
       {isOpen && (
-        <div className="absolute left-0 right-0 z-10 mt-2 origin-top-right bg-white border border-gray-200 rounded-md shadow-lg sm:left-auto ">
+        <div className="absolute left-0 right-0 z-50 mt-2 origin-top-right bg-white border border-gray-200 rounded-md shadow-lg sm:left-auto ">
           <div className="px-3 py-2">
             <h4 className="mx-4 my-2 text-sm text-gray-600">Your Accounts</h4>
             <ul className="flex flex-col w-full overflow-y-auto max-h-[50vh]">

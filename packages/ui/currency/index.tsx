@@ -31,8 +31,8 @@ export const Currency = ({ currency, ...rest }: CurrencyProps) => {
         width="1.62em"
         height="1.62em"
         xmlSpace="preserve"
-        {...rest}
         viewBox="0 0 337.963 337.958"
+        {...rest}
       >
         <g>
           <path
@@ -48,7 +48,7 @@ export const Currency = ({ currency, ...rest }: CurrencyProps) => {
     )
   } else if (exists && currency) {
     return (
-      <img src={url} alt={currency} width="1.62em" height="1.62em" className="rounded-full bg-primary-300" {...rest} />
+      <img src={url} alt={currency} width="1.62em" height="1.62em" className="rounded-full bg-primary-200" {...rest} />
     )
   } else {
     return (
