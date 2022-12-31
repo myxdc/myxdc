@@ -1,3 +1,0 @@
-[submodule "packages/widgets"]
-	path = packages/widgets
-	url = https://github.com/Uniswap/widgets.git
