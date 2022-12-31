@@ -13,7 +13,6 @@
     "@myxdc/constants": "workspace:*",
     "@myxdc/ui": "workspace:*",
     "@myxdc/utils": "workspace:*",
-    "@myxdc/widgets": "workspace:*",
     "next": "13.1.1-canary.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
