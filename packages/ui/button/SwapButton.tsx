@@ -1,12 +1,12 @@
 import { Skeleton } from '../animated'
 
-export interface ExchangeButtonProps {
+export interface SwapButtonProps {
   variant?: 'default' | 'loading' | 'error' | 'disabled'
   onClick?: () => void
   children?: React.ReactNode
 }
 
-export const ExchangeButton = ({ variant = 'disabled', onClick, children }: ExchangeButtonProps) => {
+export const SwapButton = ({ variant = 'disabled', onClick, children }: SwapButtonProps) => {
   const classes =
     variant === 'default'
       ? 'bg-primary-600 bg-gradient-to-r from-primary-600 to-primary-500  hover:opacity-95 text-white '

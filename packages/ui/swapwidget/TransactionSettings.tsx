@@ -8,9 +8,9 @@ import { RoundedTabs } from '../tabs'
 import { Typography } from '../typography'
 
 export interface TransactionSettingsProps {
-  slippage?: number
+  slippage?: number | 'auto'
   deadline?: number
-  setSlippage?: (slippage: number) => void
+  setSlippage?: (slippage: number | 'auto') => void
   setDeadline?: (deadline: number) => void
   onClose?: () => void
 }
@@ -22,7 +22,7 @@ export const TransactionSettings = ({
   setDeadline,
   onClose,
 }: TransactionSettingsProps) => {
-  const [slipageTab, setSlipageTab] = useState(0)
+  const [slippageTab, setSlippageTab] = useState(0)
 
   return (
     <div className="absolute z-10 top-0 bottom-0 left-0 right-0 p-4 bg-white shadow-lg rounded-3xl min-h-[20rem] px-6 py-4">
@@ -39,7 +39,13 @@ export const TransactionSettings = ({
           Slippage Tolerance
         </Typography>
         <Typography variant="tiny" weight={600}>
-          {slippage || slippage === 0 ? `${slippage}%` : <Skeleton width={40} borderRadius={100} />}
+          {slippage === 'auto' ? (
+            'Auto'
+          ) : slippage || slippage === 0 ? (
+            `${slippage}%`
+          ) : (
+            <Skeleton width={40} borderRadius={100} />
+          )}
         </Typography>
       </div>
       <RoundedTabs
@@ -47,19 +53,25 @@ export const TransactionSettings = ({
         tabs={[
           {
             label: 'Auto',
-            onClick: () => setSlipageTab(0),
-            active: slipageTab === 0,
+            onClick: () => {
+              setSlippage && setSlippage('auto')
+              setSlippageTab(0)
+            },
+            active: slippageTab === 0,
           },
           {
             label: 'Custom',
-            onClick: () => setSlipageTab(1),
-            active: slipageTab === 1,
+            onClick: () => {
+              setSlippage && setSlippage(1)
+              setSlippageTab(1)
+            },
+            active: slippageTab === 1,
           },
         ]}
         linkComponent={'button'}
         className="mt-2 border border-primary-100"
       />
-      {slipageTab === 1 && (
+      {slippage !== 'auto' && slippageTab === 1 && (
         <input
           type="range"
           min="0"

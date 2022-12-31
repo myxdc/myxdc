@@ -26,11 +26,11 @@ export const Navbar = ({ linkComponent, activeLink, accounts, onAccountSelected,
     <nav className="fixed relative top-0 left-0 z-20 w-full py-3 bg-white border-b border-gray-200 sm:px-4">
       <Container>
         <div className="container flex flex-wrap items-center justify-between mx-auto">
-          <LinkComponent href="/" className="flex items-center lg:flex-1">
+          <LinkComponent href="/" className="flex items-center">
             <img src="https://www.svgrepo.com/show/10349/circle.svg" className="h-8 mr-3 sm:h-9" alt="MyXDC Logo" />
             <span className="self-center hidden text-xl font-semibold whitespace-nowrap md:block">MyXDC</span>
           </LinkComponent>
-          <div className="flex justify-end flex-1 md:order-2">
+          <div className="flex justify-end md:order-2">
             {accounts && accounts.length > 0 ? (
               <AccountSelector
                 accounts={accounts}
@@ -81,7 +81,7 @@ export const Navbar = ({ linkComponent, activeLink, accounts, onAccountSelected,
           </div>
           <div
             id="navbar-sticky"
-            className={`absolute md:relative top-full left-0 right-0 flex-1 items-center justify-center w-full md:flex md:w-auto md:order-1 shadow-xl border md:shadow-none md:border-0 ${
+            className={`lg:ml-10 lg:mr-auto absolute md:relative top-full left-0 right-0 items-center justify-center w-full md:flex md:w-auto md:order-1 shadow-xl border md:shadow-none md:border-0 ${
               navbarOpen ? 'block' : 'hidden'
             }`}
           >
@@ -96,13 +96,8 @@ export const Navbar = ({ linkComponent, activeLink, accounts, onAccountSelected,
                 </LinkComponent>
               </li>
               <li>
-                <LinkComponent href="/swap" className={activeLink === 'swap' ? activeLinkClass : linkClass}>
+                <LinkComponent href="/dex/swap" className={activeLink === 'dex' ? activeLinkClass : linkClass}>
                   Swap
-                </LinkComponent>
-              </li>
-              <li>
-                <LinkComponent href="/account" className={activeLink === 'account' ? activeLinkClass : linkClass}>
-                  Account
                 </LinkComponent>
               </li>
               <li>

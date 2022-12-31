@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@fontsource/manrope": "^4.5.12",
+    "rc-slider": "^10.1.0",
     "react-loading-skeleton": "^3.1.0",
     "react-qr-code": "^2.0.11"
   },

@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react'
 
+import { Skeleton } from '../animated'
+
 interface CurrencyProps {
   currency?: string
   [key: string]: unknown
@@ -62,4 +64,34 @@ export const Currency = ({ currency, ...rest }: CurrencyProps) => {
       </svg>
     )
   }
+}
+
+export const CurrencySkeleton = ({ ...rest }: { [key: string]: unknown }) => {
+  return <Skeleton borderRadius={100} width="1.62em" height="1.62em" {...rest} />
+}
+
+export const CurrencyPair = ({
+  currency1,
+  currency2,
+  ...rest
+}: {
+  currency1?: string
+  currency2?: string
+  [key: string]: unknown
+}) => {
+  return (
+    <div className="flex items-center" {...rest}>
+      <Currency currency={currency1} />
+      <Currency currency={currency2} className="-ml-2" />
+    </div>
+  )
+}
+
+export const CurrencyPairSkeleton = ({ ...rest }: { [key: string]: unknown }) => {
+  return (
+    <div className="flex items-center" {...rest}>
+      <CurrencySkeleton />
+      <CurrencySkeleton className="-ml-2" />
+    </div>
+  )
 }

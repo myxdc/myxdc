@@ -2,6 +2,7 @@ import { useWallet } from '@myxdc/hooks/useWallet'
 import { Navbar as NavbarUI } from '@myxdc/ui'
 import { toChecksumAddress } from '@myxdc/utils/web3/address'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 export default function Navbar() {
   const { accounts, account, switchActiveAccount, removeAccount } = useWallet()
@@ -15,10 +16,12 @@ export default function Navbar() {
     }
   })
 
+  const pathnames = usePathname()?.split('/')
+
   return (
     <NavbarUI
       accounts={accountsForNavbar}
-      activeLink="wallet"
+      activeLink={pathnames?.[1]}
       linkComponent={Link}
       onAccountRemove={({ address }) => {
         removeAccount(toChecksumAddress(address as string) || '')

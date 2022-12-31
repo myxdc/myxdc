@@ -1,14 +1,14 @@
 import { RefreshIcon, SwapIcon } from '../icons'
 
-export interface SwapButtonProps {
+export interface MiddleButtonProps {
   onClick?: () => void
   showLoading?: boolean
 }
 
-export const SwapButton = ({ onClick, showLoading = false }: SwapButtonProps) => {
+export const MiddleButton = ({ onClick, showLoading = false }: MiddleButtonProps) => {
   return (
-    <div className="relative w-full">
-      <div className="absolute left-0 right-0 flex justify-center bg-gray-100 h-[3.22rem]">
+    <div className="relative w-full h-[44px]">
+      <div className="absolute left-0 right-0 flex justify-center bg-gray-100 h-[44px]">
         <div className="flex-1 h-full bg-white rounded-r-full"></div>
         <button
           className={'relative h-full px-4 ' + (!showLoading && onClick ? 'cursor-pointer' : '')}

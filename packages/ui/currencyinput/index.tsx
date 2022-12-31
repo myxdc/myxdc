@@ -2,8 +2,7 @@
 import { useState } from 'react'
 
 import { Skeleton } from '../animated'
-import { Currency } from '../currency'
-import { ChevronDownIcon } from '../icons'
+import { TokenButton } from '../tokenbutton'
 import { TokenSelector, TokenType } from '../tokenselector'
 import { Typography } from '../typography'
 
@@ -18,9 +17,11 @@ export interface CurrencyInputProps {
         symbol: string
       }
     | TokenType
+  disabled?: boolean
   setAmount?: (amount: string) => void
   onMax?: () => void
-  onCurrencySelect?: () => void
+  onCurrencySelect?: (token: TokenType) => void
+  className?: string
 }
 
 export const CurrencyInput = ({
@@ -30,13 +31,15 @@ export const CurrencyInput = ({
   balance,
   tokens,
   selectedToken,
+  disabled = false,
   setAmount = () => {},
   onMax = () => {},
   onCurrencySelect = () => {},
+  className = '',
 }: CurrencyInputProps) => {
   const [open, setOpen] = useState(false)
   return (
-    <div className="mt-6">
+    <div className={className}>
       <Typography variant="tiny" className="relative block pl-2 text-gray-500 w-fit h-7" weight={600}>
         {label}
       </Typography>
@@ -47,7 +50,8 @@ export const CurrencyInput = ({
               className="w-full min-w-0 text-3xl font-medium text-gray-700 bg-transparent outline-none "
               placeholder="0.00"
               value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              onChange={(e) => !disabled && setAmount(e.target.value)}
+              disabled={disabled}
             />
           ) : (
             <Skeleton width={140} height={24} borderRadius={100} />
@@ -58,16 +62,7 @@ export const CurrencyInput = ({
           </Typography>
         </div>
         <div className="flex flex-col items-end gap-3 ml-2">
-          <button
-            className="flex items-center justify-end min-w-32 gap-4 px-3 py-1.5 text-sm bg-primary-600 rounded-full shadow-lg bg-gradient-to-r from-primary-600 to-primary-500"
-            onClick={() => setOpen(true)}
-          >
-            <ChevronDownIcon className="w-5 h-5 text-white" />
-            <Typography className="py-1.5 text-white" weight={700} variant="tiny">
-              {selectedToken ? selectedToken.symbol : 'Select token'}
-            </Typography>
-            {selectedToken && <Currency className="w-8 h-8 bg-white rounded-full" currency={selectedToken.symbol} />}
-          </button>
+          <TokenButton onClick={() => setOpen(true)} selectedToken={selectedToken} />
           {balance ? (
             <Typography className="mr-2 text-gray-500 cursor-pointer" weight={500} variant="tiny" onClick={onMax}>
               Balance: {balance}

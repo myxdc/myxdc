@@ -45,7 +45,7 @@ export const WalletOverviewBox = ({ balance, balanceDecimals, linkComponent }: W
             linkComponent={linkComponent}
           />
           <IconButton
-            href="/wallet/send"
+            href="/dex/swap"
             label="Swap"
             icon={<SwapIcon className="w-full h-full" />}
             linkComponent={linkComponent}
@@ -70,7 +70,7 @@ const IconButton = ({
   const Link = linkComponent
   return (
     <Link href={href} className="flex flex-col items-center gap-2">
-      <span className="block w-12 h-12 p-3 text-white transition-shadow transition-transform duration-300 shadow-sm md:p-4 md:w-14 md:h-14 rounded-2xl md:rounded-3xl bg-primary-500 hover:shadow-lg hover:scale-105">
+      <span className="block w-12 h-12 p-3 text-white transition-all duration-300 shadow-sm md:p-4 md:w-14 md:h-14 rounded-2xl md:rounded-3xl bg-primary-500 hover:shadow-lg hover:scale-105">
         {icon}
       </span>
       <Typography variant="tiny" className="text-primary-100" weight={500}>

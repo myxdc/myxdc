@@ -9,13 +9,22 @@ import { Typography } from '../typography'
 export interface ExchangeRateProps {
   rate1?: string
   rate2?: string
-  usdRate?: string
+  usdRate1?: string
+  usdRate2?: string
   priceImpact?: string
   minReceived?: string
   networkFee?: string
 }
 
-export const ExchangeRate = ({ rate1, rate2, usdRate, priceImpact, minReceived, networkFee }: ExchangeRateProps) => {
+export const ExchangeRate = ({
+  rate1,
+  rate2,
+  usdRate1,
+  usdRate2,
+  priceImpact,
+  minReceived,
+  networkFee,
+}: ExchangeRateProps) => {
   const [open, setOpen] = useState(false)
   const [shownRate, setShownRate] = useState(1)
 
@@ -36,7 +45,8 @@ export const ExchangeRate = ({ rate1, rate2, usdRate, priceImpact, minReceived, 
             {shownRate === 2 && (rate2 || <Skeleton width={160} height={16} borderRadius={100} />)}
           </Typography>
           <Typography variant="tiny" className="text-gray-400" weight={500}>
-            {usdRate ? `(${usdRate})` : <Skeleton width={40} height={16} borderRadius={100} />}
+            {shownRate === 1 && (usdRate1 ? `(${usdRate1})` : <Skeleton width={40} height={16} borderRadius={100} />)}
+            {shownRate === 2 && (usdRate2 ? `(${usdRate2})` : <Skeleton width={40} height={16} borderRadius={100} />)}
           </Typography>
           <IconButton className={'ml-auto transition-transform' + (open ? ' rotate-180' : '')} size={1}>
             <ChevronDownIcon className="text-gray-400" />
