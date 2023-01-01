@@ -1,4 +1,5 @@
 'use client'
+import { toHumanReadable } from '@myxdc/utils/numbers/price'
 import { useState } from 'react'
 
 import { Skeleton } from '../animated'
@@ -9,14 +10,8 @@ import { Typography } from '../typography'
 export interface CurrencyInputProps {
   label?: string
   amount?: string
-  usd?: string
-  balance?: string
   tokens?: TokenType[]
-  selectedToken?:
-    | {
-        symbol: string
-      }
-    | TokenType
+  selectedToken?: TokenType
   disabled?: boolean
   setAmount?: (amount: string) => void
   onMax?: () => void
@@ -27,8 +22,6 @@ export interface CurrencyInputProps {
 export const CurrencyInput = ({
   label = 'Asset',
   amount,
-  usd,
-  balance,
   tokens,
   selectedToken,
   disabled = false,
@@ -38,6 +31,14 @@ export const CurrencyInput = ({
   className = '',
 }: CurrencyInputProps) => {
   const [open, setOpen] = useState(false)
+
+  const usd =
+    (selectedToken?.price || selectedToken?.price === 0) && (amount || amount === '')
+      ? `${selectedToken?.price * parseFloat(amount || '0')}`
+      : undefined
+
+  const balance = selectedToken?.balance ? selectedToken?.balance : selectedToken?.balance === 0 ? '0.0000' : undefined
+
   return (
     <div className={className}>
       <Typography variant="tiny" className="relative block pl-2 text-gray-500 w-fit h-7" weight={600}>
@@ -52,27 +53,40 @@ export const CurrencyInput = ({
               value={amount}
               onChange={(e) => !disabled && setAmount(e.target.value)}
               disabled={disabled}
+              type="number"
+              min="0"
+              autoComplete="off"
+              step="any"
             />
           ) : (
             <Skeleton width={140} height={24} borderRadius={100} />
           )}
 
           <Typography className="mr-2 text-gray-400" weight={500} variant="tiny">
-            {usd ? '≈ ' + usd : <Skeleton borderRadius={100} width={80} height={16} />}
+            {usd ? '≈ $' + toHumanReadable(usd) : <Skeleton borderRadius={100} width={80} height={16} />}
           </Typography>
         </div>
         <div className="flex flex-col items-end gap-3 ml-2">
           <TokenButton onClick={() => setOpen(true)} selectedToken={selectedToken} />
           {balance ? (
             <Typography className="mr-2 text-gray-500 cursor-pointer" weight={500} variant="tiny" onClick={onMax}>
-              Balance: {balance}
+              Balance: {toHumanReadable(balance, 4)}
             </Typography>
           ) : (
             <Skeleton width={100} height={18} borderRadius={100} />
           )}
         </div>
       </div>
-      {open && <TokenSelector onClose={() => setOpen(false)} onSelect={onCurrencySelect} tokens={tokens} />}
+      {open && (
+        <TokenSelector
+          onClose={() => setOpen(false)}
+          onSelect={(token: TokenType) => {
+            setOpen(false)
+            onCurrencySelect(token)
+          }}
+          tokens={tokens}
+        />
+      )}
     </div>
   )
 }

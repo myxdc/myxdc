@@ -4,126 +4,164 @@ import { useState } from 'react'
 
 import { SwapButton } from '../button'
 import { CurrencyInput } from '../currencyinput'
+import { InfoIcon } from '../icons'
 import { TokenType } from '../tokenselector'
+import { Typography } from '../typography'
 import { ExchangeRate } from './ExchangeRate'
 import { MiddleButton } from './MiddleButton'
 import { SwapHeader } from './SwapHeader'
 import { TransactionSettings } from './TransactionSettings'
 
 export interface SwapWidgetProps {
-  showBetaBadge?: boolean
-  buttonText?: string
-  buttonVariant?: 'default' | 'loading' | 'error' | 'disabled'
   tokens?: TokenType[]
-  input?: {
+  inputState?: {
     token?: TokenType
     amount?: string
-    balance?: string
-    usd?: string
   }
-  output?: {
+  inputHandlers?: {
+    currencySelect?: (token: TokenType) => void
+    amountChange?: (amount: string) => void
+    maxBalance?: () => void
+  }
+  outputState?: {
     token?: TokenType
     amount?: string
-    balance?: string
-    usd?: string
   }
-  minReceived?: string
-  slippage?: number
-  networkFee?: string
-  priceImpact?: string
-  rate1?: string
-  rate2?: string
-  usdRate1?: string
-  usdRate2?: string
-  deadline?: number
-  setDeadline?: (deadline: number) => void
-  setSlippage?: (slippage: number | 'auto') => void
-  handleInputCurrencySelect?: (token: TokenType) => void
-  handleInputAmountChange?: (amount: string) => void
-  handleInputMax?: () => void
-  handleOutputCurrencySelect?: (token: TokenType) => void
-  handleOutputAmountChange?: (amount: string) => void
-  handleOutputMax?: () => void
-  handleButtonClick?: () => void
+  outputHandlers?: {
+    currencySelect?: (token: TokenType) => void
+    amountChange?: (amount: string) => void
+    maxBalance?: () => void
+  }
+  exchangeRate?: {
+    minReceived?: string
+    liquidityFee?: string
+    priceImpact?: number
+    rate1?: string
+    rate2?: string
+  }
+  config?: {
+    deadline?: number
+    slippage?: number
+  }
+  configHandlers?: {
+    setDeadline?: (deadline: number) => void
+    setSlippage?: (slippage: number | 'auto') => void
+  }
+  uiConfig?: {
+    showBetaBadge?: boolean
+    buttonText?: string
+    buttonVariant?: 'default' | 'loading' | 'error' | 'disabled'
+    showTips?: boolean
+  }
+  handleSwitchPlaces?: () => void
+  handleSubmit?: () => void
 }
 
 export const SwapWidget = ({
-  showBetaBadge = true,
-  buttonText = 'Swap',
-  buttonVariant = 'disabled',
-  input,
-  output,
-  minReceived,
-  slippage,
-  networkFee,
-  priceImpact,
-  rate1,
-  rate2,
-  usdRate1,
-  usdRate2,
-  deadline,
-  setDeadline,
-  setSlippage,
-  handleInputCurrencySelect,
-  handleInputAmountChange,
-  handleInputMax,
-  handleOutputCurrencySelect,
-  handleOutputAmountChange,
-  handleOutputMax,
-  handleButtonClick,
   tokens,
+  inputState,
+  outputState,
+  inputHandlers,
+  outputHandlers,
+  exchangeRate,
+  config,
+  configHandlers,
+  uiConfig = {
+    showBetaBadge: true,
+    buttonText: 'Swap',
+    buttonVariant: 'disabled',
+    showTips: true,
+  },
+  handleSwitchPlaces,
+  handleSubmit,
 }: SwapWidgetProps) => {
   const [openSettings, setOpenSettings] = useState(false)
 
+  let tipConfig: any = {}
+  if (exchangeRate?.priceImpact && exchangeRate?.priceImpact > 10) {
+    tipConfig.tipVariant = 'danger'
+    tipConfig.tipTitle = 'High price impact'
+    tipConfig.tipDescription =
+      'The price impact is too high and you will get a bad deal, try a smaller amount for a better price.'
+  }
+
   return (
     <div className="relative max-w-md mx-auto bg-white shadow-lg rounded-3xl min-h-[20rem] px-6 py-4">
-      <SwapHeader showBeta={showBetaBadge} onSettings={() => setOpenSettings(true)} />
+      <SwapHeader showBeta={uiConfig?.showBetaBadge} onSettings={() => setOpenSettings(true)} />
       <CurrencyInput
         label="You send"
         tokens={tokens}
-        selectedToken={input?.token}
-        amount={input?.amount}
-        balance={input?.balance}
-        usd={input?.usd}
-        onCurrencySelect={handleInputCurrencySelect}
-        setAmount={handleInputAmountChange}
-        onMax={handleInputMax}
+        selectedToken={inputState?.token}
+        amount={inputState?.amount}
+        onCurrencySelect={inputHandlers?.currencySelect}
+        setAmount={inputHandlers?.amountChange}
+        onMax={inputHandlers?.maxBalance}
       />
-      <MiddleButton showLoading={buttonVariant === 'loading'} />
+      <MiddleButton onClick={handleSwitchPlaces} showLoading={uiConfig?.buttonVariant === 'loading'} />
       <CurrencyInput
         className="-mt-7"
         label="You receive (est.)"
         tokens={tokens}
-        selectedToken={output?.token}
-        amount={output?.amount}
-        balance={output?.balance}
-        usd={output?.usd}
-        onCurrencySelect={handleOutputCurrencySelect}
-        setAmount={handleOutputAmountChange}
-        onMax={handleOutputMax}
-        disabled={!handleOutputAmountChange}
+        selectedToken={outputState?.token}
+        amount={outputState?.amount}
+        onCurrencySelect={outputHandlers?.currencySelect}
+        setAmount={outputHandlers?.amountChange}
+        onMax={outputHandlers?.maxBalance}
+        disabled={!outputHandlers?.amountChange}
       />
-      <ExchangeRate
-        minReceived={minReceived}
-        networkFee={networkFee}
-        priceImpact={priceImpact}
-        rate1={rate1}
-        rate2={rate2}
-        usdRate1={usdRate1}
-        usdRate2={usdRate2}
-      />
-      <SwapButton variant={buttonVariant} onClick={handleButtonClick}>
-        {buttonText}
+      {
+        <div
+          className={`max-h-0 transition-all duration-300 ease-in-out overflow-hidden ${
+            exchangeRate ? 'max-h-[20rem]' : 'max-h-0'
+          }`}
+        >
+          <ExchangeRate {...exchangeRate} />
+        </div>
+      }
+      <SwapButton variant={uiConfig?.buttonVariant} onClick={handleSubmit}>
+        {uiConfig?.buttonText}
       </SwapButton>
-      {openSettings && (
-        <TransactionSettings
-          deadline={deadline}
-          slippage={slippage}
-          setDeadline={setDeadline}
-          setSlippage={setSlippage}
-          onClose={() => setOpenSettings(false)}
-        />
-      )}
+      <SwapInfo
+        variant={tipConfig.tipVariant}
+        title={tipConfig.tipTitle}
+        description={tipConfig.tipDescription}
+        show={tipConfig.tipVariant}
+      />
+      {openSettings && <TransactionSettings {...config} {...configHandlers} onClose={() => setOpenSettings(false)} />}
+    </div>
+  )
+}
+
+const SwapInfo = ({
+  variant,
+  title,
+  description,
+  show,
+}: {
+  variant?: 'danger' | 'warning'
+  title?: string
+  description?: string
+  show?: boolean
+}) => {
+  return (
+    <div className={'transition-all overflow-hidden ' + (!show ? 'max-h-0' : 'max-h-[10rem]')}>
+      <div
+        className={`flex items-center justify-between px-4 py-3 mt-4 rounded-md transition overflow-hidden ${
+          variant === 'danger' ? 'bg-red-50 text-red-700' : 'bg-yellow-50 text-yellow-700'
+        }`}
+      >
+        <div>
+          <InfoIcon className="mr-3 w-7 h-7" />
+        </div>
+        <div>
+          <Typography variant="h6" weight={600}>
+            {title}
+          </Typography>
+          <Typography variant="base" weight={500} className="mt-2 text-gray-600">
+            {description}
+          </Typography>
+        </div>
+      </div>{' '}
     </div>
   )
 }

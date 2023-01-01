@@ -11,8 +11,9 @@ export const MiddleButton = ({ onClick, showLoading = false }: MiddleButtonProps
       <div className="absolute left-0 right-0 flex justify-center bg-gray-100 h-[44px]">
         <div className="flex-1 h-full bg-white rounded-r-full"></div>
         <button
-          className={'relative h-full px-4 ' + (!showLoading && onClick ? 'cursor-pointer' : '')}
+          className={'relative h-full px-4 ' + (!showLoading && onClick ? 'cursor-pointer' : 'cursor-default')}
           disabled={showLoading}
+          onClick={onClick}
         >
           {showLoading ? (
             <RefreshIcon className="w-6 h-6 text-gray-600 animate-spin" />

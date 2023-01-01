@@ -22,7 +22,7 @@ export const TransactionSettings = ({
   setDeadline,
   onClose,
 }: TransactionSettingsProps) => {
-  const [slippageTab, setSlippageTab] = useState(0)
+  const [slippageTab, setSlippageTab] = useState(localStorage.getItem('myxdc:swap:config') ? 1 : 0)
 
   return (
     <div className="absolute z-10 top-0 bottom-0 left-0 right-0 p-4 bg-white shadow-lg rounded-3xl min-h-[20rem] px-6 py-4">

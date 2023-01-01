@@ -36,7 +36,7 @@ const TokensContext = createContext<TokensContext>({} as TokensContext)
 function TokensProvider({ children }: { children: React.ReactNode }) {
   const [tokens, setTokens] = useState<Token[]>(TOKENS)
   const [customTokens, setCustomTokens] = useState<Token[]>([])
-  const { web3, account } = useWallet()
+  const { web3, account, updateAccountsBalances } = useWallet()
 
   useEffect(() => {
     updatePrices()

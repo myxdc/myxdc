@@ -13,7 +13,7 @@
     "@myxdc/constants": "workspace:*",
     "@myxdc/ui": "workspace:*",
     "@myxdc/utils": "workspace:*",
-    "next": "13.1.1-canary.1",
+    "next": "13.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.0"
@@ -29,7 +29,7 @@
     "@types/react-dom": "^18.0.10",
     "autoprefixer": "^10.4.13",
     "encoding": "^0.1.13",
-    "eslint": "8.30.0",
+    "eslint": "8.31.0",
     "postcss": "^8.4.20",
     "tailwindcss": "^3.2.4",
     "typescript": "^4.9.4"

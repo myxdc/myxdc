@@ -1,7 +1,6 @@
 'use client'
 import { useState } from 'react'
 
-import { Button } from '../button'
 import { Container } from '../container'
 import { AccountSelector, AccountSelectorProps } from './AccountSelector'
 
@@ -25,9 +24,9 @@ export const Navbar = ({ linkComponent, activeLink, accounts, onAccountSelected,
   return (
     <nav className="fixed relative top-0 left-0 z-20 w-full py-3 bg-white border-b border-gray-200 sm:px-4">
       <Container>
-        <div className="container flex flex-wrap items-center justify-between mx-auto">
+        <div className="flex items-center justify-between mx-auto">
           <LinkComponent href="/" className="flex items-center">
-            <img src="https://www.svgrepo.com/show/10349/circle.svg" className="h-8 mr-3 sm:h-9" alt="MyXDC Logo" />
+            <img src="https://www.svgrepo.com/show/10349/circle.svg" className="h-8 sm:mr-3 sm:h-9" alt="MyXDC Logo" />
             <span className="self-center hidden text-xl font-semibold whitespace-nowrap md:block">MyXDC</span>
           </LinkComponent>
           <div className="flex justify-end md:order-2">
@@ -42,23 +41,22 @@ export const Navbar = ({ linkComponent, activeLink, accounts, onAccountSelected,
               <>
                 <LinkComponent
                   href="/wallet/create"
-                  className="text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200  font-medium rounded-lg text-sm px-5 py-2.5 text-center sm:mr-3"
+                  className="text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200  font-medium rounded-lg text-sm px-2 sm:px-5 py-2.5 text-center sm:mr-3 mr-2"
                 >
                   Create Account
                 </LinkComponent>
-                <Button
-                  as={LinkComponent}
+                <LinkComponent
                   href="/wallet/import"
-                  className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center sm:mr-3 md:mr-0 "
+                  className="text-white px-2 sm:px-5 bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm py-2.5 text-center sm:mr-3 md:mr-0 "
                 >
                   Import Account
                   <span className="hidden sm:inline"></span>
-                </Button>
+                </LinkComponent>
               </>
             )}
             <button
               type="button"
-              className="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100"
+              className="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg sm:ml-3 md:hidden hover:bg-gray-100"
               aria-controls="navbar-sticky"
               aria-expanded="false"
               onClick={() => setNavbarOpen(!navbarOpen)}

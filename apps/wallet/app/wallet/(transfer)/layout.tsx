@@ -12,7 +12,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <main className="relative max-w-2xl pt-5 pb-32 mx-auto lg:px-8 sm:pb-40">
       <Link href={`/wallet`} className="flex items-center mb-4">
-        <IconButton as={'span'} className="!w-11 !h-11 mr-1 rounded-full" title="Back to Wallet">
+        <IconButton as={'span'} className="!w-11 !h-11 mr-1 rounded-full !bg-transparent" title="Back to Wallet">
           <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M14.5 17L9.5 12L14.5 7"

@@ -57,7 +57,7 @@ export function TokenSelector({ tokens, onSelect = () => {}, onClose = () => {} 
       role="dialog"
       aria-modal="true"
     >
-      <div className="w-full max-w-md px-4 py-6 bg-white shadow-lg md:px-8 md:py-8 rounded-3xl">
+      <div className="w-full max-w-md px-4 py-4 bg-white shadow-lg rounded-3xl">
         <div className="flex items-center justify-between">
           <Typography variant="h4" weight={600} as="h2">
             Select Token
@@ -74,7 +74,7 @@ export function TokenSelector({ tokens, onSelect = () => {}, onClose = () => {} 
             onChange={handleInput}
           />
         </div>
-        <div className="flex flex-col mt-4 overflow-y-auto h-96">
+        <div className="flex flex-col h-full mt-4 overflow-y-auto max-h-[calc(100vh-300px)]">
           {(filteredTokens ? filteredTokens : tokens)?.map((t) => {
             const subtitle = t.price ? `$${toHumanReadable(t.price || 0, 2)}` : t.price === 0 ? '$0' : undefined
             const balance = t.balance

@@ -1,10 +1,10 @@
 # MyXDC monorepo
 
-This is a monorepo for the MyXDC project.
+This is a monorepo for the MyXDC project. [Testnet](https://testnet.myxdc.org) and [Mainnet](https://app.myxdc.org) are the main deployments of the project.
 
 ## What's inside?
 
-This turborepo uses [pnpm](https://pnpm.io) as a package manager. It includes the following packages/apps:
+This monorepo uses [Turborepo](https://turbo.build/repo) to manage the project. It uses [pnpm](https://pnpm.io) as a package manager. It includes the following packages/apps:
 
 ### Apps and Packages
 
@@ -13,8 +13,7 @@ This turborepo uses [pnpm](https://pnpm.io) as a package manager. It includes th
 - `@myxdc/hooks`: a React hook library for the MyXDC project
 - `@myxdc/utils`: a utility library for the MyXDC project
 - `@myxdc/constants`: a constants library for the MyXDC project
-- `@myxdc/widgets`: a fork of the [Uniswap](https://uniswap.org/) widgets library
-- `eslint`, `prettier`, `typescript`: shared configuration for linting, formatting, and type checking
+- `@myxdc/eslint`, `@myxdc/prettier`, `@myxdc/typescript`: shared configuration for linting, formatting, and type checking
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 

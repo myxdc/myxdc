@@ -4,7 +4,7 @@ import { Skeleton } from '../animated'
 export const SwapWidgetSkeleton = () => {
   return (
     <div className="relative max-w-md mx-auto bg-white shadow-lg rounded-3xl min-h-[20rem] px-6 py-4">
-      <div className="flex justify-between">
+      <div className="flex justify-between mb-2">
         <Skeleton height={32} width={96} borderRadius={100} />
         <Skeleton height={40} width={40} borderRadius={14} />
       </div>

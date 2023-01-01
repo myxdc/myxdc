@@ -11,20 +11,12 @@ export interface ExchangeRateProps {
   rate2?: string
   usdRate1?: string
   usdRate2?: string
-  priceImpact?: string
+  priceImpact?: number
   minReceived?: string
-  networkFee?: string
+  liquidityFee?: string
 }
 
-export const ExchangeRate = ({
-  rate1,
-  rate2,
-  usdRate1,
-  usdRate2,
-  priceImpact,
-  minReceived,
-  networkFee,
-}: ExchangeRateProps) => {
+export const ExchangeRate = ({ rate1, rate2, priceImpact, minReceived, liquidityFee }: ExchangeRateProps) => {
   const [open, setOpen] = useState(false)
   const [shownRate, setShownRate] = useState(1)
 
@@ -44,10 +36,10 @@ export const ExchangeRate = ({
             {shownRate === 1 && (rate1 || <Skeleton width={160} height={16} borderRadius={100} />)}
             {shownRate === 2 && (rate2 || <Skeleton width={160} height={16} borderRadius={100} />)}
           </Typography>
-          <Typography variant="tiny" className="text-gray-400" weight={500}>
+          {/* <Typography variant="tiny" className="text-gray-400" weight={500}>
             {shownRate === 1 && (usdRate1 ? `(${usdRate1})` : <Skeleton width={40} height={16} borderRadius={100} />)}
             {shownRate === 2 && (usdRate2 ? `(${usdRate2})` : <Skeleton width={40} height={16} borderRadius={100} />)}
-          </Typography>
+          </Typography> */}
           <IconButton className={'ml-auto transition-transform' + (open ? ' rotate-180' : '')} size={1}>
             <ChevronDownIcon className="text-gray-400" />
           </IconButton>
@@ -62,8 +54,27 @@ export const ExchangeRate = ({
           <Typography variant="tiny" className="py-2 text-gray-400" weight={400}>
             Price Impact
           </Typography>
-          <Typography variant="tiny" className="py-2 text-gray-600" weight={500}>
-            {priceImpact || <Skeleton width={80} height={16} borderRadius={100} />}
+          <Typography
+            variant="tiny"
+            className={`py-2 ${
+              priceImpact &&
+              (priceImpact >= 5
+                ? 'text-red-500'
+                : priceImpact >= 3
+                ? 'text-yellow-500'
+                : priceImpact >= 1
+                ? 'text-gray-600'
+                : 'text-green-500')
+            }`}
+            weight={500}
+          >
+            {priceImpact ? (
+              '-' + priceImpact + '%'
+            ) : priceImpact === 0 ? (
+              '0%'
+            ) : (
+              <Skeleton width={80} height={16} borderRadius={100} />
+            )}
           </Typography>
         </div>
         <div className="flex items-center justify-between">
@@ -76,10 +87,10 @@ export const ExchangeRate = ({
         </div>
         <div className="flex items-center justify-between">
           <Typography variant="tiny" className="py-2 text-gray-400" weight={400}>
-            Network Fee
+            Liquidity Fee
           </Typography>
           <Typography variant="tiny" className="py-2 text-gray-600" weight={500}>
-            {networkFee || <Skeleton width={70} height={16} borderRadius={100} />}
+            {liquidityFee || <Skeleton width={70} height={16} borderRadius={100} />}
           </Typography>
         </div>
       </div>
