@@ -14,10 +14,18 @@ export interface ExchangeRateProps {
   priceImpact?: number
   minReceived?: string
   liquidityFee?: string
+  alwaysOpen?: boolean
 }
 
-export const ExchangeRate = ({ rate1, rate2, priceImpact, minReceived, liquidityFee }: ExchangeRateProps) => {
-  const [open, setOpen] = useState(false)
+export const ExchangeRate = ({
+  rate1,
+  rate2,
+  priceImpact,
+  minReceived,
+  liquidityFee,
+  alwaysOpen = false,
+}: ExchangeRateProps) => {
+  const [open, setOpen] = useState(alwaysOpen)
   const [shownRate, setShownRate] = useState(1)
 
   return (

@@ -46,7 +46,7 @@ export const CurrencyInput = ({
       </Typography>
       <div className="flex pl-4 py-4 rounded-[2rem] pr-2 bg-gray-100 ">
         <div className="flex flex-col justify-center flex-1 gap-1">
-          {amount || amount === '' ? (
+          {amount || amount === '' || !selectedToken ? (
             <input
               className="w-full min-w-0 text-3xl font-medium text-gray-700 bg-transparent outline-none "
               placeholder="0.00"
@@ -63,12 +63,16 @@ export const CurrencyInput = ({
           )}
 
           <Typography className="mr-2 text-gray-400" weight={500} variant="tiny">
-            {usd ? '≈ $' + toHumanReadable(usd) : <Skeleton borderRadius={100} width={80} height={16} />}
+            {usd || !selectedToken ? (
+              '≈ $' + toHumanReadable(usd)
+            ) : (
+              <Skeleton borderRadius={100} width={80} height={16} />
+            )}
           </Typography>
         </div>
         <div className="flex flex-col items-end gap-3 ml-2">
           <TokenButton onClick={() => setOpen(true)} selectedToken={selectedToken} />
-          {balance ? (
+          {balance || !selectedToken ? (
             <Typography className="mr-2 text-gray-500 cursor-pointer" weight={500} variant="tiny" onClick={onMax}>
               Balance: {toHumanReadable(balance, 4)}
             </Typography>

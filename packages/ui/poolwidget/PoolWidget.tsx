@@ -20,6 +20,8 @@ export interface PoolWidgetProps {
   removeLiquidityButton?: React.ReactNode
   onAddToWatchlist?: () => void
   onRemoveFromWatchlist?: () => void
+  createPairButton?: React.ReactNode
+  error?: string
 }
 
 export const PoolWidget = ({
@@ -33,6 +35,8 @@ export const PoolWidget = ({
   removeLiquidityButton,
   onAddToWatchlist,
   onRemoveFromWatchlist,
+  createPairButton,
+  error,
 }: PoolWidgetProps) => {
   return (
     <div className="relative max-w-md px-4 py-6 mx-auto bg-white shadow-lg sm:px-6 rounded-3xl">
@@ -49,7 +53,7 @@ export const PoolWidget = ({
       <div
         className={
           'max-h-0 overflow-hidden transition-all duration-300 ease-in-out ' +
-          (token1 && token2 ? 'max-h-[20rem]' : 'max-h-0')
+          (token1 && token2 ? 'max-h-[30rem]' : 'max-h-0')
         }
       >
         <LiquidityBox
@@ -63,7 +67,13 @@ export const PoolWidget = ({
           removeLiquidityButton={removeLiquidityButton}
           onAddToWatchlist={onAddToWatchlist}
           onRemoveFromWatchlist={onRemoveFromWatchlist}
+          createPairButton={createPairButton}
         />
+        {error && (
+          <Typography variant="tiny" weight={500} className="mt-4 text-center text-red-500">
+            {error}
+          </Typography>
+        )}
       </div>
     </div>
   )

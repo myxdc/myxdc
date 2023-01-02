@@ -77,7 +77,7 @@ export const SwapWidget = ({
 }: SwapWidgetProps) => {
   const [openSettings, setOpenSettings] = useState(false)
 
-  let tipConfig: any = {}
+  const tipConfig: any = {}
   if (exchangeRate?.priceImpact && exchangeRate?.priceImpact > 10) {
     tipConfig.tipVariant = 'danger'
     tipConfig.tipTitle = 'High price impact'

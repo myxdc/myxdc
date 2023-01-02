@@ -15,6 +15,7 @@ export interface LiquidityBoxProps {
   removeLiquidityButton?: React.ReactNode
   onAddToWatchlist?: () => void
   onRemoveFromWatchlist?: () => void
+  createPairButton?: React.ReactNode
 }
 
 export const LiquidityBox = ({
@@ -28,6 +29,7 @@ export const LiquidityBox = ({
   removeLiquidityButton,
   onAddToWatchlist,
   onRemoveFromWatchlist,
+  createPairButton,
 }: LiquidityBoxProps) => {
   return (
     <div className="p-4 mt-6 border border-gray-200 rounded-lg">
@@ -52,7 +54,6 @@ export const LiquidityBox = ({
             Remove from watchlist
           </button>
         )}
-        {!onAddToWatchlist && !onRemoveFromWatchlist && <Skeleton className="w-24 h-4" borderRadius={100} />}
       </div>
       <div className="flex items-center justify-between pt-4 mt-4 border-t">
         <Typography variant="tiny" weight={500} className="text-gray-500">
@@ -80,7 +81,7 @@ export const LiquidityBox = ({
       </div>
       <div className="flex items-center justify-between mt-4">
         <Typography variant="tiny" weight={500} className="text-gray-500">
-          Pooled XDC
+          Pooled {symbol1}
         </Typography>
         {pooledToken1 ? (
           <Typography variant="h6" weight={600} className="text-gray-800">
@@ -92,7 +93,7 @@ export const LiquidityBox = ({
       </div>
       <div className="flex items-center justify-between mt-4">
         <Typography variant="tiny" weight={500} className="text-gray-500">
-          Pooled ETH
+          Pooled {symbol2}
         </Typography>
         {pooledToken2 ? (
           <Typography variant="h6" weight={600} className="text-gray-800">
@@ -102,22 +103,34 @@ export const LiquidityBox = ({
           <Skeleton className="w-24 h-4" borderRadius={100} />
         )}
       </div>
-      <div className="flex items-center gap-4 mt-4">
-        {addLiquidityButton ? (
-          React.cloneElement(addLiquidityButton as React.ReactElement, {
-            className: 'w-full py-2 text-sm font-medium text-white bg-green-500 rounded-lg text-center',
-          })
-        ) : (
-          <Skeleton className="w-full h-10" borderRadius={14} />
-        )}
-        {removeLiquidityButton ? (
-          React.cloneElement(removeLiquidityButton as React.ReactElement, {
-            className: 'w-full py-2 text-sm font-medium text-white bg-red-500 rounded-lg text-center',
-          })
-        ) : (
-          <Skeleton className="w-full h-10" borderRadius={14} />
-        )}
-      </div>
+      {createPairButton ? (
+        <div className="w-full mt-4">
+          {React.cloneElement(createPairButton as React.ReactElement, {
+            className: 'w-full block py-2 text-sm font-medium text-white bg-green-500 rounded-lg text-center',
+          })}
+        </div>
+      ) : (
+        <div className="flex items-center gap-4 mt-4">
+          {addLiquidityButton ? (
+            React.cloneElement(addLiquidityButton as React.ReactElement, {
+              className: 'w-full py-2 text-sm font-medium text-white bg-green-500 rounded-lg text-center',
+            })
+          ) : (
+            <div className="flex-1">
+              <Skeleton className="w-full h-9" borderRadius={14} />
+            </div>
+          )}
+          {removeLiquidityButton ? (
+            React.cloneElement(removeLiquidityButton as React.ReactElement, {
+              className: 'w-full py-2 text-sm font-medium text-white bg-red-500 rounded-lg text-center',
+            })
+          ) : (
+            <div className="flex-1">
+              <Skeleton className="w-full h-9" borderRadius={14} />
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }

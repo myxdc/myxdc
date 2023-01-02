@@ -9,12 +9,14 @@ import { CloseIcon } from '../icons'
 import { Input } from '../input'
 import { Typography } from '../typography'
 
-export interface TokenType {
-  symbol?: string
-  address?: string
+export type TokenType = {
+  symbol: string
+  address: string
   name?: string
-  price?: number
+  decimals?: number
+  coinGeckoId?: string
   balance?: number
+  price?: number
 }
 
 export interface TokenSelectorProps {

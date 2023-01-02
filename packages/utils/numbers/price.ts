@@ -3,6 +3,11 @@
  * */
 export const toHumanReadable = (num?: string | number, decimalPlaces = 2, intSep = ',', floatSep = '.') => {
   if (num === undefined) num = 0
+  if (typeof num === 'string') {
+    num = Number(num)
+  }
+  num = num.toLocaleString('fullwide', { useGrouping: false })
+
   const numStr = num.toString()
   const [int, float] = numStr.split('.')
   const intStr = int.replace(/\B(?=(\d{3})+(?!\d))/g, intSep)

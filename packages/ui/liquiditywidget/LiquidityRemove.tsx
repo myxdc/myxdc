@@ -3,7 +3,6 @@ import { PercentInput } from '../percentInput'
 import { TokenType } from '../tokenselector'
 import { Typography } from '../typography'
 import { MiddleButton } from './MiddleButton'
-import { PricePoolShare } from './PricePoolShare'
 import { ReceiveAmounts } from './ReceiveAmounts'
 
 export interface LiquidityWidgetRemoveProps {
@@ -12,18 +11,11 @@ export interface LiquidityWidgetRemoveProps {
   outputA?: {
     token?: TokenType
     amount?: string
-    balance?: string
-    usd?: string
   }
   outputB?: {
     token?: TokenType
     amount?: string
-    balance?: string
-    usd?: string
   }
-  priceAperB?: string
-  priceBperA?: string
-  poolShare?: string
   percent?: string
   setPercent?: (percent: string) => void
   handleButtonClick?: () => void
@@ -34,9 +26,6 @@ export const LiquidityWidgetRemove = ({
   buttonVariant = 'disabled',
   outputA,
   outputB,
-  priceAperB,
-  priceBperA,
-  poolShare,
   percent,
   setPercent,
   handleButtonClick,
@@ -53,14 +42,6 @@ export const LiquidityWidgetRemove = ({
         amount2={outputB?.amount}
         symbol1={outputA?.token?.symbol}
         symbol2={outputB?.token?.symbol}
-      />
-      <PricePoolShare
-        price1={priceAperB}
-        label1={outputA && `${outputA?.token?.symbol} per ${outputB?.token?.symbol}`}
-        price2={priceBperA}
-        label2={outputB && `${outputB?.token?.symbol} per ${outputA?.token?.symbol}`}
-        poolShare={poolShare}
-        label3="New pool share"
       />
       <SwapButton variant={buttonVariant} onClick={handleButtonClick}>
         {buttonText}

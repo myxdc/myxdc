@@ -296,6 +296,6 @@ export { useWallet, WalletProvider }
 async function getAccountBalance(account: Account, web3: any) {
   return {
     ...account,
-    balance: fromWei(await web3.eth.getBalance(account.address)),
+    balance: fromWei(await web3.eth.getBalance(account.address)).toString(),
   }
 }

@@ -1,6 +1,5 @@
 'use client'
 
-import { SwapProvider } from '@myxdc/hooks/useSwap'
 import { TextTabs } from '@myxdc/ui'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -31,7 +30,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         ]}
         linkComponent={Link}
       />
-      <SwapProvider>{children}</SwapProvider>
+      {children}
     </div>
   )
 }

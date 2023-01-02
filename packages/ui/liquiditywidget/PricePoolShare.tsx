@@ -21,10 +21,10 @@ export const PricePoolShare = ({
   return (
     <div className="px-6 py-4 mt-4 bg-gray-100 rounded-3xl">
       <Typography variant="tiny" className="pb-2 text-gray-600 border-b" weight={600}>
-        Price and Pool Share
+        Prices
       </Typography>
       <div className="flex justify-between pt-2 mt-2 text-center">
-        <div className="w-1/3 border-r border-gray-300">
+        <div className="w-1/2 border-r border-gray-300">
           {price1 ? (
             <Typography variant="tiny" className="text-gray-600" weight={600}>
               {price1}
@@ -40,7 +40,7 @@ export const PricePoolShare = ({
             <Skeleton className="w-20 h-4 rounded-full" />
           )}
         </div>
-        <div className="w-1/3 border-r border-gray-300">
+        <div className="w-1/2 border-r border-gray-300">
           {price2 ? (
             <Typography variant="tiny" className="text-gray-600" weight={600}>
               {price2}
@@ -56,7 +56,7 @@ export const PricePoolShare = ({
             <Skeleton className="w-20 h-4 rounded-full" />
           )}
         </div>
-        <div className="w-1/3">
+        {/* <div className="w-1/3">
           {poolShare ? (
             <Typography variant="tiny" className="text-gray-600" weight={600}>
               {poolShare}
@@ -71,7 +71,7 @@ export const PricePoolShare = ({
           ) : (
             <Skeleton className="w-20 h-4 rounded-full" />
           )}
-        </div>
+        </div> */}
       </div>
     </div>
   )

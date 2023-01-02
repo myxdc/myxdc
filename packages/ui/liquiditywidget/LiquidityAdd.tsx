@@ -6,49 +6,51 @@ import { MiddleButton } from './MiddleButton'
 import { PricePoolShare } from './PricePoolShare'
 
 export interface LiquidityWidgetAddProps {
-  buttonText?: string
-  buttonVariant?: 'default' | 'loading' | 'error' | 'disabled'
   tokens?: TokenType[]
-  inputA?: {
+  inputAState?: {
     token?: TokenType
     amount?: string
-    balance?: string
-    usd?: string
   }
-  inputB?: {
+  inputBState?: {
     token?: TokenType
     amount?: string
-    balance?: string
-    usd?: string
   }
-  priceBperA?: string
-  priceAperB?: string
-  poolShare?: string
-  handleTokenACurrencySelect?: (token?: TokenType) => void
-  handleTokenAAmountChange?: (amount: string) => void
-  handleTokenAMax?: () => void
-  handleTokenBCurrencySelect?: (token?: TokenType) => void
-  handleTokenBAmountChange?: (amount: string) => void
-  handleTokenBMax?: () => void
-  handleButtonClick?: () => void
+  inputAHandlers?: {
+    currencySelect?: (token: TokenType) => void
+    amountChange?: (amount: string) => void
+    maxBalance?: () => void
+  }
+  inputBHandlers?: {
+    currencySelect?: (token: TokenType) => void
+    amountChange?: (amount: string) => void
+    maxBalance?: () => void
+  }
+  uiConfig?: {
+    buttonText?: string
+    buttonVariant?: 'default' | 'loading' | 'error' | 'disabled'
+    allowInputB?: boolean
+  }
+  prices?: {
+    BperA?: string
+    AperB?: string
+    poolShare?: string
+  }
+  handleSubmit?: () => void
 }
 
 export const LiquidityWidgetAdd = ({
-  buttonText = 'Add Liquidity',
-  buttonVariant = 'disabled',
   tokens,
-  inputA,
-  inputB,
-  priceBperA,
-  priceAperB,
-  poolShare,
-  handleTokenACurrencySelect,
-  handleTokenAAmountChange,
-  handleTokenAMax,
-  handleTokenBCurrencySelect,
-  handleTokenBAmountChange,
-  handleTokenBMax,
-  handleButtonClick,
+  inputAState,
+  inputBState,
+  inputAHandlers,
+  inputBHandlers,
+  uiConfig = {
+    buttonText: 'Add Liquidity',
+    buttonVariant: 'disabled',
+    allowInputB: false,
+  },
+  prices,
+  handleSubmit,
 }: LiquidityWidgetAddProps) => {
   return (
     <div className="relative max-w-md mx-auto bg-white shadow-lg rounded-3xl min-h-[20rem] px-6 py-4">
@@ -58,36 +60,38 @@ export const LiquidityWidgetAdd = ({
       <CurrencyInput
         label="Token A"
         tokens={tokens}
-        selectedToken={inputA?.token}
-        amount={inputA?.amount}
-        balance={inputA?.balance}
-        usd={inputA?.usd}
-        onCurrencySelect={handleTokenACurrencySelect}
-        setAmount={handleTokenAAmountChange}
-        onMax={handleTokenAMax}
+        selectedToken={inputAState?.token}
+        amount={inputAState?.amount}
+        onCurrencySelect={inputAHandlers?.currencySelect}
+        setAmount={inputAHandlers?.amountChange}
+        onMax={inputAHandlers?.maxBalance}
       />
-      <MiddleButton showLoading={buttonVariant === 'loading'} variant="add" />
+      <MiddleButton showLoading={uiConfig?.buttonVariant === 'loading'} variant="add" />
       <CurrencyInput
         className="-mt-7"
         label="Token B"
         tokens={tokens}
-        selectedToken={inputB?.token}
-        amount={inputB?.amount}
-        balance={inputB?.balance}
-        usd={inputB?.usd}
-        onCurrencySelect={handleTokenBCurrencySelect}
-        setAmount={handleTokenBAmountChange}
-        onMax={handleTokenBMax}
+        selectedToken={inputBState?.token}
+        amount={inputBState?.amount}
+        onCurrencySelect={inputBHandlers?.currencySelect}
+        setAmount={inputBHandlers?.amountChange}
+        onMax={inputBHandlers?.maxBalance}
+        disabled={!uiConfig?.allowInputB}
       />
-      <PricePoolShare
-        price1={priceAperB}
-        label1={inputA && `${inputA?.token?.symbol} per ${inputB?.token?.symbol}`}
-        price2={priceBperA}
-        label2={inputB && `${inputB?.token?.symbol} per ${inputA?.token?.symbol}`}
-        poolShare={poolShare}
-      />
-      <SwapButton variant={buttonVariant} onClick={handleButtonClick}>
-        {buttonText}
+      <div
+        className={`max-h-0 transition-all duration-300 ease-in-out overflow-hidden ${
+          prices?.AperB && prices?.BperA ? 'max-h-[20rem]' : 'max-h-0'
+        }`}
+      >
+        <PricePoolShare
+          price1={prices?.AperB}
+          label1={inputAState && inputBState && `${inputAState?.token?.symbol} per ${inputBState?.token?.symbol}`}
+          price2={prices?.BperA}
+          label2={inputBState && inputAState && `${inputBState?.token?.symbol} per ${inputAState?.token?.symbol}`}
+        />
+      </div>
+      <SwapButton variant={uiConfig?.buttonVariant} onClick={handleSubmit}>
+        {uiConfig?.buttonText}
       </SwapButton>
     </div>
   )

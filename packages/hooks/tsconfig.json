@@ -2,7 +2,4 @@
   "extends": "@myxdc/typescript-config/react-library.json",
   "include": ["."],
   "exclude": ["node_modules"],
-  "compilerOptions": {
-    "baseUrl": "."
-  }
 }

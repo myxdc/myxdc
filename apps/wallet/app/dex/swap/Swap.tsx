@@ -1,20 +1,18 @@
 'use client'
+import { useAmountOut } from '@myxdc/hooks/swap/useAmountOut'
+import { useSwapConfig } from '@myxdc/hooks/swap/useSwapConfig'
 import { useTokens } from '@myxdc/hooks/useTokens'
-import { useSwap } from '@myxdc/hooks/useSwap'
-import { SwapWidget, SwapWidgetSkeleton, TokenType } from '@myxdc/ui'
+import { SwapWidget, TokenType } from '@myxdc/ui'
 import { SwapWidgetProps } from '@myxdc/ui/swapwidget/SwapWidget'
-import React from 'react'
 import { toHumanReadable } from '@myxdc/utils/numbers/price'
-import { toast } from 'react-hot-toast'
-import { useWallet } from '@myxdc/hooks/useWallet'
+import { fromWei, toWei } from '@myxdc/utils/web3'
+import React from 'react'
+
+import SwapConfirm from './SwapConfirm'
 
 export default function Swap() {
-  /**
-   * * Initial states
-   */
-  const swap = useSwap()
   const { tokens } = useTokens()
-  const { updateAccountsBalances } = useWallet()
+  const { config: swapConfig, setDeadline, setSlippage } = useSwapConfig()
   const [input, setInput] = React.useState<SwapWidgetProps['inputState']>({
     token: tokens[0],
     amount: '',
@@ -23,11 +21,13 @@ export default function Swap() {
     token: tokens[1],
     amount: '',
   })
-  const [priceImpact, setPriceImpact] = React.useState<number | undefined>(undefined)
-  const [minReceived, setMinReceived] = React.useState<string | undefined>(undefined)
-  const [error, setError] = React.useState<string | undefined>(undefined)
-  const [loading, setLoading] = React.useState<boolean>(false)
-  const [showSkeleton, setShowSkeleton] = React.useState<boolean>(false)
+  const [showSwapModal, setShowSwapModal] = React.useState<boolean>(false)
+
+  const { amountOut, priceImpact, error, isLoading } = useAmountOut(
+    input?.amount && toWei(input?.amount, input?.token?.decimals || 18),
+    input?.token?.address,
+    output?.token?.address
+  )
 
   /**
    * * Event handlers
@@ -64,20 +64,9 @@ export default function Swap() {
     },
   }
 
-  const handleSubmit = () => {
-    if (loading || error || !input?.amount || !output?.amount) return
-    setShowSkeleton(true)
-    swap.send
-      ?.swapTokens(input?.token?.address!, output?.token?.address!, input?.amount!, minReceived!)
-      .then(() => {
-        setShowSkeleton(false)
-        setInput((input) => ({ ...input, amount: '' }))
-        setOutput((output) => ({ ...output, amount: '' }))
-        updateAccountsBalances()
-      })
-      .catch((err) => {
-        setShowSkeleton(false)
-      })
+  const handleSubmit = async () => {
+    if (isLoading || error || !input?.amount || !amountOut) return
+    setShowSwapModal(true)
   }
 
   /**
@@ -85,114 +74,98 @@ export default function Swap() {
    */
   const helpers = {
     switchTokensPlaces: () => {
-      setInput((input) => ({ ...input, token: output?.token, amount: output?.amount }))
-      setOutput((output) => ({ ...output, token: input?.token, amount: '' }))
+      setInput((input) => ({ ...input, token: output?.token }))
+      setOutput((output) => ({ ...output, token: input?.token }))
     },
   }
 
   /**
-   * * Effects
-   */
-  // if input amount or input token or output token changes, update output amount
-  React.useEffect(() => {
-    if (input?.token?.address && output?.token?.address && input?.amount && input?.amount !== '0') {
-      // reset the state
-      setOutput((output) => ({ ...output, amount: undefined }))
-      setPriceImpact(undefined)
-      setMinReceived(undefined)
-      setError(undefined)
-      setLoading(true)
-
-      if (Number(input?.amount) > Number(input?.token?.balance)) {
-        setError('Insufficient balance')
-        setLoading(false)
-      }
-
-      // using setTimeout to only fetch output amount after user stops typing
-      const timeout = setTimeout(() => {
-        // fetch output amount
-        swap.call
-          ?.amountOut(input?.token?.address!, output?.token?.address!, input?.amount!)
-          .then((data) => {
-            setOutput((output) => ({ ...output, amount: data.amountOut }))
-            setPriceImpact(Number(data.priceImpact))
-            setMinReceived(data.amountOutMin)
-            setLoading(false)
-          })
-          .catch((err) => {
-            toast.error(err.message, { duration: 5000 })
-            setError(err.message)
-            setLoading(false)
-          })
-      }, 500)
-      return () => clearTimeout(timeout)
-    } else {
-      setOutput((output) => ({ ...output, amount: '' }))
-    }
-  }, [input?.amount, input?.token, output?.token])
-
-  /**
    * * Render
    */
-  if (showSkeleton) {
-    return <SwapWidgetSkeleton />
-  }
+
+  const amountOutNum = amountOut ? fromWei(amountOut, output?.token?.decimals || 18) : 0
+
+  const rateAtoB = amountOut && input?.amount && amountOutNum / parseFloat(input?.amount)
+  const rateBtoA = amountOut && input?.amount && parseFloat(input?.amount) / amountOutNum
+
+  const amountMin = amountOut && amountOutNum * (1 - swapConfig?.slippage / 100)
+
   return (
-    <SwapWidget
-      tokens={tokens}
-      inputState={input}
-      outputState={output}
-      inputHandlers={inputHandlers}
-      outputHandlers={outputHandlers}
-      uiConfig={{
-        buttonText: error
-          ? error
-          : loading
-          ? 'loading'
-          : !input?.amount || !output?.amount
-          ? 'Enter an amount'
-          : 'Swap',
-        buttonVariant: error
-          ? 'error'
-          : loading
-          ? 'loading'
-          : !input?.amount || !output?.amount
-          ? 'disabled'
-          : 'default',
-      }}
-      handleSubmit={handleSubmit}
-      handleSwitchPlaces={helpers.switchTokensPlaces}
-      exchangeRate={
-        output?.amount
-          ? {
-              rate1: `1 ${input?.token?.symbol} = ${toHumanReadable(Number(output?.amount) / Number(input?.amount))} ${
-                output?.token?.symbol
-              }`,
-              rate2: `1 ${output?.token?.symbol} = ${toHumanReadable(Number(input?.amount) / Number(output?.amount))} ${
-                input?.token?.symbol
-              }`,
-              priceImpact: priceImpact,
-              liquidityFee: '0.30%',
-              minReceived: minReceived && toHumanReadable(minReceived) + ' ' + output?.token?.symbol,
-            }
-          : undefined
-      }
-      config={{
-        deadline: swap.config?.deadline,
-        slippage: swap.config?.slippage,
-      }}
-      configHandlers={{
-        setDeadline(deadline) {
-          swap.config?.setDeadline(deadline)
-        },
-        setSlippage(slippage) {
-          if (slippage === 'auto') {
-            swap.config?.setSlippage(0.5)
-            return
-          }
-          swap.config?.setSlippage(slippage)
-        },
-      }}
-    />
+    <>
+      <SwapWidget
+        tokens={tokens}
+        inputState={input}
+        outputState={{
+          token: output?.token,
+          amount: amountOut && `${amountOutNum}`,
+        }}
+        inputHandlers={inputHandlers}
+        outputHandlers={outputHandlers}
+        uiConfig={{
+          buttonText: error
+            ? error.replaceAll('_', ' ')
+            : isLoading
+            ? 'loading'
+            : !input?.amount
+            ? 'Enter an amount'
+            : 'Swap',
+          buttonVariant: error
+            ? 'error'
+            : isLoading
+            ? 'loading'
+            : !input?.amount || !amountOut
+            ? 'disabled'
+            : 'default',
+        }}
+        handleSubmit={handleSubmit}
+        handleSwitchPlaces={helpers.switchTokensPlaces}
+        exchangeRate={
+          amountOut
+            ? {
+                rate1: `1 ${input?.token?.symbol} = ${toHumanReadable(rateAtoB, 4)} ${output?.token?.symbol}`,
+                rate2: `1 ${output?.token?.symbol} = ${toHumanReadable(rateBtoA, 4)} ${input?.token?.symbol}`,
+                priceImpact: priceImpact ? parseFloat(priceImpact) : undefined,
+                liquidityFee: '0.30%',
+                minReceived:
+                  amountMin || amountMin === 0
+                    ? toHumanReadable(amountMin, 4) + ' ' + output?.token?.symbol
+                    : undefined,
+              }
+            : undefined
+        }
+        config={{
+          deadline: swapConfig?.deadline,
+          slippage: swapConfig?.slippage,
+        }}
+        configHandlers={{
+          setDeadline,
+          setSlippage,
+        }}
+      />
+      {showSwapModal && (
+        <SwapConfirm
+          onClose={() => setShowSwapModal(false)}
+          exchangeRate={{
+            rate1: `1 ${input?.token?.symbol} = ${toHumanReadable(rateAtoB, 4)} ${output?.token?.symbol}`,
+            rate2: `1 ${output?.token?.symbol} = ${toHumanReadable(rateBtoA, 4)} ${input?.token?.symbol}`,
+            priceImpact: parseFloat(priceImpact!),
+            liquidityFee: '0.30%',
+            minReceived: toHumanReadable(amountMin, 4) + ' ' + output?.token?.symbol,
+          }}
+          inputState={{
+            token: input!.token!,
+            amount: input!.amount!,
+            amountRaw: toWei(input!.amount!, input!.token!.decimals || 18),
+          }}
+          outputState={{
+            token: output!.token!,
+            amount: `${amountOutNum}`,
+            amountRaw: amountOut!,
+            min: `${amountMin}`,
+            minRaw: toWei(amountMin!.toString(), output!.token!.decimals || 18),
+          }}
+        />
+      )}
+    </>
   )
 }

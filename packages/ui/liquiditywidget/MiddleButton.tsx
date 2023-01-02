@@ -1,7 +1,7 @@
 import { ArrowDownIcon, PlusIcon, RefreshIcon } from '../icons'
 
 export interface MiddleButtonProps {
-  variant?: 'add' | 'remove'
+  variant?: 'add' | 'remove' | 'down'
   onClick?: () => void
   showLoading?: boolean
 }
@@ -19,9 +19,9 @@ export const MiddleButton = ({ variant = 'add', onClick, showLoading = false }: 
             <RefreshIcon className="w-6 h-6 text-gray-600 animate-spin" />
           ) : variant === 'add' ? (
             <PlusIcon className="rotate-90 text-primary-600" />
-          ) : (
+          ) : variant === 'down' ? (
             <ArrowDownIcon className=" text-primary-600" />
-          )}
+          ) : null}
         </button>
         <div className="flex-1 h-full bg-white rounded-l-full"></div>
       </div>

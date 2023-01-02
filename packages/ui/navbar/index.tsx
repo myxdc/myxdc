@@ -26,8 +26,10 @@ export const Navbar = ({ linkComponent, activeLink, accounts, onAccountSelected,
       <Container>
         <div className="flex items-center justify-between mx-auto">
           <LinkComponent href="/" className="flex items-center">
-            <img src="https://www.svgrepo.com/show/10349/circle.svg" className="h-8 sm:mr-3 sm:h-9" alt="MyXDC Logo" />
-            <span className="self-center hidden text-xl font-semibold whitespace-nowrap md:block">MyXDC</span>
+            <img src="/assets/img/logo.svg" className="h-8 sm:mr-2 sm:h-9" alt="MyXDC Logo" />
+            <span className="self-center hidden text-xl font-extrabold text-gray-700 whitespace-nowrap md:block">
+              MyXDC
+            </span>
           </LinkComponent>
           <div className="flex justify-end md:order-2">
             {accounts && accounts.length > 0 ? (
