@@ -139,7 +139,10 @@ export default function Page() {
         onMax={() => {
           setAmount(
             selectedToken?.balance
-              ? (parseFloat(String(selectedToken!.balance)) - (selectedToken.symbol === 'xdc' ? 0.0001 : 0)).toString()
+              ? (
+                  parseFloat(String(selectedToken!.balance)) -
+                  (selectedToken.symbol?.toLowerCase() === 'xdc' ? 0.0001 : 0)
+                ).toString()
               : '0'
           )
         }}
