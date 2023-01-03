@@ -10,13 +10,14 @@ import { Input } from '../input'
 import { Typography } from '../typography'
 
 export type TokenType = {
-  symbol: string
   address: string
+  symbol?: string
   name?: string
   decimals?: number
   coinGeckoId?: string
-  balance?: number
   price?: number
+  usd?: number
+  balance?: number | string
 }
 
 export interface TokenSelectorProps {

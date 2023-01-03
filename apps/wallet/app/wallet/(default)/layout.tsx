@@ -1,37 +1,19 @@
 'use client'
-import { useTokens } from '@myxdc/hooks/useTokens'
-import { RoundedTabs, WalletOverviewBox } from '@myxdc/ui'
-import { toHumanReadable } from '@myxdc/utils/numbers/price'
+import { RoundedTabs } from '@myxdc/ui'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+
+import { WalletOverviewBox } from './WalletOverviewBox'
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const [usdTotal, setUsdTotal] = useState<number | undefined>(undefined)
-  const { tokens } = useTokens()
   const pathname = usePathname()
-
-  useEffect(() => {
-    if (!tokens) return
-    const total = tokens.reduce((acc, token) => {
-      if (!token.balance || !token.price) return acc
-      return (acc || 0) + token.balance * token.price
-    }, 0)
-    setUsdTotal(total)
-  }, [tokens])
 
   const path = pathname?.split('/')[2]
 
   return (
     <div className="max-w-screen-xl px-4 py-8 mx-auto sm:px-6 lg:px-8">
       <div className="max-w-lg mx-auto">
-        <WalletOverviewBox
-          balance={usdTotal || usdTotal === 0 ? '$' + toHumanReadable(usdTotal).split('.')[0] : undefined}
-          balanceDecimals={
-            usdTotal || usdTotal === 0 ? '.' + (toHumanReadable(usdTotal).split('.')[1] || '00') : undefined
-          }
-          linkComponent={Link}
-        />
+        <WalletOverviewBox />
 
         <RoundedTabs
           linkComponent={Link}

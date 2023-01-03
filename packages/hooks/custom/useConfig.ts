@@ -6,6 +6,7 @@ const SWAP_ROUTER_ADDRESS = process.env.NEXT_PUBLIC_ROUTER_ADDRESS!
 const SWAP_FACTORY_ADDRESS = process.env.NEXT_PUBLIC_FACTORY_ADDRESS!
 const SWAP_WXDC_ADDRESS = process.env.NEXT_PUBLIC_WXDC_ADDRESS!
 const SWAP_INIT_CODE_HASH = process.env.NEXT_PUBLIC_INIT_CODE_HASH!
+const EXPLORER_URL = CHAIN_ID === 51 ? 'https://explorer.apothem.network' : 'https://explorer.xinfin.network'
 
 export const useConfig = () => {
   return {
@@ -16,5 +17,6 @@ export const useConfig = () => {
     SWAP_FACTORY_ADDRESS,
     SWAP_WXDC_ADDRESS,
     SWAP_INIT_CODE_HASH,
+    EXPLORER_URL,
   }
 }

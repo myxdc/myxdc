@@ -1,13 +1,26 @@
 'use client'
 
-import { useWallet } from '@myxdc/hooks/useWallet'
+import { useAccount } from '@myxdc/hooks/wallet/useAccount'
 import { Button, CloseIcon, IconButton, Typography } from '@myxdc/ui'
 import { useState } from 'react'
 import { toast } from 'react-hot-toast'
 
 const Page = () => {
   const [openPrivateKeyModal, setOpenPrivateKeyModal] = useState(false)
-  const { account } = useWallet()
+  const { activeAccount } = useAccount()
+
+  if (!activeAccount) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full p-6 bg-white rounded-3xl">
+        <Typography variant="h3" weight={500}>
+          Settings
+        </Typography>
+        <Typography className="max-w-lg mx-auto mt-4 text-center" variant="p">
+          Please connect your wallet to view your settings.
+        </Typography>
+      </div>
+    )
+  }
 
   return (
     <div className="flex flex-col items-center justify-center h-full p-6 bg-white rounded-3xl">
@@ -18,13 +31,10 @@ const Page = () => {
       <Button
         className="w-full mt-6"
         onClick={() => {
-          if (account?.privateKey) {
-            setOpenPrivateKeyModal(true)
-          } else {
-            toast.error('No private key found')
-          }
+          setOpenPrivateKeyModal(true)
+          toast.error('No private key found')
         }}
-        disabled={!account?.privateKey}
+        disabled={true}
       >
         Export Private Key
       </Button>
@@ -54,7 +64,7 @@ const Page = () => {
             </div>
             <div className="p-4 mt-6 text-gray-400 bg-gray-600 rounded-lg">
               <Typography variant="tiny" weight={500} className="break-words">
-                {account?.privateKey}
+                {/* {account?.privateKey} */}
               </Typography>
             </div>
             <Typography variant="base" weight={400} className="mt-4 text-red-600">

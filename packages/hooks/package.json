@@ -32,7 +32,9 @@
   },
   "dependencies": {
     "@myxdc/constants": "workspace:^0.0.0",
+    "jotai": "^1.12.1",
     "swr": "^2.0.0",
+    "use-local-storage-state": "^18.1.2",
     "web3-utils": "^1.8.1"
   }
 }

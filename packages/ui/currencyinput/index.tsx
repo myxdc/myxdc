@@ -1,6 +1,6 @@
 'use client'
 import { toHumanReadable } from '@myxdc/utils/numbers/price'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { Skeleton } from '../animated'
 import { TokenButton } from '../tokenbutton'
@@ -11,11 +11,11 @@ export interface CurrencyInputProps {
   label?: string
   amount?: string
   tokens?: TokenType[]
-  selectedToken?: TokenType
+  selectedToken?: string
   disabled?: boolean
   setAmount?: (amount: string) => void
   onMax?: () => void
-  onCurrencySelect?: (token: TokenType) => void
+  onCurrencySelect?: (token: string) => void
   className?: string
 }
 
@@ -32,12 +32,17 @@ export const CurrencyInput = ({
 }: CurrencyInputProps) => {
   const [open, setOpen] = useState(false)
 
+  const token = useMemo(
+    () => tokens?.find((token) => token.address?.toLowerCase() === selectedToken?.toLowerCase()),
+    [tokens, selectedToken]
+  )
+
   const usd =
-    (selectedToken?.price || selectedToken?.price === 0) && (amount || amount === '')
-      ? `${selectedToken?.price * parseFloat(amount || '0')}`
+    (token?.price || token?.price === 0) && (amount || amount === '')
+      ? `${token?.price * parseFloat(amount || '0')}`
       : undefined
 
-  const balance = selectedToken?.balance ? selectedToken?.balance : selectedToken?.balance === 0 ? '0.0000' : undefined
+  const balance = token?.balance ? token?.balance : token?.balance === 0 ? '0.0000' : undefined
 
   return (
     <div className={className}>
@@ -46,7 +51,7 @@ export const CurrencyInput = ({
       </Typography>
       <div className="flex pl-4 py-4 rounded-[2rem] pr-2 bg-gray-100 ">
         <div className="flex flex-col justify-center flex-1 gap-1">
-          {amount || amount === '' || !selectedToken ? (
+          {amount || amount === '' || !token ? (
             <input
               className="w-full min-w-0 text-3xl font-medium text-gray-700 bg-transparent outline-none "
               placeholder="0.00"
@@ -71,7 +76,7 @@ export const CurrencyInput = ({
           </Typography>
         </div>
         <div className="flex flex-col items-end gap-3 ml-2">
-          <TokenButton onClick={() => setOpen(true)} selectedToken={selectedToken} />
+          <TokenButton onClick={() => setOpen(true)} selectedToken={token} />
           {balance || !selectedToken ? (
             <Typography className="mr-2 text-gray-500 cursor-pointer" weight={500} variant="tiny" onClick={onMax}>
               Balance: {toHumanReadable(balance, 4)}
@@ -86,7 +91,7 @@ export const CurrencyInput = ({
           onClose={() => setOpen(false)}
           onSelect={(token: TokenType) => {
             setOpen(false)
-            onCurrencySelect(token)
+            onCurrencySelect(token?.address)
           }}
           tokens={tokens}
         />

@@ -1,4 +1,4 @@
-import { SwapButton } from '../button'
+import { FormButton } from '../button'
 import { PercentInput } from '../percentInput'
 import { TokenType } from '../tokenselector'
 import { Typography } from '../typography'
@@ -43,9 +43,9 @@ export const LiquidityWidgetRemove = ({
         symbol1={outputA?.token?.symbol}
         symbol2={outputB?.token?.symbol}
       />
-      <SwapButton variant={buttonVariant} onClick={handleButtonClick}>
+      <FormButton variant={buttonVariant} onClick={handleButtonClick}>
         {buttonText}
-      </SwapButton>
+      </FormButton>
     </div>
   )
 }

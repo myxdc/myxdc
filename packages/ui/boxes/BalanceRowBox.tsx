@@ -24,7 +24,7 @@ export const BalanceRowBox = ({
 }: BalanceRowBoxProps) => {
   const Component = as || 'div'
   return (
-    <Component className={'flex items-center gap-4 p-6 rounded-xl ' + className} {...rest}>
+    <Component className={'flex items-center gap-4 px-2 lg:px-6 py-6 rounded-xl ' + className} {...rest}>
       <Currency className="w-10 h-10" currency={currencySymbol?.toUpperCase()} />
       <div>
         <div className="text-base font-bold text-gray-900">{title || <Skeleton />}</div>

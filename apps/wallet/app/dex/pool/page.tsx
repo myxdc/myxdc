@@ -1,8 +1,8 @@
 'use client'
 import { useUserLiquidity } from '@myxdc/hooks/swap/useUserLiquidity'
-import { useTokens } from '@myxdc/hooks/useTokens'
-import { useWallet } from '@myxdc/hooks/useWallet'
-import { PoolWidget, TokenType } from '@myxdc/ui'
+import { useTokensWithBalances } from '@myxdc/hooks/tokens/useTokensWithBalances'
+import { useAccount } from '@myxdc/hooks/wallet/useAccount'
+import { PoolWidget, TokenType, Typography } from '@myxdc/ui'
 import { toHumanReadable } from '@myxdc/utils/numbers/price'
 import { fromWei } from '@myxdc/utils/web3'
 import Link from 'next/link'
@@ -14,10 +14,12 @@ export default function Page() {
    */
   const [token1, setToken1] = useState<TokenType | undefined>(undefined)
   const [token2, setToken2] = useState<TokenType | undefined>(undefined)
-  const { tokens } = useTokens()
-  const { account } = useWallet()
+  const { activeAccount } = useAccount()
+  const { tokens } = useTokensWithBalances({
+    address: activeAccount?.address,
+  })
   const { liquidityTokens, pooledToken2, pooledToken1, poolShare, isLoading, error } = useUserLiquidity(
-    account.address,
+    activeAccount?.address,
     token1?.address,
     token2?.address
   )
@@ -32,6 +34,16 @@ export default function Page() {
     remove: (token: TokenType) => {
       console.log('remove token from watchlist', token)
     },
+  }
+
+  if (!activeAccount) {
+    return (
+      <div className="relative max-w-md px-4 py-6 mx-auto bg-white shadow-lg sm:px-6 rounded-3xl">
+        <Typography variant="h5" weight={600} className="text-center text-gray-800">
+          Please connect your wallet to view your liquidity
+        </Typography>
+      </div>
+    )
   }
 
   return (
@@ -55,7 +67,7 @@ export default function Page() {
         pooledToken1: pooledToken1 ? toHumanReadable(fromWei(pooledToken1, token1?.decimals || 18), 4) : undefined,
         pooledToken2: pooledToken2 ? toHumanReadable(fromWei(pooledToken2, token2?.decimals || 18), 4) : undefined,
         totalPoolTokens: liquidityTokens ? toHumanReadable(fromWei(liquidityTokens, 18), 4) : undefined,
-        poolShare: poolShare + '%',
+        poolShare: poolShare ? poolShare + '%' : undefined,
       }}
       createPairButton={
         error?.message === 'PAIR_NOT_FOUND' ? (

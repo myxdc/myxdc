@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-import { SwapButton } from '../button'
+import { FormButton } from '../button'
 import { CurrencyInput } from '../currencyinput'
 import { InfoIcon } from '../icons'
 import { TokenType } from '../tokenselector'
@@ -15,20 +15,20 @@ import { TransactionSettings } from './TransactionSettings'
 export interface SwapWidgetProps {
   tokens?: TokenType[]
   inputState?: {
-    token?: TokenType
+    token?: string
     amount?: string
   }
   inputHandlers?: {
-    currencySelect?: (token: TokenType) => void
+    currencySelect?: (token: string) => void
     amountChange?: (amount: string) => void
     maxBalance?: () => void
   }
   outputState?: {
-    token?: TokenType
+    token?: string
     amount?: string
   }
   outputHandlers?: {
-    currencySelect?: (token: TokenType) => void
+    currencySelect?: (token: string) => void
     amountChange?: (amount: string) => void
     maxBalance?: () => void
   }
@@ -118,9 +118,9 @@ export const SwapWidget = ({
           <ExchangeRate {...exchangeRate} />
         </div>
       }
-      <SwapButton variant={uiConfig?.buttonVariant} onClick={handleSubmit}>
+      <FormButton variant={uiConfig?.buttonVariant} onClick={handleSubmit}>
         {uiConfig?.buttonText}
-      </SwapButton>
+      </FormButton>
       <SwapInfo
         variant={tipConfig.tipVariant}
         title={tipConfig.tipTitle}

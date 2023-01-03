@@ -2,13 +2,13 @@
 import { useQuote } from '@myxdc/hooks/swap/useQuote'
 import { useSwapConfig } from '@myxdc/hooks/swap/useSwapConfig'
 import { useUserLiquidity } from '@myxdc/hooks/swap/useUserLiquidity'
-import { useTokens } from '@myxdc/hooks/useTokens'
-import { useWallet } from '@myxdc/hooks/useWallet'
-import { LiquidityWidgetAdd, TokenType } from '@myxdc/ui'
+import { useTokensWithBalances } from '@myxdc/hooks/tokens/useTokensWithBalances'
+import { useAccount } from '@myxdc/hooks/wallet/useAccount'
+import { LiquidityWidgetAdd } from '@myxdc/ui'
 import { LiquidityWidgetAddProps } from '@myxdc/ui/liquiditywidget/LiquidityAdd'
 import { toHumanReadable } from '@myxdc/utils/numbers/price'
 import { fromWei, toChecksumAddress, toWei } from '@myxdc/utils/web3'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import LiquidityConfirmAdd from './AddConfirm'
 
@@ -22,26 +22,38 @@ export default function Page({
   /**
    * * Initial states
    */
-
-  const { tokens } = useTokens()
+  const { activeAccount } = useAccount()
+  const { tokens } = useTokensWithBalances({
+    address: activeAccount?.address,
+  })
   const [inputA, setInputA] = useState<LiquidityWidgetAddProps['inputAState']>({
-    token: tokens?.find((t) => t.address.toLowerCase() === toChecksumAddress(params?.pair?.[0]).toLowerCase()),
+    token: toChecksumAddress(params?.pair?.[0]),
     amount: '',
   })
   const [inputB, setInputB] = useState<LiquidityWidgetAddProps['inputBState']>({
-    token: tokens?.find((t) => t.address.toLowerCase() === toChecksumAddress(params?.pair?.[1]).toLowerCase()),
+    token: toChecksumAddress(params?.pair?.[1]),
     amount: '',
   })
   const [showConfirm, setShowConfirm] = useState(false)
-  const { account } = useWallet()
+
+  const tokenA = useMemo(
+    () => tokens.find((t) => t.address.toLowerCase() === inputA?.token?.toLowerCase()),
+    [inputA, tokens]
+  )
+  const tokenB = useMemo(
+    () => tokens.find((t) => t.address.toLowerCase() === inputB?.token?.toLowerCase()),
+    [inputB, tokens]
+  )
   const quotedB = useQuote(
-    inputA?.amount ? toWei(inputA?.amount, inputA?.token?.decimals || 18) : undefined,
-    inputA?.token?.address,
-    inputB?.token?.address
+    inputA?.amount ? toWei(inputA?.amount, tokenA?.decimals || 18) : undefined,
+    inputA?.token,
+    inputB?.token
   )
   const [customQuoteB, setCustomQuoteB] = useState<string | undefined>(undefined)
-  const { error } = useUserLiquidity(account.address, inputA?.token?.address, inputB?.token?.address)
+  const { error } = useUserLiquidity(activeAccount?.address, inputA?.token, inputB?.token)
   const { config: swapConfig } = useSwapConfig()
+
+  if (!activeAccount) return null
 
   /**
    * * Event handlers
@@ -50,19 +62,19 @@ export default function Page({
     amountChange: (amount: string) => {
       setInputA((input) => ({ ...input, amount }))
     },
-    currencySelect: (token: TokenType) => {
-      if (token.address === inputA?.token?.address) {
+    currencySelect: (token: string) => {
+      if (token.toLowerCase() === inputA?.token?.toLowerCase()) {
         return
-      } else if (token.address === inputB?.token?.address) {
+      } else if (token.toLowerCase() === inputB?.token?.toLowerCase()) {
         helpers.switchTokensPlaces()
       } else {
         setInputA((input) => ({ ...input, token }))
       }
     },
     maxBalance: () => {
-      if (!inputA?.token?.balance) return
+      if (!tokenA?.balance) return
       // set to max minus 0.01% of the balance to avoid errors
-      const max = inputA?.token?.balance - inputA?.token?.balance * 0.0001
+      const max = parseFloat(String(tokenA?.balance)) - parseFloat(String(tokenA?.balance)) * 0.0001
       setInputA((input) => ({ ...input, amount: max?.toString() || '' }))
     },
   }
@@ -70,19 +82,19 @@ export default function Page({
     amountChange: (amount: string) => {
       setCustomQuoteB(amount)
     },
-    currencySelect: (token: TokenType) => {
-      if (token.address === inputB?.token?.address) {
+    currencySelect: (token: string) => {
+      if (token.toLowerCase() === inputB?.token?.toLowerCase()) {
         return
-      } else if (token.address === inputA?.token?.address) {
+      } else if (token.toLowerCase() === inputA?.token?.toLowerCase()) {
         helpers.switchTokensPlaces()
       } else {
         setInputB((input) => ({ ...input, token }))
       }
     },
     maxBalance: () => {
-      if (!inputB?.token?.balance) return
+      if (!tokenB?.balance) return
       // set to max minus 0.01% of the balance to avoid errors
-      const max = inputB?.token?.balance - inputB?.token?.balance * 0.0001
+      const max = parseFloat(String(tokenB?.balance)) - parseFloat(String(tokenB?.balance)) * 0.0001
       setInputB((input) => ({ ...input, amount: max?.toString() || '' }))
     },
   }
@@ -102,7 +114,7 @@ export default function Page({
   if (isNewPair) {
     inputBNum = parseFloat(customQuoteB || '0')
   } else {
-    inputBNum = quotedB ? fromWei(quotedB, inputB?.token?.decimals || 18) : 0
+    inputBNum = quotedB ? fromWei(quotedB, tokenB?.decimals || 18) : 0
   }
 
   const rateAtoB = quotedB || isNewPair ? inputA?.amount && parseFloat(inputA.amount) / inputBNum : '0'
@@ -111,17 +123,22 @@ export default function Page({
   const inputAMin = inputA?.amount && parseFloat(inputA.amount) * (1 - swapConfig?.slippage / 100)
   const inputBMin = inputBNum && inputBNum * (1 - swapConfig?.slippage / 100)
 
-  const inputAMinRaw = inputAMin ? toWei(inputAMin.toString(), inputA?.token?.decimals || 18) : undefined
-  const inputBMinRaw = inputBMin ? toWei(inputBMin.toString(), inputB?.token?.decimals || 18) : undefined
+  const inputAMinRaw = inputAMin ? toWei(inputAMin.toString(), tokenA?.decimals || 18) : undefined
+  const inputBMinRaw = inputBMin ? toWei(inputBMin.toString(), tokenB?.decimals || 18) : undefined
 
   return (
     <>
       <LiquidityWidgetAdd
         tokens={tokens}
-        inputAState={inputA}
+        inputAState={{
+          token: inputA?.token,
+          amount: inputA?.amount,
+          symbol: tokenA?.symbol,
+        }}
         inputBState={{
           token: inputB?.token,
           amount: isNewPair ? `${customQuoteB}` : quotedB ? `${inputBNum}` : quotedB,
+          symbol: tokenB?.symbol,
         }}
         inputAHandlers={inputAHandlers}
         inputBHandlers={inputBHandlers}
@@ -135,8 +152,8 @@ export default function Page({
           allowInputB: isNewPair,
         }}
         handleSubmit={() => {
-          if (!account.address) return
-          if (!inputA?.amount || !inputA.token?.address) return
+          if (!activeAccount) return
+          if (!inputA?.amount || !inputA.token) return
           if (quotedB || (isNewPair && customQuoteB)) {
             setShowConfirm(true)
           }
@@ -148,14 +165,16 @@ export default function Page({
           inputAState={{
             token: inputA!.token!,
             amount: inputA!.amount!,
-            amountRaw: toWei(inputA!.amount!, inputA?.token?.decimals || 18),
+            amountRaw: toWei(inputA!.amount!, tokenA?.decimals || 18),
             minRaw: inputAMinRaw || '0',
+            symbol: tokenA!.symbol!,
           }}
           inputBState={{
             token: inputB!.token!,
             amount: isNewPair ? customQuoteB! : inputBNum.toString(),
-            amountRaw: isNewPair ? toWei(customQuoteB!, inputB?.token?.decimals || 18) : quotedB!,
+            amountRaw: isNewPair ? toWei(customQuoteB!, tokenB?.decimals || 18) : quotedB!,
             minRaw: inputBMinRaw || '0',
+            symbol: tokenB!.symbol!,
           }}
           exchangeRate={{
             AperB: toHumanReadable(rateAtoB, 4),

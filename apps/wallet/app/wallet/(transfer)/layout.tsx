@@ -1,16 +1,37 @@
 'use client'
 
+import { useAccount } from '@myxdc/hooks/wallet/useAccount'
 import { IconButton } from '@myxdc/ui'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import React from 'react'
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
-  const paths = pathname?.split('/')
 
+  const { activeAccount } = useAccount()
+  const router = useRouter()
+
+  React.useEffect(() => {
+    if (!activeAccount) {
+      router.replace('/wallet/connect')
+    }
+  }, [activeAccount])
+
+  const [mounted, setMounted] = React.useState(false)
+
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted || !activeAccount) {
+    return null
+  }
+
+  const paths = pathname?.split('/')
   return (
-    <main className="relative max-w-2xl pt-5 pb-32 mx-auto lg:px-8 sm:pb-40">
+    <main className="relative max-w-xl pt-5 pb-32 mx-auto lg:px-8 sm:pb-40">
       <Link href={`/wallet`} className="flex items-center mb-4">
         <IconButton as={'span'} className="!w-11 !h-11 mr-1 rounded-full !bg-transparent" title="Back to Wallet">
           <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -25,8 +46,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </IconButton>
         <span>Back</span>
       </Link>
-      <div className="overflow-hidden bg-white shadow-xl rounded-xl">
-        <div className="flex w-full rounded-t-xl">
+      <div className="overflow-hidden bg-white shadow-xl rounded-3xl">
+        <div className="flex w-full rounded-t-3xl">
           <Link
             href="/wallet/send"
             className={

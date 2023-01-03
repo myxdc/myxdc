@@ -8,6 +8,14 @@ const nextConfig = {
     serverComponentsExternalPackages: ['@myxdc/ui'],
   },
   transpilePackages: ['@myxdc/ui'],
+  async rewrites() {
+    return [
+      {
+        source: '/',
+        destination: '/wallet',
+      },
+    ]
+  },
 }
 
 export default nextConfig

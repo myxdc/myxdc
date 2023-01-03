@@ -1,32 +1,37 @@
 'use client'
 import { useAmountOut } from '@myxdc/hooks/swap/useAmountOut'
 import { useSwapConfig } from '@myxdc/hooks/swap/useSwapConfig'
-import { useTokens } from '@myxdc/hooks/useTokens'
-import { SwapWidget, TokenType } from '@myxdc/ui'
+import { useTokensWithBalances } from '@myxdc/hooks/tokens/useTokensWithBalances'
+import { useAccount } from '@myxdc/hooks/wallet/useAccount'
+import { SwapWidget } from '@myxdc/ui'
 import { SwapWidgetProps } from '@myxdc/ui/swapwidget/SwapWidget'
 import { toHumanReadable } from '@myxdc/utils/numbers/price'
 import { fromWei, toWei } from '@myxdc/utils/web3'
-import React from 'react'
+import React, { useMemo } from 'react'
 
 import SwapConfirm from './SwapConfirm'
 
 export default function Swap() {
-  const { tokens } = useTokens()
+  const { activeAccount } = useAccount()
+  const { tokens } = useTokensWithBalances({ address: activeAccount?.address })
   const { config: swapConfig, setDeadline, setSlippage } = useSwapConfig()
   const [input, setInput] = React.useState<SwapWidgetProps['inputState']>({
-    token: tokens[0],
+    token: tokens[0].address,
     amount: '',
   })
   const [output, setOutput] = React.useState<SwapWidgetProps['outputState']>({
-    token: tokens[1],
+    token: tokens[1].address,
     amount: '',
   })
   const [showSwapModal, setShowSwapModal] = React.useState<boolean>(false)
 
+  const inputToken = useMemo(() => tokens.find((t) => t.address === input?.token), [input, tokens])
+  const outputToken = useMemo(() => tokens.find((t) => t.address === output?.token), [output, tokens])
+
   const { amountOut, priceImpact, error, isLoading } = useAmountOut(
-    input?.amount && toWei(input?.amount, input?.token?.decimals || 18),
-    input?.token?.address,
-    output?.token?.address
+    input?.amount && toWei(input?.amount, inputToken?.decimals || 18),
+    input?.token,
+    output?.token
   )
 
   /**
@@ -36,30 +41,32 @@ export default function Swap() {
     amountChange: (amount: string) => {
       setInput((input) => ({ ...input, amount }))
     },
-    currencySelect: (token: TokenType) => {
-      if (token.address === input?.token?.address) {
+    currencySelect: (tokenAddress: string) => {
+      if (tokenAddress === input?.token) {
         return
-      } else if (token.address === output?.token?.address) {
+      } else if (tokenAddress === output?.token) {
         helpers.switchTokensPlaces()
       } else {
-        setInput((input) => ({ ...input, token }))
+        setInput((input) => ({ ...input, token: tokenAddress }))
       }
     },
     maxBalance: () => {
-      if (!input?.token?.balance) return
-      // set to max minus 0.01% of the balance to avoid errors
-      const max = input?.token?.balance - input?.token?.balance * 0.0001
+      if (!inputToken?.balance) return
+      let max = inputToken?.balance
+      if (inputToken?.symbol === 'XDC') {
+        max = parseFloat(String(inputToken?.balance)) - 0.0001
+      }
       setInput((input) => ({ ...input, amount: max?.toString() || '' }))
     },
   }
   const outputHandlers = {
-    currencySelect: (token: TokenType) => {
-      if (token.address === output?.token?.address) {
+    currencySelect: (tokenAddress: string) => {
+      if (tokenAddress === output?.token) {
         return
-      } else if (token.address === input?.token?.address) {
+      } else if (tokenAddress === input?.token) {
         helpers.switchTokensPlaces()
       } else {
-        setOutput({ token, amount: '' })
+        setOutput({ amount: '', token: tokenAddress })
       }
     },
   }
@@ -83,7 +90,7 @@ export default function Swap() {
    * * Render
    */
 
-  const amountOutNum = amountOut ? fromWei(amountOut, output?.token?.decimals || 18) : 0
+  const amountOutNum = amountOut ? fromWei(amountOut, outputToken?.decimals || 18) : 0
 
   const rateAtoB = amountOut && input?.amount && amountOutNum / parseFloat(input?.amount)
   const rateBtoA = amountOut && input?.amount && parseFloat(input?.amount) / amountOutNum
@@ -106,6 +113,8 @@ export default function Swap() {
             ? error.replaceAll('_', ' ')
             : isLoading
             ? 'loading'
+            : !activeAccount
+            ? 'Connect Wallet to Swap'
             : !input?.amount
             ? 'Enter an amount'
             : 'Swap',
@@ -113,7 +122,7 @@ export default function Swap() {
             ? 'error'
             : isLoading
             ? 'loading'
-            : !input?.amount || !amountOut
+            : !input?.amount || !amountOut || !activeAccount
             ? 'disabled'
             : 'default',
         }}
@@ -122,14 +131,12 @@ export default function Swap() {
         exchangeRate={
           amountOut
             ? {
-                rate1: `1 ${input?.token?.symbol} = ${toHumanReadable(rateAtoB, 4)} ${output?.token?.symbol}`,
-                rate2: `1 ${output?.token?.symbol} = ${toHumanReadable(rateBtoA, 4)} ${input?.token?.symbol}`,
+                rate1: `1 ${inputToken?.symbol} = ${toHumanReadable(rateAtoB, 4)} ${outputToken?.symbol}`,
+                rate2: `1 ${outputToken?.symbol} = ${toHumanReadable(rateBtoA, 4)} ${inputToken?.symbol}`,
                 priceImpact: priceImpact ? parseFloat(priceImpact) : undefined,
                 liquidityFee: '0.30%',
                 minReceived:
-                  amountMin || amountMin === 0
-                    ? toHumanReadable(amountMin, 4) + ' ' + output?.token?.symbol
-                    : undefined,
+                  amountMin || amountMin === 0 ? toHumanReadable(amountMin, 4) + ' ' + outputToken?.symbol : undefined,
               }
             : undefined
         }
@@ -146,23 +153,25 @@ export default function Swap() {
         <SwapConfirm
           onClose={() => setShowSwapModal(false)}
           exchangeRate={{
-            rate1: `1 ${input?.token?.symbol} = ${toHumanReadable(rateAtoB, 4)} ${output?.token?.symbol}`,
-            rate2: `1 ${output?.token?.symbol} = ${toHumanReadable(rateBtoA, 4)} ${input?.token?.symbol}`,
+            rate1: `1 ${inputToken?.symbol} = ${toHumanReadable(rateAtoB, 4)} ${outputToken?.symbol}`,
+            rate2: `1 ${outputToken?.symbol} = ${toHumanReadable(rateBtoA, 4)} ${inputToken?.symbol}`,
             priceImpact: parseFloat(priceImpact!),
             liquidityFee: '0.30%',
-            minReceived: toHumanReadable(amountMin, 4) + ' ' + output?.token?.symbol,
+            minReceived: toHumanReadable(amountMin, 4) + ' ' + outputToken?.symbol,
           }}
           inputState={{
             token: input!.token!,
+            symbol: inputToken!.symbol!,
             amount: input!.amount!,
-            amountRaw: toWei(input!.amount!, input!.token!.decimals || 18),
+            amountRaw: toWei(input!.amount!, inputToken!.decimals || 18),
           }}
           outputState={{
             token: output!.token!,
+            symbol: outputToken!.symbol!,
             amount: `${amountOutNum}`,
             amountRaw: amountOut!,
             min: `${amountMin}`,
-            minRaw: toWei(amountMin!.toString(), output!.token!.decimals || 18),
+            minRaw: toWei(amountMin!.toString(), outputToken!.decimals || 18),
           }}
         />
       )}

@@ -3,16 +3,18 @@ import { useWeb3 } from '@myxdc/hooks/contracts/useWeb3'
 import { useConfig } from '@myxdc/hooks/custom/useConfig'
 import { usePairAddress } from '@myxdc/hooks/swap/usePairAddress'
 import { useSwapConfig } from '@myxdc/hooks/swap/useSwapConfig'
-import { useWallet } from '@myxdc/hooks/useWallet'
+import { useTokensWithBalances } from '@myxdc/hooks/tokens/useTokensWithBalances'
+import { useAccount } from '@myxdc/hooks/wallet/useAccount'
+import { useSigner } from '@myxdc/hooks/wallet/useSigner'
 import {
   CloseIcon,
   Currency,
   CurrencySkeleton,
+  FormButton,
   IconButton,
   MiddleButton,
   Skeleton,
   Spinner,
-  SwapButton,
   TokenType,
   Typography,
 } from '@myxdc/ui'
@@ -43,31 +45,33 @@ export default function LiquidityConfirmRemove({
 }: LiquidityConfirmRemoveProps) {
   const [loading, setLoading] = useState(false)
   const { config: swapConfig } = useSwapConfig()
-  const { SWAP_ROUTER_ADDRESS, SWAP_WXDC_ADDRESS } = useConfig()
+  const { SWAP_ROUTER_ADDRESS } = useConfig()
   const web3 = useWeb3()
-  const { account, signThenSend, updateAccountsBalances } = useWallet()
   const pairAddress = usePairAddress(outputAState.token.address, outputBState.token.address)
   const pair = useSwapPair(pairAddress)
+  const { activeAccount } = useAccount()
+  const { signer } = useSigner({
+    type: activeAccount?.type,
+  })
+  const { mutate } = useTokensWithBalances({
+    address: activeAccount?.address,
+  })
   const router = useSwapRouter()
 
   const handleRemove = async () => {
+    if (!pairAddress || !pair || !router || !web3 || !signer || !activeAccount) return
     setLoading(true)
-
-    console.log(liquidityTokensAmount)
 
     // calculate Unix timestamp after which the transaction will revert.
     const deadlineUnix = Math.floor(Date.now() / 1000) + swapConfig.deadline * 60
 
     // approve pair
-    let nonce = await web3.eth.getTransactionCount(account.address)
     let txObj = {
       to: pairAddress!,
       data: await pair!.methods.approve(SWAP_ROUTER_ADDRESS, liquidityTokensAmount).encodeABI(),
-      nonce: nonce,
-      value: '0',
     }
 
-    await toast.promise(signThenSend(txObj), {
+    await toast.promise(signer(txObj, activeAccount?.address), {
       loading: 'Approving pair...',
       success: 'Approved the pair',
       error: (err: Error) => {
@@ -77,8 +81,7 @@ export default function LiquidityConfirmRemove({
     })
 
     // remove liquidity
-    nonce++
-    if (outputAState.token.symbol.toLowerCase() === 'xdc') {
+    if (outputAState.token.symbol?.toLowerCase() === 'xdc') {
       // XDC + token
       txObj = {
         to: SWAP_ROUTER_ADDRESS,
@@ -88,14 +91,12 @@ export default function LiquidityConfirmRemove({
             liquidityTokensAmount,
             outputBState.minRaw,
             outputAState.minRaw,
-            account.address,
+            activeAccount.address,
             deadlineUnix
           )
           .encodeABI(),
-        nonce: nonce,
-        value: '0',
       }
-    } else if (outputBState.token.symbol.toLowerCase() === 'xdc') {
+    } else if (outputBState.token.symbol?.toLowerCase() === 'xdc') {
       // token + XDC
       txObj = {
         to: SWAP_ROUTER_ADDRESS,
@@ -105,12 +106,10 @@ export default function LiquidityConfirmRemove({
             liquidityTokensAmount,
             outputAState.minRaw,
             outputBState.minRaw,
-            account.address,
+            activeAccount.address,
             deadlineUnix
           )
           .encodeABI(),
-        nonce: nonce,
-        value: '0',
       }
     } else {
       // token + token
@@ -123,16 +122,14 @@ export default function LiquidityConfirmRemove({
             liquidityTokensAmount,
             outputAState.minRaw,
             outputBState.minRaw,
-            account.address,
+            activeAccount.address,
             deadlineUnix
           )
           .encodeABI(),
-        nonce: nonce,
-        value: '0',
       }
     }
     await toast.promise(
-      signThenSend({ ...txObj, gasLimit: '200000' }),
+      signer(txObj, activeAccount?.address),
       {
         loading: 'Withdrawing liquidity...',
         success: 'You will receive your tokens shortly after the transaction is confirmed',
@@ -149,7 +146,7 @@ export default function LiquidityConfirmRemove({
       }
     )
     setTimeout(() => {
-      updateAccountsBalances()
+      mutate()
     }, 2000)
 
     setLoading(false)
@@ -191,9 +188,9 @@ export default function LiquidityConfirmRemove({
           symbol1={outputAState.token.symbol}
           symbol2={outputBState.token.symbol}
         />
-        <SwapButton onClick={handleRemove} variant="default">
+        <FormButton onClick={handleRemove} variant="default">
           Withdraw Tokens
-        </SwapButton>
+        </FormButton>
       </div>
     </div>
   )

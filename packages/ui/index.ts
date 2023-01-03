@@ -1,3 +1,4 @@
+export * from './addressinput'
 export * from './animated'
 export * from './boxes'
 export * from './button'

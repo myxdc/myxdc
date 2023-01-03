@@ -1,19 +1,22 @@
+'use client'
 import { useSwapRouter, useXRC20 } from '@myxdc/hooks/contracts/useContract'
 import { useWeb3 } from '@myxdc/hooks/contracts/useWeb3'
 import { useConfig } from '@myxdc/hooks/custom/useConfig'
 import { useSwapConfig } from '@myxdc/hooks/swap/useSwapConfig'
-import { useWallet } from '@myxdc/hooks/useWallet'
+import { useTokensWithBalances } from '@myxdc/hooks/tokens/useTokensWithBalances'
+import { txObj } from '@myxdc/hooks/wallet/types'
+import { useAccount } from '@myxdc/hooks/wallet/useAccount'
+import { useSigner } from '@myxdc/hooks/wallet/useSigner'
 import {
   CloseIcon,
   Currency,
   CurrencySkeleton,
   ExchangeRate,
+  FormButton,
   IconButton,
   MiddleButton,
   Skeleton,
   Spinner,
-  SwapButton,
-  TokenType,
   Typography,
 } from '@myxdc/ui'
 import { toHumanReadable } from '@myxdc/utils/numbers/price'
@@ -24,12 +27,14 @@ interface SwapConfirmProps {
   onClose: () => void
 
   inputState: {
-    token: TokenType
+    token: string
+    symbol: string
     amount: string
     amountRaw: string
   }
   outputState: {
-    token: TokenType
+    token: string
+    symbol: string
     amount: string
     amountRaw: string
     min: string
@@ -50,53 +55,50 @@ export default function SwapConfirm({ onClose, inputState, outputState, exchange
   const { SWAP_ROUTER_ADDRESS, SWAP_WXDC_ADDRESS } = useConfig()
   const router = useSwapRouter()
   const web3 = useWeb3()
-  const { account, signThenSend, updateAccountsBalances } = useWallet()
-  const token1 = useXRC20(inputState.token.address)
+
+  const token1 = useXRC20(inputState.token)
+  const { activeAccount } = useAccount()
+  const { signer } = useSigner({ type: activeAccount?.type })
+  const { mutate } = useTokensWithBalances({
+    address: activeAccount?.address,
+  })
 
   const handleSwap = async () => {
+    if (!activeAccount || !signer) return
     setLoading(true)
 
     // calculate Unix timestamp after which the transaction will revert.
     const deadlineUnix = Math.floor(Date.now() / 1000) + swapConfig.deadline * 60
 
-    toast.loading(`Swapping from ${inputState.token.symbol} to ${outputState.token.symbol}...`, {
-      duration: 2000,
-    })
-
     // approve token1 for router
-    let nonce = await web3.eth.getTransactionCount(account.address)
-    let txObj = {
-      to: inputState.token.address,
+    let txObj: txObj = {
+      to: inputState.token,
       data: await token1?.methods.approve(SWAP_ROUTER_ADDRESS, inputState.amountRaw).encodeABI(),
-      nonce: nonce,
-      value: '0',
     }
-    await toast.promise(signThenSend(txObj), {
-      loading: 'Approving token: ' + inputState.token.symbol || inputState.token.address,
-      success: 'Approved token: ' + inputState.token.symbol || inputState.token.address,
+    await toast.promise(signer(txObj, activeAccount.address), {
+      loading: 'Approving token: ' + inputState.symbol || inputState.token,
+      success: 'Approved token: ' + inputState.symbol || inputState.token,
       error: (err: Error) => {
         setLoading(false)
         return err.message
       },
     })
 
-    nonce++
-    if (inputState.token.symbol.toLowerCase() === 'xdc') {
+    if (inputState.symbol.toLowerCase() === 'xdc') {
       // XDC -> Token
       txObj = {
         to: SWAP_ROUTER_ADDRESS,
         data: await router.methods
           .swapExactETHForTokens(
             outputState.minRaw,
-            [SWAP_WXDC_ADDRESS, outputState.token.address],
-            account.address,
+            [SWAP_WXDC_ADDRESS, outputState.token],
+            activeAccount.address,
             deadlineUnix
           )
           .encodeABI(),
-        nonce: nonce,
         value: inputState.amountRaw,
       }
-    } else if (outputState.token.symbol.toLowerCase() === 'xdc') {
+    } else if (outputState.symbol.toLowerCase() === 'xdc') {
       // Token -> XDC
       txObj = {
         to: SWAP_ROUTER_ADDRESS,
@@ -104,13 +106,11 @@ export default function SwapConfirm({ onClose, inputState, outputState, exchange
           .swapExactTokensForETH(
             inputState.amountRaw,
             outputState.minRaw,
-            [inputState.token.address, SWAP_WXDC_ADDRESS],
-            account.address,
+            [inputState.token, SWAP_WXDC_ADDRESS],
+            activeAccount.address,
             deadlineUnix
           )
           .encodeABI(),
-        nonce: nonce,
-        value: '0',
       }
     } else {
       // Token -> Token
@@ -120,23 +120,26 @@ export default function SwapConfirm({ onClose, inputState, outputState, exchange
           .swapExactTokensForTokens(
             inputState.amountRaw,
             outputState.minRaw,
-            [inputState.token.address, outputState.token.address],
-            account.address,
+            [inputState.token, outputState.token],
+            activeAccount.address,
             deadlineUnix
           )
           .encodeABI(),
-        nonce: nonce,
-        value: '0',
       }
     }
     await toast.promise(
-      signThenSend({ ...txObj, gasLimit: '200000' }),
+      signer(txObj, activeAccount.address),
       {
         loading: 'Swapping tokens',
-        success: 'Tokens swapped',
+        success: 'Tokens swapped!',
         error: (err: Error) => {
           setLoading(false)
-          return `Error swapping tokens: ${err.message}`
+          return `Transaction reverted. We suggest you the following solutions:
+          1. Make sure you have enough XDC to pay for gas.
+          2. Refresh the page.
+          2. Manually increase slippage tolerance.
+          3. Change Uniswap deadline in Settings.         
+          `
         },
       },
       {
@@ -148,14 +151,8 @@ export default function SwapConfirm({ onClose, inputState, outputState, exchange
     )
 
     setTimeout(() => {
-      toast.promise(updateAccountsBalances(), {
-        loading: 'Updating balances',
-        success: 'Balances updated',
-        error: (err: Error) => {
-          return `Error updating balances: ${err.message}`
-        },
-      })
-    }, 2000)
+      mutate()
+    }, 3000)
 
     setLoading(false)
     onClose()
@@ -193,22 +190,22 @@ export default function SwapConfirm({ onClose, inputState, outputState, exchange
         <ReceiveAmounts
           amount1={inputState.amount}
           amount2={outputState.amount}
-          symbol1={inputState.token.symbol}
-          symbol2={outputState.token.symbol}
+          symbol1={inputState.symbol}
+          symbol2={outputState.symbol}
         />
         <ExchangeRate {...exchangeRate} alwaysOpen={true} />
         {outputState.amount && (
           <Typography variant="tiny" className="mt-4 text-center text-red-600">
             You will receive at least{' '}
             <b>
-              {toHumanReadable(outputState.amount, 4)} {outputState.token.symbol}
+              {toHumanReadable(outputState.amount, 4)} {outputState.symbol}
             </b>{' '}
             or the transaction will revert.
           </Typography>
         )}
-        <SwapButton onClick={handleSwap} variant="default">
+        <FormButton onClick={handleSwap} variant="default">
           Confirm Swap
-        </SwapButton>
+        </FormButton>
       </div>
     </div>
   )

@@ -1,12 +1,13 @@
 'use client'
+import { useWeb3 } from '@myxdc/hooks/contracts/useWeb3'
 import { useSwapConfig } from '@myxdc/hooks/swap/useSwapConfig'
 import { useUserLiquidity } from '@myxdc/hooks/swap/useUserLiquidity'
-import { useTokens } from '@myxdc/hooks/useTokens'
-import { useWallet } from '@myxdc/hooks/useWallet'
+import { useTokensWithBalances } from '@myxdc/hooks/tokens/useTokensWithBalances'
+import { useAccount } from '@myxdc/hooks/wallet/useAccount'
 import { LiquidityWidgetRemove } from '@myxdc/ui'
 import { LiquidityWidgetRemoveProps } from '@myxdc/ui/liquiditywidget/LiquidityRemove'
 import { toHumanReadable } from '@myxdc/utils/numbers/price'
-import { fromWei, toChecksumAddress, toWei } from '@myxdc/utils/web3'
+import { fromWei, toChecksumAddress } from '@myxdc/utils/web3'
 import { useState } from 'react'
 
 import LiquidityConfirmRemove from './RemoveConfirm'
@@ -18,8 +19,10 @@ export default function Page({
     pair: string[]
   }
 }) {
-  const { tokens } = useTokens()
-  const { account } = useWallet()
+  const { activeAccount } = useAccount()
+  const { tokens } = useTokensWithBalances({
+    address: activeAccount?.address,
+  })
   const { config: swapConfig } = useSwapConfig()
   const [showConfirm, setShowConfirm] = useState(false)
   const outputA = {
@@ -29,25 +32,44 @@ export default function Page({
     token: tokens?.find((t) => t.address.toLowerCase() === toChecksumAddress(params?.pair?.[1]).toLowerCase()),
   }
   const { pooledToken1, pooledToken2, liquidityTokens, error } = useUserLiquidity(
-    account.address,
+    activeAccount?.address,
     outputA?.token?.address,
     outputB?.token?.address
   )
   const [percent, setPercent] = useState<LiquidityWidgetRemoveProps['percent']>('25')
+  const web3 = useWeb3()
 
-  if (!outputA?.token || !outputB?.token) return null
+  if (!outputA?.token || !outputB?.token || !activeAccount) return null
 
-  const pooledTokenA = pooledToken1 ? fromWei(pooledToken1, outputA?.token?.decimals || 18) : undefined
-  const pooledTokenB = pooledToken2 ? fromWei(pooledToken2, outputB?.token?.decimals || 18) : undefined
   const liquidityTokensNum = liquidityTokens ? fromWei(liquidityTokens, 18) : undefined
 
-  const outputAAmount = pooledTokenA ? (pooledTokenA * Number(percent)) / 100 : undefined
-  const outputBAmount = pooledTokenB ? (pooledTokenB * Number(percent)) / 100 : undefined
+  const output1Amount = pooledToken1
+    ? web3.utils
+        .toBN(pooledToken1)
+        .mul(web3.utils.toBN(percent || 0))
+        .div(web3.utils.toBN(100))
+    : undefined
+  const output2Amount = pooledToken2
+    ? web3.utils
+        .toBN(pooledToken2)
+        .mul(web3.utils.toBN(percent || 0))
+        .div(web3.utils.toBN(100))
+    : undefined
+  const output1AmountMin = output1Amount
+    ? output1Amount
+        .mul(web3.utils.toBN((1000 - (swapConfig?.slippage || 0) * 10).toFixed(0)))
+        .div(web3.utils.toBN(1000))
+    : undefined
+  const output2AmountMin = output2Amount
+    ? output2Amount
+        .mul(web3.utils.toBN((1000 - (swapConfig?.slippage || 0) * 10).toFixed(0)))
+        .div(web3.utils.toBN(1000))
+    : undefined
+
+  const outputAAmount = output1Amount ? fromWei(output1Amount.toString(), outputA?.token?.decimals || 18) : undefined
+  const outputBAmount = output2Amount ? fromWei(output2Amount.toString(), outputB?.token?.decimals || 18) : undefined
+
   const liquidityTokensAmount = liquidityTokensNum ? (liquidityTokensNum * Number(percent)) / 100 : undefined
-
-  const outputAAmountMin = outputAAmount && outputAAmount * (1 - swapConfig?.slippage / 100)
-  const outputBAmountMin = outputBAmount && outputBAmount * (1 - swapConfig?.slippage / 100)
-
   return (
     <>
       <LiquidityWidgetRemove
@@ -56,7 +78,9 @@ export default function Page({
         percent={percent}
         setPercent={setPercent}
         buttonVariant={
-          !error && outputAAmount && outputBAmount && outputAAmount > 0 && outputBAmount > 0 ? 'default' : 'disabled'
+          !error && outputAAmount && outputBAmount && outputAAmount > 0.0001 && outputBAmount > 0.0001
+            ? 'default'
+            : 'disabled'
         }
         handleButtonClick={() => {
           if (
@@ -76,14 +100,14 @@ export default function Page({
           outputAState={{
             token: outputA.token!,
             amount: outputAAmount ? `${outputAAmount.toFixed(4)}` : '0',
-            minRaw: toWei(outputAAmountMin ? `${outputAAmountMin}` : '0', outputA.token?.decimals || 18),
+            minRaw: output1AmountMin?.toString() || '0',
           }}
           outputBState={{
             token: outputB.token!,
             amount: outputBAmount ? `${toHumanReadable(outputBAmount.toFixed(4), 4)}` : '0',
-            minRaw: toWei(outputBAmountMin ? `${outputBAmountMin}` : '0', outputB.token?.decimals || 18),
+            minRaw: output2AmountMin?.toString() || '0',
           }}
-          liquidityTokensAmount={toWei(liquidityTokensAmount!, 18)}
+          liquidityTokensAmount={liquidityTokens!}
           onClose={() => {
             setShowConfirm(false)
           }}

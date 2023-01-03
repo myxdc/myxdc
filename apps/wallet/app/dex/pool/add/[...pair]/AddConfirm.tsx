@@ -1,19 +1,20 @@
 import { useSwapRouter, useXRC20 } from '@myxdc/hooks/contracts/useContract'
-import { useWeb3 } from '@myxdc/hooks/contracts/useWeb3'
 import { useConfig } from '@myxdc/hooks/custom/useConfig'
 import { useSwapConfig } from '@myxdc/hooks/swap/useSwapConfig'
-import { useWallet } from '@myxdc/hooks/useWallet'
+import { useTokensWithBalances } from '@myxdc/hooks/tokens/useTokensWithBalances'
+import { txObj } from '@myxdc/hooks/wallet/types'
+import { useAccount } from '@myxdc/hooks/wallet/useAccount'
+import { useSigner } from '@myxdc/hooks/wallet/useSigner'
 import {
   CloseIcon,
   Currency,
   CurrencySkeleton,
+  FormButton,
   IconButton,
   MiddleButton,
   PricePoolShare,
   Skeleton,
   Spinner,
-  SwapButton,
-  TokenType,
   Typography,
 } from '@myxdc/ui'
 import { useState } from 'react'
@@ -23,16 +24,18 @@ interface LiquidityConfirmAddProps {
   onClose: () => void
 
   inputAState: {
-    token: TokenType
+    token: string
     amount: string
     amountRaw: string
     minRaw: string
+    symbol: string
   }
   inputBState: {
-    token: TokenType
+    token: string
     amount: string
     amountRaw: string
     minRaw: string
+    symbol: string
   }
   exchangeRate: {
     AperB: string
@@ -50,30 +53,33 @@ export default function LiquidityConfirmAdd({
 }: LiquidityConfirmAddProps) {
   const [loading, setLoading] = useState(false)
   const { config: swapConfig } = useSwapConfig()
-  const { SWAP_ROUTER_ADDRESS, SWAP_WXDC_ADDRESS } = useConfig()
-  const web3 = useWeb3()
-  const { account, signThenSend, updateAccountsBalances } = useWallet()
-  const token1 = useXRC20(inputAState.token.address)
-  const token2 = useXRC20(inputBState.token.address)
+  const { SWAP_ROUTER_ADDRESS } = useConfig()
+  const token1 = useXRC20(inputAState.token)
+  const token2 = useXRC20(inputBState.token)
   const router = useSwapRouter()
+  const { activeAccount } = useAccount()
+  const { signer } = useSigner({
+    type: activeAccount?.type,
+  })
+  const { mutate } = useTokensWithBalances({
+    address: activeAccount?.address,
+  })
 
   const handleAdd = async () => {
+    if (!activeAccount) return null
     setLoading(true)
 
     // calculate Unix timestamp after which the transaction will revert.
     const deadlineUnix = Math.floor(Date.now() / 1000) + swapConfig.deadline * 60
 
     // approve token1 for router
-    let nonce = await web3.eth.getTransactionCount(account.address)
-    let txObj = {
-      to: inputAState.token.address,
+    let txObj: txObj = {
+      to: inputAState.token,
       data: await token1?.methods.approve(SWAP_ROUTER_ADDRESS, inputAState.amountRaw).encodeABI(),
-      nonce: nonce,
-      value: '0',
     }
-    await toast.promise(signThenSend(txObj), {
-      loading: 'Approving token: ' + inputAState.token.symbol || inputAState.token.address,
-      success: 'Approved token: ' + inputAState.token.symbol || inputAState.token.address,
+    await toast.promise(signer(txObj, activeAccount?.address), {
+      loading: 'Approving token: ' + inputAState.symbol || inputAState.token,
+      success: 'Approved token: ' + inputAState.symbol || inputAState.token,
       error: (err: Error) => {
         setLoading(false)
         return err.message
@@ -81,16 +87,13 @@ export default function LiquidityConfirmAdd({
     })
 
     // approve token2 for router
-    nonce++
     txObj = {
-      to: inputBState.token.address,
+      to: inputBState.token,
       data: await token2?.methods.approve(SWAP_ROUTER_ADDRESS, inputBState.amountRaw).encodeABI(),
-      nonce: nonce,
-      value: '0',
     }
-    await toast.promise(signThenSend(txObj), {
-      loading: 'Approving token: ' + inputBState.token.symbol || inputBState.token.address,
-      success: 'Approved token: ' + inputBState.token.symbol || inputBState.token.address,
+    await toast.promise(signer(txObj, activeAccount.address), {
+      loading: 'Approving token: ' + inputBState.symbol || inputBState.token,
+      success: 'Approved token: ' + inputBState.symbol || inputBState.token,
       error: (err: Error) => {
         setLoading(false)
         return err.message
@@ -98,39 +101,36 @@ export default function LiquidityConfirmAdd({
     })
 
     // add liquidity
-    nonce++
-    if (inputAState.token.symbol.toLowerCase() === 'xdc') {
+    if (inputAState.symbol.toLowerCase() === 'xdc') {
       // XDC + token
       txObj = {
         to: SWAP_ROUTER_ADDRESS,
         data: await router.methods
           .addLiquidityETH(
-            inputBState.token.address,
+            inputBState.token,
             inputBState.amountRaw,
             inputBState.minRaw,
             inputAState.minRaw,
-            account.address,
+            activeAccount.address,
             deadlineUnix
           )
           .encodeABI(),
-        nonce: nonce,
         value: inputAState.amountRaw,
       }
-    } else if (inputBState.token.symbol.toLowerCase() === 'xdc') {
+    } else if (inputBState.symbol.toLowerCase() === 'xdc') {
       // token + XDC
       txObj = {
         to: SWAP_ROUTER_ADDRESS,
         data: await router.methods
           .addLiquidityETH(
-            inputAState.token.address,
+            inputAState.token,
             inputAState.amountRaw,
             inputAState.minRaw,
             inputBState.minRaw,
-            account.address,
+            activeAccount.address,
             deadlineUnix
           )
           .encodeABI(),
-        nonce: nonce,
         value: inputBState.amountRaw,
       }
     } else {
@@ -139,22 +139,21 @@ export default function LiquidityConfirmAdd({
         to: SWAP_ROUTER_ADDRESS,
         data: await router.methods
           .addLiquidity(
-            inputAState.token.address,
-            inputBState.token.address,
+            inputAState.token,
+            inputBState.token,
             inputAState.amountRaw,
             inputBState.amountRaw,
             inputAState.minRaw,
             inputBState.minRaw,
-            account.address,
+            activeAccount.address,
             deadlineUnix
           )
           .encodeABI(),
-        nonce: nonce,
         value: '0',
       }
     }
     await toast.promise(
-      signThenSend({ ...txObj, gasLimit: '200000' }),
+      signer(txObj, activeAccount?.address),
       {
         loading: 'Adding liquidity',
         success: 'Liquidity will be added after the transaction is confirmed',
@@ -171,7 +170,7 @@ export default function LiquidityConfirmAdd({
       }
     )
     setTimeout(() => {
-      updateAccountsBalances()
+      mutate()
     }, 2000)
 
     setLoading(false)
@@ -210,14 +209,14 @@ export default function LiquidityConfirmAdd({
         <ReceiveAmounts
           amount1={inputAState.amount}
           amount2={inputBState.amount}
-          symbol1={inputAState.token.symbol}
-          symbol2={inputBState.token.symbol}
+          symbol1={inputAState.symbol}
+          symbol2={inputBState.symbol}
         />
         <PricePoolShare
           price1={exchangeRate?.AperB}
-          label1={inputAState && inputBState && `${inputAState?.token?.symbol} per ${inputBState?.token?.symbol}`}
+          label1={inputAState && inputBState && `${inputAState?.symbol} per ${inputBState?.symbol}`}
           price2={exchangeRate?.BperA}
-          label2={inputBState && inputAState && `${inputBState?.token?.symbol} per ${inputAState?.token?.symbol}`}
+          label2={inputBState && inputAState && `${inputBState?.symbol} per ${inputAState?.symbol}`}
         />
         {/* {inputBState.amount && (
           <Typography variant="tiny" className="mt-4 text-center text-red-600">
@@ -228,9 +227,9 @@ export default function LiquidityConfirmAdd({
             or the transaction will revert.
           </Typography>
         )} */}
-        <SwapButton onClick={handleAdd} variant="default">
+        <FormButton onClick={handleAdd} variant="default">
           {isNewPair ? 'Confirm & Create Pair' : 'Confirm & Add Liquidity'}
-        </SwapButton>
+        </FormButton>
       </div>
     </div>
   )

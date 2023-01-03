@@ -20,15 +20,15 @@ export const NftBox = ({ name, description, owner, image }: NftBoxProps) => {
       </div>
       <div className="p-6 mt-6 bg-white shadow-xl rounded-3xl">
         <Typography variant="h3" weight={600} as="h1" className="text-primary-600">
-          {name || <Skeleton />}
+          {name || <Skeleton height={60} />}
         </Typography>
         <Typography variant="p" className="mt-3">
-          {description || <Skeleton height={100} />}
+          {description || <Skeleton height={60} />}
         </Typography>
         <Typography variant="p" className="mt-3 text-black" weight={600}>
           Owner:
         </Typography>
-        <Typography variant="p" className="truncate">
+        <Typography variant="p" className="break-words">
           {owner || <Skeleton />}
         </Typography>
       </div>

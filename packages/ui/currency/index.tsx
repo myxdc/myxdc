@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
 import { Skeleton } from '../animated'
@@ -11,7 +12,7 @@ interface CurrencyProps {
 
 export const Currency = ({ currency, ...rest }: CurrencyProps) => {
   const [exists, setExists] = useState(false)
-  const url = `https://raw.githubusercontent.com/XinFinOrg/xdc-network-token-lists/main/tokens/${currency?.toUpperCase()}.png`
+  const url = `/assets/img/tokens/${currency?.toUpperCase()}.png`
 
   useEffect(() => {
     if (!currency || currency?.toLowerCase() == 'xdc' || currency?.toLowerCase() == 'unknown') return
@@ -30,8 +31,8 @@ export const Currency = ({ currency, ...rest }: CurrencyProps) => {
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="1.62em"
-        height="1.62em"
+        width={26}
+        height={26}
         xmlSpace="preserve"
         viewBox="0 0 337.963 337.958"
         {...rest}
@@ -49,12 +50,10 @@ export const Currency = ({ currency, ...rest }: CurrencyProps) => {
       </svg>
     )
   } else if (exists && currency) {
-    return (
-      <img src={url} alt={currency} width="1.62em" height="1.62em" className="rounded-full bg-primary-200" {...rest} />
-    )
+    return <Image src={url} alt={currency} width={26} height={26} className="rounded-full bg-primary-200" {...rest} />
   } else {
     return (
-      <svg width="1.62em" height="1.62em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...rest}>
+      <svg width={26} height={26} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...rest}>
         <path
           fillRule="evenodd"
           clipRule="evenodd"
@@ -67,7 +66,7 @@ export const Currency = ({ currency, ...rest }: CurrencyProps) => {
 }
 
 export const CurrencySkeleton = ({ ...rest }: { [key: string]: unknown }) => {
-  return <Skeleton borderRadius={100} width="1.62em" height="1.62em" {...rest} />
+  return <Skeleton borderRadius={100} width={26} height={26} {...rest} />
 }
 
 export const CurrencyPair = ({

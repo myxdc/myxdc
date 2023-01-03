@@ -1,4 +1,4 @@
-import { SwapButton } from '../button'
+import { FormButton } from '../button'
 import { CurrencyInput } from '../currencyinput'
 import { TokenType } from '../tokenselector'
 import { Typography } from '../typography'
@@ -8,20 +8,22 @@ import { PricePoolShare } from './PricePoolShare'
 export interface LiquidityWidgetAddProps {
   tokens?: TokenType[]
   inputAState?: {
-    token?: TokenType
+    token?: string
     amount?: string
+    symbol?: string
   }
   inputBState?: {
-    token?: TokenType
+    token?: string
     amount?: string
+    symbol?: string
   }
   inputAHandlers?: {
-    currencySelect?: (token: TokenType) => void
+    currencySelect?: (token: string) => void
     amountChange?: (amount: string) => void
     maxBalance?: () => void
   }
   inputBHandlers?: {
-    currencySelect?: (token: TokenType) => void
+    currencySelect?: (token: string) => void
     amountChange?: (amount: string) => void
     maxBalance?: () => void
   }
@@ -85,14 +87,14 @@ export const LiquidityWidgetAdd = ({
       >
         <PricePoolShare
           price1={prices?.AperB}
-          label1={inputAState && inputBState && `${inputAState?.token?.symbol} per ${inputBState?.token?.symbol}`}
+          label1={inputAState && inputBState && `${inputAState?.symbol} per ${inputBState?.symbol}`}
           price2={prices?.BperA}
-          label2={inputBState && inputAState && `${inputBState?.token?.symbol} per ${inputAState?.token?.symbol}`}
+          label2={inputBState && inputAState && `${inputBState?.symbol} per ${inputAState?.symbol}`}
         />
       </div>
-      <SwapButton variant={uiConfig?.buttonVariant} onClick={handleSubmit}>
+      <FormButton variant={uiConfig?.buttonVariant} onClick={handleSubmit}>
         {uiConfig?.buttonText}
-      </SwapButton>
+      </FormButton>
     </div>
   )
 }
