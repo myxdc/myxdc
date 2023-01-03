@@ -256,9 +256,7 @@ const Accounts = ({ onClose, activeAccount, accounts, setActiveAccount, removeAc
               className="text-sm rounded-full"
               variant="primary"
               onClick={() => {
-                setTimeout(() => {
-                  onClose()
-                }, 400)
+                onClose()
               }}
             >
               Create New Account
@@ -272,12 +270,23 @@ const Accounts = ({ onClose, activeAccount, accounts, setActiveAccount, removeAc
             className="text-sm rounded-full"
             variant="primary"
             onClick={() => {
-              setTimeout(() => {
-                onClose()
-              }, 400)
+              onClose()
             }}
           >
             Import Account
+          </Button>
+        )}
+        {type === 'metamask' && (
+          <Button
+            as={Link}
+            href="/wallet/connect/metamask"
+            className="text-sm rounded-full"
+            variant="primary"
+            onClick={() => {
+              onClose()
+            }}
+          >
+            Connect MetaMask
           </Button>
         )}
       </div>
