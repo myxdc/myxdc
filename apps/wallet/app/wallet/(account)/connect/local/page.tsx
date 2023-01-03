@@ -12,8 +12,8 @@ export default function Page() {
           A local account is stored in your browser&apos;s local storage. It&apos;s not backed up anywhere, so
           you&apos;ll need to remember your password and keep it safe.
         </Typography>
-        <div className="p-6 mt-6 mb-0 space-y-2 text-center bg-white rounded-lg shadow-2xl">
-          <Typography variant="h5" weight={600} className="pb-4">
+        <div className="p-6 mt-6 mb-0 text-center bg-white rounded-lg shadow-2xl">
+          <Typography variant="h5" weight={600} className="pb-6">
             What do you want to do?
           </Typography>
           <div className="flex gap-4">
@@ -34,6 +34,12 @@ export default function Page() {
               <span>Create a new account</span>
             </Link>
           </div>
+
+          <p className="mt-6 text-center">
+            <Link className="text-gray-800 text-md" href="/wallet/connect">
+              Back
+            </Link>
+          </p>
         </div>
       </div>
     </div>

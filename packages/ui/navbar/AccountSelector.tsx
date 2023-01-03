@@ -43,7 +43,13 @@ export const AccountSelector = () => {
     setHasMounted(true)
   }, [])
 
-  if (!hasMounted) return <Skeleton height={47} width={271} borderRadius={100} />
+  if (!hasMounted)
+    return (
+      <>
+        <Skeleton width={293} height={50} borderRadius={100} className="hidden lg:inline-block" />
+        <Skeleton width={160} height={40} borderRadius={100} className="lg:hidden" />
+      </>
+    )
 
   return (
     <div className="sm:relative account-selector">

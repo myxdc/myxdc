@@ -15,7 +15,8 @@ export const SkeletonNavbar = () => {
             </span>
           </div>
           <div className="flex justify-end md:order-2">
-            <Skeleton width={293} height={47} borderRadius={100} />
+            <Skeleton width={293} height={47} borderRadius={100} className="hidden lg:block" />
+            <Skeleton width={160} height={40} borderRadius={100} className="lg:hidden" />
           </div>
           <div
             className={`hidden lg:block lg:ml-10 lg:mr-auto absolute md:relative top-full left-0 right-0 items-center justify-center w-full md:flex md:w-auto md:order-1 shadow-xl border md:shadow-none md:border-0`}

@@ -12,8 +12,8 @@ export default function Page() {
           You can import your account from a private key or a mnemonic phrase. If you don&apos;t have one, you need to
           create a new account first.
         </Typography>
-        <div className="p-6 mt-6 mb-0 space-y-2 text-center bg-white rounded-lg shadow-2xl">
-          <Typography variant="h5" weight={600} className="pb-4">
+        <div className="p-6 mt-6 mb-0 text-center bg-white rounded-lg shadow-2xl">
+          <Typography variant="h5" weight={600} className="pb-6">
             How do you want to import your account?
           </Typography>
           <div className="flex gap-4">
@@ -34,6 +34,12 @@ export default function Page() {
               <span>Private Key</span>
             </Link>
           </div>
+
+          <p className="mt-6 text-center">
+            <Link className="text-gray-800 text-md" href="/wallet/connect/local">
+              Back
+            </Link>
+          </p>
         </div>
       </div>
     </div>
