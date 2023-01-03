@@ -18,8 +18,6 @@ export interface PoolWidgetProps {
   }
   addLiquidityButton?: React.ReactNode
   removeLiquidityButton?: React.ReactNode
-  onAddToWatchlist?: () => void
-  onRemoveFromWatchlist?: () => void
   createPairButton?: React.ReactNode
   error?: string
 }
@@ -33,8 +31,6 @@ export const PoolWidget = ({
   liquidity,
   addLiquidityButton,
   removeLiquidityButton,
-  onAddToWatchlist,
-  onRemoveFromWatchlist,
   createPairButton,
   error,
 }: PoolWidgetProps) => {
@@ -65,9 +61,9 @@ export const PoolWidget = ({
           symbol2={token2?.symbol}
           addLiquidityButton={addLiquidityButton}
           removeLiquidityButton={removeLiquidityButton}
-          onAddToWatchlist={onAddToWatchlist}
-          onRemoveFromWatchlist={onRemoveFromWatchlist}
           createPairButton={createPairButton}
+          token1={token1?.address}
+          token2={token2?.address}
         />
         {error && (
           <Typography variant="tiny" weight={500} className="mt-4 text-center text-red-500">

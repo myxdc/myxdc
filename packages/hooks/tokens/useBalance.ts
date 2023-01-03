@@ -14,13 +14,14 @@ export const useBalance = ({
 }) => {
   const Web3 = useWeb3()
 
-  const fetcher = React.useCallback(
-    async ([address]: any) => {
-      if (!address) return null
-      const balance = await Web3.eth.getBalance(address)
-      return wei ? balance : Web3.utils.fromWei(balance)
-    },
-    [address]
+  const fetcher = React.useMemo(
+    () =>
+      async ([address]: any) => {
+        if (!address) return null
+        const balance = await Web3.eth.getBalance(address)
+        return wei ? balance : Web3.utils.fromWei(balance)
+      },
+    [address, wei]
   )
 
   const { data: balance, mutate } = useSWR([address, 'userBalance'], fetcher, {

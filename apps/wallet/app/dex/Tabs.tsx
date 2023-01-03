@@ -21,7 +21,7 @@ export default function Tabs() {
           href: '/dex/pool',
         },
         {
-          label: 'Watchlist',
+          label: 'Favorites',
           active: pathnames?.[2] === 'watchlist',
           href: '/dex/watchlist',
         },

@@ -1,4 +1,5 @@
 import { BigNumber } from 'ethers'
+import { useMemo } from 'react'
 import useSWR from 'swr'
 
 import { useSwapPair } from '../contracts/useContract'
@@ -10,43 +11,46 @@ export const useUserLiquidity = (address?: string, tokenA?: string, tokenB?: str
   const pairContract = useSwapPair(pairAddress)
   const { reserves, error: reserves_error, isLoading: reserves_loading } = useReserves(tokenA, tokenB)
 
-  const { data, error, isLoading } = useSWR(
-    ['getLiquidityTokens', address, pairAddress, reserves],
-    async ([method, address, pairAddress, reserves]: string[]) => {
-      if (!pairContract || !address || !reserves) {
-        return {
-          liquidityTokens: undefined,
-          poolShare: undefined,
-          pooledToken1: undefined,
-          pooledToken2: undefined,
+  const fetcher = useMemo(
+    () =>
+      async ([method, address, pairAddress, reserves]: string[]) => {
+        if (!pairContract || !address || !reserves) {
+          return {
+            liquidityTokens: undefined,
+            poolShare: undefined,
+            pooledToken1: undefined,
+            pooledToken2: undefined,
+          }
         }
-      }
 
-      const liquidityTokensRaw = BigNumber.from(
-        await pairContract.methods
-          .balanceOf(address)
-          .call()
-          .catch(() => {
-            throw new Error('PAIR_NOT_FOUND')
-          })
-      )
+        const liquidityTokensRaw = BigNumber.from(
+          await pairContract.methods
+            .balanceOf(address)
+            .call()
+            .catch(() => {
+              throw new Error('PAIR_NOT_FOUND')
+            })
+        )
 
-      // pool share in percent
-      const totalSupply = BigNumber.from(await pairContract.methods.totalSupply().call())
-      const poolShare = liquidityTokensRaw.mul(100).div(totalSupply)
+        // pool share in percent
+        const totalSupply = BigNumber.from(await pairContract.methods.totalSupply().call())
+        const poolShare = liquidityTokensRaw.mul(100).div(totalSupply)
 
-      // calculate user share of reserves
-      const pooledToken1Raw = BigNumber.from(reserves?.[0]).mul(liquidityTokensRaw).div(totalSupply)
-      const pooledToken2Raw = BigNumber.from(reserves?.[1]).mul(liquidityTokensRaw).div(totalSupply)
+        // calculate user share of reserves
+        const pooledToken1Raw = BigNumber.from(reserves?.[0]).mul(liquidityTokensRaw).div(totalSupply)
+        const pooledToken2Raw = BigNumber.from(reserves?.[1]).mul(liquidityTokensRaw).div(totalSupply)
 
-      return {
-        liquidityTokens: liquidityTokensRaw.toString(),
-        poolShare: poolShare.toString(),
-        pooledToken1: pooledToken1Raw.toString(),
-        pooledToken2: pooledToken2Raw.toString(),
-      }
-    }
+        return {
+          liquidityTokens: liquidityTokensRaw.toString(),
+          poolShare: poolShare.toString(),
+          pooledToken1: pooledToken1Raw.toString(),
+          pooledToken2: pooledToken2Raw.toString(),
+        }
+      },
+    [pairContract]
   )
+
+  const { data, error, isLoading } = useSWR(['getLiquidityTokens', address, pairAddress, reserves], fetcher)
 
   if (reserves_error?.message === 'PAIR_NOT_FOUND') {
     return {

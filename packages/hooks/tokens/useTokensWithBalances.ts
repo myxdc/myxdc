@@ -3,6 +3,7 @@ import { fromWei } from '@myxdc/utils/web3'
 import { useAtomValue } from 'jotai'
 import React from 'react'
 import useSWR from 'swr'
+import { useSWRConfig } from 'swr'
 
 import { useWeb3 } from '../contracts/useWeb3'
 import { tokensAtom } from './state'
@@ -19,6 +20,7 @@ export const useTokensWithBalances = ({
 }) => {
   const tokens = useAtomValue(tokensAtom)
   const Web3 = useWeb3()
+  const { mutate } = useSWRConfig()
 
   const fetcher = React.useMemo(() => {
     return async ({ address, tokens }: { address: string; tokens: Token[] }) => {
@@ -81,7 +83,7 @@ export const useTokensWithBalances = ({
 
   const {
     data: tokensWithBalance,
-    mutate,
+    mutate: mutateTokensWithBalance,
     isLoading,
     error,
   } = useSWR({ address, tokens }, fetcher, {
@@ -100,10 +102,16 @@ export const useTokensWithBalances = ({
     }, 0)
   }, [tokensWithBalance])
 
+  // mutate useTokensWithBalances in addition to useBalance hook
+  const mutateAll = React.useCallback(() => {
+    mutateTokensWithBalance()
+    mutate([address, 'userBalance'])
+  }, [address])
+
   return {
     tokens: (tokensWithBalance as Token[]) || tokens,
     totalUsd,
-    mutate,
+    mutate: mutateAll,
     isLoading,
     error,
   }

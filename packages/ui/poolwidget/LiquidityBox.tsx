@@ -7,28 +7,28 @@ import { Typography } from '../typography'
 export interface LiquidityBoxProps {
   symbol1?: string
   symbol2?: string
+  token1?: string
+  token2?: string
   totalPoolTokens?: string
   poolShare?: string
   pooledToken1?: string
   pooledToken2?: string
   addLiquidityButton?: React.ReactNode
   removeLiquidityButton?: React.ReactNode
-  onAddToWatchlist?: () => void
-  onRemoveFromWatchlist?: () => void
   createPairButton?: React.ReactNode
 }
 
 export const LiquidityBox = ({
   symbol1,
   symbol2,
+  token1,
+  token2,
   totalPoolTokens,
   poolShare,
   pooledToken1,
   pooledToken2,
   addLiquidityButton,
   removeLiquidityButton,
-  onAddToWatchlist,
-  onRemoveFromWatchlist,
   createPairButton,
 }: LiquidityBoxProps) => {
   return (
@@ -44,16 +44,7 @@ export const LiquidityBox = ({
             <Skeleton className="w-20 h-4 ml-2" borderRadius={100} />
           )}
         </div>
-        {onAddToWatchlist && !onRemoveFromWatchlist && (
-          <button className="px-2 py-1 text-sm font-medium rounded-lg" onClick={onAddToWatchlist}>
-            Add to watchlist
-          </button>
-        )}
-        {onRemoveFromWatchlist && !onAddToWatchlist && (
-          <button className="px-2 py-1 text-sm font-medium rounded-lg" onClick={onRemoveFromWatchlist}>
-            Remove from watchlist
-          </button>
-        )}
+        <WatchListButton token1={token1} token2={token2} />
       </div>
       <div className="flex items-center justify-between pt-4 mt-4 border-t">
         <Typography variant="tiny" weight={500} className="text-gray-500">
@@ -110,7 +101,7 @@ export const LiquidityBox = ({
           })}
         </div>
       ) : (
-        <div className="flex items-center gap-4 mt-4">
+        <div className="flex items-center justify-center gap-4 mt-4">
           {addLiquidityButton ? (
             React.cloneElement(addLiquidityButton as React.ReactElement, {
               className: 'w-full py-2 text-sm font-medium text-white bg-green-500 rounded-lg text-center',
@@ -132,5 +123,44 @@ export const LiquidityBox = ({
         </div>
       )}
     </div>
+  )
+}
+
+import { useSwapWatchList } from '@myxdc/hooks/swap/useSwapWatchList'
+import { useCallback, useMemo } from 'react'
+
+import { StarIcon } from '../icons'
+
+const WatchListButton = ({ token1, token2 }: { token1?: string; token2?: string }) => {
+  const { addPair, removePair, watchList } = useSwapWatchList()
+
+  const handleAddToWatchList = useCallback(() => {
+    if (!token1 || !token2) return
+    addPair([token1, token2])
+  }, [addPair, token1, token2])
+
+  const handleRemoveFromWatchList = useCallback(() => {
+    if (!token1 || !token2) return
+    removePair([token1, token2])
+  }, [removePair, token1, token2])
+
+  const isWatched = useMemo(() => {
+    if (!token1 || !token2) return false
+    return watchList.some((pair) => pair[0] === token1 && pair[1] === token2)
+  }, [watchList, token1, token2])
+
+  return (
+    <>
+      {!isWatched && (
+        <button onClick={handleAddToWatchList}>
+          <StarIcon className="w-6 h-6 text-gray-400" />
+        </button>
+      )}
+      {isWatched && (
+        <button onClick={handleRemoveFromWatchList}>
+          <StarIcon className="w-6 h-6 text-yellow-500" />
+        </button>
+      )}
+    </>
   )
 }

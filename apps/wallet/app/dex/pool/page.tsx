@@ -2,16 +2,20 @@
 import { useUserLiquidity } from '@myxdc/hooks/swap/useUserLiquidity'
 import { useTokensWithBalances } from '@myxdc/hooks/tokens/useTokensWithBalances'
 import { useAccount } from '@myxdc/hooks/wallet/useAccount'
-import { PoolWidget, TokenType, Typography } from '@myxdc/ui'
+import { PoolWidget, PoolWidgetSkeleton, TokenType, Typography } from '@myxdc/ui'
 import { toHumanReadable } from '@myxdc/utils/numbers/price'
 import { fromWei } from '@myxdc/utils/web3'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function Page() {
   /**
    * * Initial states
    */
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => {
+    setMounted(true)
+  }, [])
   const [token1, setToken1] = useState<TokenType | undefined>(undefined)
   const [token2, setToken2] = useState<TokenType | undefined>(undefined)
   const { activeAccount } = useAccount()
@@ -24,16 +28,8 @@ export default function Page() {
     token2?.address
   )
 
-  /**
-   * * Event handlers
-   */
-  const watchList = {
-    add: (token: TokenType) => {
-      console.log('add token to watchlist', token)
-    },
-    remove: (token: TokenType) => {
-      console.log('remove token from watchlist', token)
-    },
+  if (!mounted) {
+    return <PoolWidgetSkeleton />
   }
 
   if (!activeAccount) {
