@@ -85,9 +85,9 @@ export const Navbar = ({ linkComponent, activeLink }: NavbarProps) => {
                 </LinkComponent>
               </li>
               <li>
-                <LinkComponent href="/help" className={activeLink === 'help' ? activeLinkClass : linkClass}>
+                <a href="http://myxdc.org/help" className={linkClass} target="_blank" rel="noopener noreferrer">
                   Help
-                </LinkComponent>
+                </a>
               </li>
             </ul>
           </div>

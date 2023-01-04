@@ -14,7 +14,7 @@ interface FaqProps {
 
 export const Faq = ({ data, label = 'FAQ', title = 'Frequently Asked Questions', description }: FaqProps) => {
   return (
-    <Container className="relative z-10 max-w-6xl p-6 mx-auto mt-6 mb-0 space-y-6 bg-white rounded-lg shadow-2xl">
+    <Container className="relative z-10 max-w-6xl p-6 mx-auto mt-6 mb-0 space-y-6 bg-white border rounded-lg shadow-2xl">
       <header className="flex justify-between">
         <Typography weight={700} className="text-primary-700">
           {label}

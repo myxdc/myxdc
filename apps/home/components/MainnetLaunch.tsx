@@ -1,7 +1,14 @@
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 import Countdown from 'react-countdown'
 
 export const MainnetLaunch = () => {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   return (
     <div className="w-full text-white py-36 bg-gradient-to-br from-primary-900 to-black">
       <div className="container flex flex-col items-center justify-center w-full h-full mx-auto">
@@ -11,35 +18,38 @@ export const MainnetLaunch = () => {
           ready for you!
         </p>
         <div className="flex items-center justify-center mt-8">
-          <Countdown
-            date={new Date('2023-02-01T00:00:00')}
-            renderer={({ days, hours, minutes, seconds, completed }) => {
-              if (completed) {
-                return <span>MyXDC is live!</span>
-              } else {
-                return (
-                  <div className="flex items-center justify-center">
-                    <div className="flex flex-col items-center justify-center w-24 h-24 p-4 mx-2 text-center text-gray-900 bg-white rounded-lg">
-                      <span className="text-2xl font-bold">{days}</span>
-                      <span className="text-sm">Days</span>
+          {mounted && (
+            <Countdown
+              onMount={({ completed }) => completed && console.log('Completed!')}
+              date={new Date('2023-02-01T00:00:00')}
+              renderer={({ days, hours, minutes, seconds, completed }) => {
+                if (completed) {
+                  return <span>MyXDC is live!</span>
+                } else {
+                  return (
+                    <div className="flex items-center justify-center">
+                      <div className="flex flex-col items-center justify-center w-24 h-24 p-4 mx-2 text-center text-gray-900 bg-white rounded-lg">
+                        <span className="text-2xl font-bold">{days}</span>
+                        <span className="text-sm">Days</span>
+                      </div>
+                      <div className="flex flex-col items-center justify-center w-24 h-24 p-4 mx-2 text-center text-gray-900 bg-white rounded-lg">
+                        <span className="text-2xl font-bold">{hours}</span>
+                        <span className="text-sm">Hours</span>
+                      </div>
+                      <div className="flex flex-col items-center justify-center w-24 h-24 p-4 mx-2 text-center text-gray-900 bg-white rounded-lg">
+                        <span className="text-2xl font-bold">{minutes}</span>
+                        <span className="text-sm">Minutes</span>
+                      </div>
+                      <div className="flex flex-col items-center justify-center w-24 h-24 p-4 mx-2 text-center text-gray-900 bg-white rounded-lg">
+                        <span className="text-2xl font-bold">{seconds}</span>
+                        <span className="text-sm">Seconds</span>
+                      </div>
                     </div>
-                    <div className="flex flex-col items-center justify-center w-24 h-24 p-4 mx-2 text-center text-gray-900 bg-white rounded-lg">
-                      <span className="text-2xl font-bold">{hours}</span>
-                      <span className="text-sm">Hours</span>
-                    </div>
-                    <div className="flex flex-col items-center justify-center w-24 h-24 p-4 mx-2 text-center text-gray-900 bg-white rounded-lg">
-                      <span className="text-2xl font-bold">{minutes}</span>
-                      <span className="text-sm">Minutes</span>
-                    </div>
-                    <div className="flex flex-col items-center justify-center w-24 h-24 p-4 mx-2 text-center text-gray-900 bg-white rounded-lg">
-                      <span className="text-2xl font-bold">{seconds}</span>
-                      <span className="text-sm">Seconds</span>
-                    </div>
-                  </div>
-                )
-              }
-            }}
-          />
+                  )
+                }
+              }}
+            />
+          )}
         </div>
         <div className="flex items-center justify-center mt-8">
           <Link

@@ -97,9 +97,14 @@ export const LedgerBox = () => {
             <Link className="text-gray-800 text-md" href="/wallet/connect">
               Back
             </Link>
-            <Link className="text-gray-800 text-md" href="/help/ledger">
+            <a
+              className="text-gray-800 text-md"
+              href="https://myxdc.org/help/ledger"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
               Still need help?
-            </Link>
+            </a>
           </p>
         </div>
       )}

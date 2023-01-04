@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  transpilePackages: ['@myxdc/ui'],
 }
 
 module.exports = nextConfig

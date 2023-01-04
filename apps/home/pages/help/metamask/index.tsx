@@ -1,20 +1,23 @@
 import { Faq } from '@myxdc/ui'
+import HelpCenterLayout from '../_layout'
 
 export default function Page() {
   return (
-    <Faq
-      data={FAQS}
-      label="MetaMask FAQ"
-      title="MetaMask Frequently Asked Questions"
-      description={
-        <>
-          Can&apos;t find the answer to your question?{' '}
-          <a href="https://t.me/myxdc" target="_blank" rel="noopener noreferrer">
-            Ask us on Telegram
-          </a>
-        </>
-      }
-    />
+    <HelpCenterLayout>
+      <Faq
+        data={FAQS}
+        label="MetaMask FAQ"
+        title="MetaMask Frequently Asked Questions"
+        description={
+          <>
+            Can&apos;t find the answer to your question?{' '}
+            <a href="https://t.me/myxdc" target="_blank" rel="noopener noreferrer">
+              Ask us on Telegram
+            </a>
+          </>
+        }
+      />
+    </HelpCenterLayout>
   )
 }
 const FAQS = [

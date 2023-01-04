@@ -55,7 +55,10 @@ export const MetamaskBox = () => {
             <b>2.</b> Log in to your MetaMask account.
           </Typography>
           <Typography variant="p">
-            <b>3.</b> Connect to the XDC Mainnet. <Link href="/help/metamask">(Need help?)</Link>
+            <b>3.</b> Connect to the XDC Mainnet.{' '}
+            <a href="https://myxdc.org/help/metamask" target="_blank" rel="noreferrer noopener">
+              (Need help?)
+            </a>
           </Typography>
           <Typography variant="p">
             <b>4.</b> Click the button below to import your accounts.
@@ -70,9 +73,14 @@ export const MetamaskBox = () => {
             <Link className="text-gray-800 text-md" href="/wallet/connect">
               Back
             </Link>
-            <Link className="text-gray-800 text-md" href="/help/metamask">
+            <a
+              className="text-gray-800 text-md"
+              href="https://myxdc.org/help/metamask"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
               Still need help?
-            </Link>
+            </a>
           </p>
         </div>
       )}
