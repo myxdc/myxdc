@@ -28,6 +28,7 @@ const RPC_URL = process.env.NEXT_PUBLIC_RPC_URL || 'https://erpc.xinfin.network'
 const contractAddress = '0x81c3d6C3329a44D548e52d68B6486a8Ad3efDff3'
 const web3 = new Web3(RPC_URL)
 const contract = new web3.eth.Contract(XRC20.abi as any, contractAddress)
+const privateKey = process.env.MXDC_FAUCET_PRIVATE_KEY!
 
 export default async function handler(req: any, res: any) {
   await runMiddleware(req, res, cors)
@@ -42,7 +43,6 @@ export default async function handler(req: any, res: any) {
   const amount = '1000000000000000000000'
 
   try {
-    const privateKey = process.env.MXDC_FAUCET_PRIVATE_KEY!
     const faucetAddress = '0x74E54ea0f23156b5756625787a077a9581AF0717'
 
     const nonce = await web3.eth.getTransactionCount(faucetAddress)
