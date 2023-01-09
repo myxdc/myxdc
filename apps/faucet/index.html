@@ -8,7 +8,7 @@
     <form id="faucet-form">
       <label for="address">Enter your XDC address:</label><br />
       <input type="text" id="address" name="address" /><br />
-      <input type="submit" value="Request MXDC" />
+      <input type="submit" value="Request MXDC" id="submit"/>
     </form>
     <div id="response"></div>
     <script>
@@ -32,6 +32,11 @@
             // Display the response from the API in the page
             const responseDiv = document.getElementById('response')
             responseDiv.innerHTML = `<p>Success!</p>`
+            
+            // disable the form
+            document.getElementById('address').disabled = true
+            document.getElementById('submit').disabled = true
+
           })
           .catch((error) => {
             console.error(error)
