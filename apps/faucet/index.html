@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MXDC Faucet</title>
+  </head>
+  <body>
+    <h1>MXDC Faucet</h1>
+    <form id="faucet-form">
+      <label for="address">Enter your Ethereum address:</label><br />
+      <input type="text" id="address" name="address" /><br />
+      <input type="submit" value="Request MXDC" />
+    </form>
+    <div id="response"></div>
+    <script>
+      // Get the form element
+      const form = document.getElementById('faucet-form')
+
+      // Add a submit event listener to the form
+      form.addEventListener('submit', (event) => {
+        // Prevent the form from submitting
+        event.preventDefault()
+
+        // Get the address from the form
+        const address = document.getElementById('address').value
+
+        // Make a POST request to the API endpoint
+        fetch(`http://localhost:3001/api/mxdc_faucet/${address}`, {
+          method: 'POST',
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            // Display the response from the API in the page
+            const responseDiv = document.getElementById('response')
+            responseDiv.innerHTML = `<p>Success!</p>`
+          })
+          .catch((error) => {
+            console.error(error)
+
+            // Display the error in the page
+            const responseDiv = document.getElementById('response')
+            responseDiv.innerHTML = `<p style="color:red">Error: ${error.message}</p>`
+          })
+      })
+    </script>
+    <style>
+            body {
+        font-family: sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100vw;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+      }
+
+      h1 {
+        text-align: center;
+      }
+
+      form {
+        max-width: 500px;
+        width: 100%;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      label {
+        margin-bottom: 10px;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        padding: 12px 20px;
+        margin-bottom: 20px;
+        box-sizing: border-box;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+      }
+
+      input[type="submit"] {
+        width: 100%;
+        background-color: #4fa2ff;
+        color: white;
+        padding: 14px 20px;
+        margin-bottom: 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #3e8ee0;
+      }
+
+      #response p {
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+      }
+    </style>
+  </body>
+</html>
