@@ -24,7 +24,7 @@
         const address = document.getElementById('address').value
 
         // Make a POST request to the API endpoint
-        fetch(`http://localhost:3001/api/mxdc_faucet/${address}`, {
+        fetch(`https://testset.myxdc.org/api/mxdc_faucet/${address}`, {
           method: 'POST',
         })
           .then((response) => response.json())
