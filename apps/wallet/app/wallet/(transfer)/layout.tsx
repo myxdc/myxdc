@@ -1,33 +1,13 @@
 'use client'
 
-import { useAccount } from '@myxdc/hooks/wallet/useAccount'
 import { IconButton } from '@myxdc/ui'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useRouter } from 'next/navigation'
 import React from 'react'
 
+// TODO: should be a server component, take away the usePathname
 export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
-
-  const { activeAccount } = useAccount()
-  const router = useRouter()
-
-  React.useEffect(() => {
-    if (!activeAccount) {
-      router.replace('/wallet/connect')
-    }
-  }, [activeAccount])
-
-  const [mounted, setMounted] = React.useState(false)
-
-  React.useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted || !activeAccount) {
-    return null
-  }
 
   const paths = pathname?.split('/')
   return (

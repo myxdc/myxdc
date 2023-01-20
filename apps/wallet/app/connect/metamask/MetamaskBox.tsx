@@ -29,13 +29,9 @@ export const MetamaskBox = () => {
 
   return (
     <>
-      {(isLoading || !hasMounted) && (
-        <div className="p-6 pb-16 mt-6 mb-0 space-y-2 bg-white rounded-lg shadow-2xl">
-          <Spinner className="mx-auto" text={isLoading ? 'Connecting...' : 'Loading...'} />
-        </div>
-      )}
+      {(isLoading || !hasMounted) && <Spinner className="mx-auto" text={isLoading ? 'Connecting...' : 'Loading...'} />}
       {hasMounted && accounts?.length > 0 && (
-        <div className="p-6 mt-6 mb-0 space-y-2 bg-white rounded-lg shadow-2xl">
+        <div className="max-w-lg p-6 mx-4 mt-6 mb-0 space-y-6 bg-white shadow-2xl md:p-8 md:pb-10 rounded-3xl">
           <MetaMaskIcon className="w-32 h-32 mx-auto" />
           <Typography variant="p" weight={600} className="pt-4 pb-4 text-center">
             You&apos;re connected to MetaMask!
@@ -43,9 +39,9 @@ export const MetamaskBox = () => {
         </div>
       )}
       {hasMounted && !isLoading && accounts.length < 1 && (
-        <div className="p-6 mt-6 mb-0 space-y-2 bg-white rounded-lg shadow-2xl">
+        <div className="max-w-lg p-6 mx-4 mt-6 mb-0 space-y-4 bg-white shadow-2xl md:p-8 rounded-3xl">
           <MetaMaskIcon className="w-32 h-32 mx-auto" />
-          <Typography variant="p" weight={600} className="pt-4 pb-4">
+          <Typography variant="p" weight={600} className="pt-2 pb-2">
             Follow these steps to connect your account:
           </Typography>
           <Typography variant="p">
@@ -64,14 +60,14 @@ export const MetamaskBox = () => {
             <b>4.</b> Click the button below to import your accounts.
           </Typography>
 
-          <div className="pt-8">
+          <div className="pt-6">
             <Button className="w-full " onClick={handleImport}>
               Authorize & Import Accounts
             </Button>
           </div>
-          <p className="flex justify-between pt-4">
-            <Link className="text-gray-800 text-md" href="/wallet/connect">
-              Back
+          <p className="flex justify-between pt-1">
+            <Link className="text-gray-800 text-md" href="/connect">
+              back
             </Link>
             <a
               className="text-gray-800 text-md"

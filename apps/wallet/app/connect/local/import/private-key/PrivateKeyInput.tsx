@@ -56,8 +56,8 @@ export const PrivateKeyInput = () => {
             Import Account
           </Button>
           <p className="mt-5 text-center">
-            <Link className="text-gray-800 text-md" href="/wallet/connect/local/import">
-              Back
+            <Link className="text-gray-800 text-md" href="/connect/local/import">
+              back
             </Link>
           </p>
         </>

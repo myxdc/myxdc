@@ -31,14 +31,10 @@ export const LedgerBox = () => {
 
   return (
     <>
-      {(isLoading || !hasMounted) && (
-        <div className="p-6 pb-16 mt-6 mb-0 bg-white rounded-lg shadow-2xl">
-          <Spinner className="mx-auto" text={isLoading ? 'Connecting...' : 'Loading...'} />
-        </div>
-      )}
+      {(isLoading || !hasMounted) && <Spinner className="mx-auto" text={isLoading ? 'Connecting...' : 'Loading...'} />}
       {hasMounted && !isLoading && (
-        <div className="p-6 mt-6 mb-0 space-y-2 bg-white rounded-lg shadow-2xl">
-          <LedgerIcon className="w-32 h-32 mx-auto" />
+        <div className="max-w-lg p-6 mx-4 mt-6 mb-0 space-y-6 bg-white shadow-2xl md:p-8 rounded-3xl">
+          <LedgerIcon className="mx-auto w-28 h-28" />
           <Typography variant="p" weight={600} className="pt-4 pb-4">
             Follow these steps to connect your account:
           </Typography>
@@ -58,7 +54,7 @@ export const LedgerBox = () => {
             <b>5.</b> Click the button below to authorize and import your account.
           </Typography>
 
-          <div className="py-6">
+          <div className="py-4">
             <Typography variant="p" weight={600}>
               Account Index (Optional)
             </Typography>
@@ -93,9 +89,9 @@ export const LedgerBox = () => {
               </Button>
             )}
           </div>
-          <p className="flex justify-between pt-4">
-            <Link className="text-gray-800 text-md" href="/wallet/connect">
-              Back
+          <p className="flex justify-between pt-1">
+            <Link className="text-gray-800 text-md" href="/connect">
+              back
             </Link>
             <a
               className="text-gray-800 text-md"

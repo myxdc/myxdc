@@ -28,7 +28,7 @@ export const Navbar = ({ linkComponent, activeLink }: NavbarProps) => {
     <nav className="fixed relative top-0 left-0 z-20 w-full py-3 bg-white border-b border-gray-200 sm:px-4">
       <Container>
         <div className="flex items-center justify-between mx-auto">
-          <LinkComponent href="/" className="flex items-center">
+          <LinkComponent href="/wallet" className="flex items-center">
             <Image
               src="/assets/img/logo.svg"
               className="w-auto h-8 sm:mr-2 sm:h-9"

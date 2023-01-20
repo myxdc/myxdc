@@ -4,16 +4,18 @@ import { LedgerBox } from './LedgerBox'
 
 export default function Page() {
   return (
-    <div className="max-w-screen-xl px-4 py-8 mx-auto sm:px-6 lg:px-8">
-      <div className="max-w-lg mx-auto">
-        <Typography variant="h2" as="h1" weight={600} className="text-center text-primary-700">
+    <>
+      <div className="text-center">
+        <Typography variant="h2" as="h1" weight={800}>
           Connect to Ledger
         </Typography>
-        <Typography className="max-w-lg mx-auto mt-4 text-center" variant="p">
+        <Typography variant="h5" as="p" className="max-w-xl mt-4">
           You need a Ledger device to connect your account. If you don&apos;t have one, you need to purchase one first.
         </Typography>
+      </div>
+      <div className="my-4">
         <LedgerBox />
       </div>
-    </div>
+    </>
   )
 }

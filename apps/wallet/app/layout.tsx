@@ -1,6 +1,5 @@
 import '@myxdc/ui/index.css'
-
-import Navbar from './navbar'
+import { LoginWrapper } from './loginWrapper'
 import Toaster from './toaster'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -8,10 +7,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <head />
       <body>
-        <div className="mb-4 h-14 md:h-16">
-          <Navbar />
-        </div>
-        {children}
+        <LoginWrapper>{children}</LoginWrapper>
         <Toaster />
       </body>
     </html>

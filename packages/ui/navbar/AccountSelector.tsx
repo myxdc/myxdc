@@ -70,7 +70,7 @@ export const AccountSelector = () => {
         </button>
       )}
       {!activeAccount && (
-        <Link href="/wallet/connect">
+        <Link href="/connect">
           <Button className="ml-2" variant="primary">
             Connect Wallet
           </Button>
@@ -100,7 +100,7 @@ const AccountsModal = ({ activeAccount, onClose }: any) => {
             <CloseIcon className="w-6 h-6" />
           </IconButton>
         </div>
-        <div className="flex flex-col gap-4 lg:flex-row">
+        <div className="flex flex-col gap-4 lg:flex-row min-h-[24rem] max-h-[90vh]">
           <div className="flex w-full gap-4 overflow-x-auto lg:flex-col lg:w-1/3 lg:overflow-y-auto">
             <button
               className={
@@ -132,8 +132,19 @@ const AccountsModal = ({ activeAccount, onClose }: any) => {
               <MetaMaskIcon height={40} width={40} />
               MetaMask
             </button>
+            <Button
+              as={Link}
+              href="/connect"
+              className="w-full mt-auto text-sm rounded-full"
+              variant="primary"
+              onClick={() => {
+                onClose()
+              }}
+            >
+              Add Account
+            </Button>
           </div>
-          <div className="flex flex-col w-full h-auto lg:w-2/3 min-h-[30vh]">
+          <div className="flex flex-col w-full h-auto lg:w-2/3">
             {tab === 'local' && <LocalAccounts onClose={onClose} />}
             {tab === 'metamask' && <MetaMaskAccounts onClose={onClose} />}
             {tab === 'ledger' && <LedgerAccounts onClose={onClose} />}
@@ -239,63 +250,6 @@ const Accounts = ({ onClose, activeAccount, accounts, setActiveAccount, removeAc
           ))}
         </ul>
       )}
-
-      <div className="flex items-center justify-center py-4 mt-auto">
-        {type === 'local' && (
-          <>
-            <Button
-              as={Link}
-              href="/wallet/connect/local/import"
-              className="mr-4 text-sm"
-              variant="secondary"
-              onClick={() => {
-                setTimeout(() => {
-                  onClose()
-                }, 400)
-              }}
-            >
-              Import Account
-            </Button>
-            <Button
-              as={Link}
-              href="/wallet/connect/local/create"
-              className="text-sm rounded-full"
-              variant="primary"
-              onClick={() => {
-                onClose()
-              }}
-            >
-              Create New Account
-            </Button>
-          </>
-        )}
-        {type === 'ledger' && (
-          <Button
-            as={Link}
-            href="/wallet/connect/ledger"
-            className="text-sm rounded-full"
-            variant="primary"
-            onClick={() => {
-              onClose()
-            }}
-          >
-            Import Account
-          </Button>
-        )}
-        {type === 'metamask' && (
-          <Button
-            as={Link}
-            href="/wallet/connect/metamask"
-            className="text-sm rounded-full"
-            variant="primary"
-            onClick={() => {
-              onClose()
-            }}
-          >
-            Connect MetaMask
-          </Button>
-        )}
-      </div>
     </>
   )
 }
