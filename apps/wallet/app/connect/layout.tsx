@@ -16,9 +16,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           loading="eager"
         />
       </div>
-      <div className="relative z-10 flex flex-col items-center mt-10">
+      <div className="relative z-10 flex flex-col items-center mt-2 sm:mt-4 md:mt-6 lg:mt-[3vh] h-max px-2 sm:px-4">
         {children}
-        <div className="flex justify-center w-full max-w-lg gap-6 px-4 mt-2 text-sm">
+        <div className="flex flex-wrap justify-center w-full max-w-lg gap-6 px-4 mt-2 mb-4 text-sm">
           <a href="https://www.myxdc.org/help" target="_blank" rel="noreferrer" className="mr-auto">
             Help Center
           </a>

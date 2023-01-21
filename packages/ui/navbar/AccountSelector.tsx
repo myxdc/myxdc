@@ -135,7 +135,7 @@ const AccountsModal = ({ activeAccount, onClose }: any) => {
             <Button
               as={Link}
               href="/connect"
-              className="w-full mt-auto text-sm rounded-full"
+              className="hidden w-full mt-auto text-sm rounded-full lg:flex"
               variant="primary"
               onClick={() => {
                 onClose()
@@ -149,6 +149,17 @@ const AccountsModal = ({ activeAccount, onClose }: any) => {
             {tab === 'metamask' && <MetaMaskAccounts onClose={onClose} />}
             {tab === 'ledger' && <LedgerAccounts onClose={onClose} />}
           </div>
+          <Button
+            as={Link}
+            href="/connect"
+            className="w-full mt-auto text-sm rounded-full lg:hidden"
+            variant="primary"
+            onClick={() => {
+              onClose()
+            }}
+          >
+            Add Account
+          </Button>
         </div>
       </div>
     </div>

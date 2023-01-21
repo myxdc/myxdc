@@ -21,7 +21,7 @@ export default function Page() {
         <div className="flex w-full gap-4">
           <Link
             type="button"
-            className="flex flex-col items-center justify-center flex-1 m-2 font-semibold aspect-square hover:bg-gray-100 rounded-3xl"
+            className="flex flex-col items-center justify-center flex-1 m-2 font-semibold text-center aspect-square hover:bg-gray-100 rounded-3xl"
             href="/connect/local/import/mnemonic"
           >
             <DrawingPaperIcon className="w-24 h-24 mx-auto mb-4" />
@@ -29,7 +29,7 @@ export default function Page() {
           </Link>
           <Link
             type="button"
-            className="flex flex-col items-center justify-center flex-1 m-2 font-semibold aspect-square hover:bg-gray-100 rounded-3xl"
+            className="flex flex-col items-center justify-center flex-1 m-2 font-semibold text-center aspect-square hover:bg-gray-100 rounded-3xl"
             href="/connect/local/import/private-key"
           >
             <DrawingKeyIcon className="w-24 h-24 mx-auto mb-4" />

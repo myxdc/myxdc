@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
+
 import { LedgerIcon, LocalWalletIcon, MetaMaskIcon } from '../icons'
 import { Typography } from '../typography'
 
@@ -26,7 +27,7 @@ const CHOICES = [
 
 export const ConnectSelector = () => {
   return (
-    <div className="p-6 mx-4 mt-6 mb-0 space-y-6 bg-white shadow-2xl md:p-8 md:pb-10 rounded-3xl">
+    <div className="p-6 mt-6 mb-0 space-y-6 bg-white shadow-2xl md:p-8 md:pb-10 rounded-3xl">
       <Typography as="h3" variant="h4" weight={500} className="mb-6">
         Select a method to connect your wallet.
       </Typography>
