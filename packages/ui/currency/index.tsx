@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { Skeleton } from '../animated'
 
@@ -11,21 +11,8 @@ interface CurrencyProps {
 }
 
 export const Currency = ({ currency, ...rest }: CurrencyProps) => {
-  const [exists, setExists] = useState(false)
+  const [exists, setExists] = useState(true)
   const url = `/assets/img/tokens/${currency?.toUpperCase()}.png`
-
-  useEffect(() => {
-    if (!currency || currency?.toLowerCase() == 'xdc' || currency?.toLowerCase() == 'unknown') return
-    fetch(url)
-      .then((res) => {
-        if (res.ok) {
-          setExists(true)
-        }
-      })
-      .catch(() => {
-        setExists(false)
-      })
-  }, [url, currency])
 
   if (!currency || currency?.toLowerCase() == 'xdc') {
     return (
@@ -50,7 +37,20 @@ export const Currency = ({ currency, ...rest }: CurrencyProps) => {
       </svg>
     )
   } else if (exists && currency) {
-    return <Image src={url} alt={currency} width={26} height={26} className="rounded-full bg-primary-200" {...rest} />
+    return (
+      <Image
+        src={url}
+        alt={currency}
+        width={26}
+        height={26}
+        className="rounded-full bg-primary-200"
+        onError={(e) => {
+          console.log(e)
+          setExists(false)
+        }}
+        {...rest}
+      />
+    )
   } else {
     return (
       <svg width={26} height={26} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...rest}>

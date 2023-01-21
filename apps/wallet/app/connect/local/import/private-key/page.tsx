@@ -13,7 +13,7 @@ export default function Page() {
           Enter the private key associated with your account, and we&apos;ll import your account.
         </Typography>
       </div>
-      <div className="w-full max-w-lg p-6 my-4 mt-6 mb-0 space-y-4 bg-white shadow-2xl rounded-3xl">
+      <div className="w-full max-w-lg p-6 my-4 mt-6 mb-4 space-y-4 bg-white shadow-2xl rounded-3xl">
         <PrivateKeyInput />
       </div>
     </>

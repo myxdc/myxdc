@@ -1,12 +1,13 @@
 import HelpCenterBlock from 'components/HelpCenterBlock'
 import Image from 'next/image'
-import React from 'react'
-import HeroImage from '../../public/monitor.svg'
-import StartImage from '../../public/hero.webp'
-import MetaMaskImage from '../../public/metamask.webp'
-import LedgerImage from '../../public/ledger.webp'
-import HelpCenterLayout from './_layout'
 import Link from 'next/link'
+import React from 'react'
+
+import StartImage from '../../public/hero.webp'
+import LedgerImage from '../../public/ledger.webp'
+import MetaMaskImage from '../../public/metamask.webp'
+import HeroImage from '../../public/monitor.svg'
+import HelpCenterLayout from './_layout'
 
 export default function Help() {
   return (
@@ -18,7 +19,7 @@ export default function Help() {
             <div className="py-6 text-lg leading-relaxed text-gray-700">
               Welcome to the MyXDC help center. Here you can advice and answers from MyXDC team to help you get the most
               out of MyXDC. If you can&apos;t find what you&apos;re looking for, please send a message at{' '}
-              <a className="text-blue-600" href="">
+              <a className="text-blue-600" href="https://t.me/+CNTsYshGlWRjNWY8">
                 our Telegram Group
               </a>
             </div>

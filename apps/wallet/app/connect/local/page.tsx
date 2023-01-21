@@ -1,4 +1,4 @@
-import { Button, DrawingLockIcon, DrawingLoginIcon, Typography } from '@myxdc/ui'
+import { DrawingLockIcon, DrawingLoginIcon, Typography } from '@myxdc/ui'
 import Link from 'next/link'
 
 export default function Page() {
@@ -13,7 +13,7 @@ export default function Page() {
           you&apos;ll need to remember your password and keep it safe.
         </Typography>
       </div>
-      <div className="w-full max-w-lg p-6 mx-4 mt-6 mb-0 space-y-6 bg-white shadow-2xl md:p-8 md:pb-6 rounded-3xl">
+      <div className="w-full max-w-lg p-6 mx-4 mt-6 mb-4 space-y-6 bg-white shadow-2xl md:p-8 md:pb-6 rounded-3xl">
         <Typography as="h3" variant="h4" weight={500} className="mb-6">
           What do you want to do?
         </Typography>

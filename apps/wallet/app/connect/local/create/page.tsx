@@ -59,7 +59,7 @@ export default function Page() {
             </b>
           </Typography>
         </div>
-        <div className="w-full max-w-lg p-6 my-4 mt-6 mb-0 space-y-4 bg-white shadow-2xl rounded-3xl">
+        <div className="w-full max-w-lg p-6 my-4 mt-6 mb-4 space-y-4 bg-white shadow-2xl rounded-3xl">
           <div className="grid grid-cols-3 gap-4 mb-6">
             {phrase.length > 1 &&
               phrase.split(' ').map((word, index) => (
@@ -100,7 +100,7 @@ export default function Page() {
           </Typography>
         </div>
 
-        <div className="w-full max-w-lg p-6 mt-6 mb-0 space-y-4 bg-white shadow-2xl rounded-3xl">
+        <div className="w-full max-w-lg p-6 mt-6 mb-4 space-y-4 bg-white shadow-2xl rounded-3xl">
           <Typography className="text-center" variant="p">
             Enter the <b>#{word}</b> word of your passphrase.
           </Typography>
