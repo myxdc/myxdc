@@ -11,7 +11,7 @@ export const SwapHeader = ({ onSettings, showBeta = true }: SwapHeaderProps) => 
     <div className="flex items-center justify-between mb-2">
       <div className="flex items-center">
         <div className="text-2xl font-bold text-gray-800">Swap</div>
-        {showBeta && <div className="ml-2 text-sm font-medium text-gray-500">alpha</div>}
+        {showBeta && <div className="p-1 ml-2 text-xs font-medium bg-gray-300 rounded-lg">alpha</div>}
       </div>
       <IconButton variant={2} onClick={onSettings}>
         <SettingsIcon />

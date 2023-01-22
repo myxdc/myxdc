@@ -25,7 +25,7 @@ export const Navbar = ({ linkComponent, activeLink }: NavbarProps) => {
     'block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-primary-700 md:p-0 '
 
   return (
-    <nav className="fixed relative top-0 left-0 z-20 w-full py-3 bg-white border-b border-gray-200 sm:px-4">
+    <nav className="relative top-0 left-0 z-20 w-full py-3 bg-white border-b border-gray-200 sm:px-4">
       <Container>
         <div className="flex items-center justify-between mx-auto">
           <LinkComponent href="/wallet" className="flex items-center">
@@ -39,6 +39,7 @@ export const Navbar = ({ linkComponent, activeLink }: NavbarProps) => {
             <span className="self-center hidden text-xl font-extrabold text-gray-700 whitespace-nowrap md:block">
               MyXDC
             </span>
+            <div className="p-1 ml-2 text-xs font-medium bg-gray-300 rounded-lg">alpha</div>
           </LinkComponent>
           <div className="flex justify-end md:order-2">
             <AccountSelector />
