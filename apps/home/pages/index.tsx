@@ -1,11 +1,8 @@
-import Head from 'next/head'
-import { Inter } from '@next/font/google'
-import Hero from 'components/Hero'
-import Navbar from 'components/Navbar'
-import { MainnetLaunch } from 'components/MainnetLaunch'
 import { Features } from 'components/Features'
-
-const inter = Inter({ subsets: ['latin'] })
+import Hero from 'components/Hero'
+import { MainnetLaunch } from 'components/MainnetLaunch'
+import Navbar from 'components/Navbar'
+import Head from 'next/head'
 
 export default function Home() {
   return (

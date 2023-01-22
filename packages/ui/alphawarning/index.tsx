@@ -4,7 +4,9 @@ import React from 'react'
 import { Button } from '../button'
 
 export function AlphaWarning() {
-  const [show, setShow] = React.useState(localStorage.getItem('myxdc:alpha:accept') != 'true')
+  const [show, setShow] = React.useState(
+    typeof window !== 'undefined' && localStorage.getItem('myxdc:alpha:accept') != 'true'
+  )
 
   function onAgree() {
     localStorage.setItem('myxdc:alpha:accept', 'true')
