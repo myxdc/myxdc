@@ -1,6 +1,17 @@
-# MyXDC monorepo
+# MyXDC Monorepo
 
-This is a monorepo for the MyXDC project. [Testnet](https://testnet.myxdc.org) and [Mainnet](https://app.myxdc.org) are the main deployments of the project.
+<p align="center">
+  <a href="https://myxdc.org"><img alt="website" src="https://img.shields.io/badge/website-myxdc.org-blue.svg"></a>
+  <a href="https://github.com/SSekaiking/myxdc/blob/main/LICENSE"><img alt="license" src="https://img.shields.io/badge/license-BSL--1.1-blue.svg"></a>
+</p>
+
+<p align="center">
+  <img alt="MyXDC Logo" src="https://user-images.githubusercontent.com/54310457/214492232-0907470b-5dec-4624-9992-97557e8c0657.png" width="200" />
+</p>
+
+<p align="center">
+  <a href="https://snyk.io/test/github/myxdc/myxdc"><img alt="Follow Twitter" src="https://img.shields.io/twitter/follow/MyXDCWallet?label=Follow&style=social"></a>
+</p>
 
 ## What's inside?
 
@@ -8,14 +19,14 @@ This monorepo uses [Turborepo](https://turbo.build/repo) to manage the project. 
 
 ### Apps and Packages
 
-- `wallet`: [Next.js](https://nextjs.org/) app
-- `@myxdc/ui`: a React component library for the MyXDC project
-- `@myxdc/hooks`: a React hook library for the MyXDC project
-- `@myxdc/utils`: a utility library for the MyXDC project
-- `@myxdc/constants`: a constants library for the MyXDC project
+- `wallet`: MyXDC [web application](https://testnet.myxdc.org) including the wallet and swap 
+- `home`: The website [home page](https://www.myxdc.org/help) and [help center](https://www.myxdc.org/help)
+- `faucet`: [Faucet](https://faucet.myxdc.org/) for testnet tokens.
+- `@myxdc/ui`: Project React component
+- `@myxdc/hooks`: Project React hooks
+- `@myxdc/utils`: Project utilities
+- `@myxdc/constants`: Project constants (configs, artifacts, default tokens...)
 - `@myxdc/eslint`, `@myxdc/prettier`, `@myxdc/typescript`: shared configuration for linting, formatting, and type checking
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
 ### Build
 
@@ -34,37 +45,34 @@ To develop all apps and packages, run the following command:
 pnpm install
 pnpm run dev
 ```
+
 If the app is slow or crashes, try increasing the RAM allowed for the node process. For example:
 
 ```
 export NODE_OPTIONS=--max_old_space_size=8192
 ```
 
-### Remote Caching
+### Project Branches
 
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+In this repository, we use a branching strategy to manage the development of MyXDC. The following branches are used:
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
+- `live`: This is the main branch where the latest stable version of MyXDC is located. It will be deployed to the mainnet at app.myxdc.org
+- `beta`: This branch is for testing the software by a smaller group of users before it's released to the live branch. This allows us to get feedback and identify potential issues before releasing to the general public. It will be deployed to mainnet at beta.myxdc.org
+- `testnet`: This is a mirror of the `beta` branch but for the Testnet network. It will be deployed to testnet at testnet.myxdc.org
+- `alpha`: This branch contains the latest features and updates that are still in development and are being tested internally. It will be deployed to testnet at alpha.myxdc.org
+- `dev`: This branch is where developers work on new features and bug fixes. Development takes place here and it's merged into the alpha branch when it's deemed stable. This branch will not be deployed.
 
-```
-pnpm dlx turbo login
-```
+By following this branching strategy, we can ensure that the live branch always contains stable and tested code, while also allowing for active development and experimentation.
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+Please make sure to create a pull request when contributing to the `dev` branch in this repository.
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your turborepo:
+## Bug Reports & Feature Requests
 
-```
-pnpm dlx turbo link
-```
+First, we appreciate your help in making MyXDC better. If you've encountered a problem with MyXDC or have an idea for a new feature, please submit a [Github Issue](https://github.com/SSekaiking/myxdc/issues/new) in this repository. To help us resolve the issue quickly, please provide the following information in your report:
 
-## Useful Links
+- A clear and concise description of the problem
+- The operating system and browser on which the problem occurred
+- Steps taken to reproduce the issue
 
-Learn more about the power of Turborepo:
+We value your feedback and look forward to improving MyXDC with your help.
 
-- [Pipelines](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
