@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="https://snyk.io/test/github/myxdc/myxdc"><img alt="Follow Twitter" src="https://img.shields.io/twitter/follow/MyXDCWallet?label=Follow&style=social"></a>
+  <a href="https://twitter.com/MyXDCWallet"><img alt="Follow Twitter" src="https://img.shields.io/twitter/follow/MyXDCWallet?label=Follow&style=social"></a>
 </p>
 
 ## What's inside?
