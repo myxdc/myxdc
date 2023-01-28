@@ -1,3 +1,4 @@
+import { config } from '@myxdc/constants'
 import XRC20 from '@myxdc/constants/artifacts/XRC20.json'
 import { isAddress, toChecksumAddress } from '@myxdc/utils/web3'
 import Cors from 'cors'
@@ -24,7 +25,7 @@ function runMiddleware(req: any, res: any, fn: any) {
   })
 }
 
-const RPC_URL = process.env.NEXT_PUBLIC_RPC_URL || 'https://erpc.xinfin.network'
+const RPC_URL = config.RPC_URL
 const contractAddress = '0x81c3d6C3329a44D548e52d68B6486a8Ad3efDff3'
 const web3 = new Web3(RPC_URL)
 const contract = new web3.eth.Contract(XRC20.abi as any, contractAddress)
@@ -32,6 +33,10 @@ const privateKey = process.env.MXDC_FAUCET_PRIVATE_KEY!
 
 export default async function handler(req: any, res: any) {
   await runMiddleware(req, res, cors)
+
+  if (config.CHAIN_ID !== 51) {
+    return res.status(400).send({ error: 'MXDC faucet is only available on XDC testnet' })
+  }
 
   const { address } = req.query
 

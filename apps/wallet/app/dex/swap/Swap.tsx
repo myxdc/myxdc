@@ -1,6 +1,7 @@
 'use client'
 import { useAmountOut } from '@myxdc/hooks/swap/useAmountOut'
 import { useSwapConfig } from '@myxdc/hooks/swap/useSwapConfig'
+import { useBalance } from '@myxdc/hooks/tokens/useBalance'
 import { useTokensWithBalances } from '@myxdc/hooks/tokens/useTokensWithBalances'
 import { useAccount } from '@myxdc/hooks/wallet/useAccount'
 import { SwapWidget } from '@myxdc/ui'
@@ -11,9 +12,12 @@ import React, { useMemo } from 'react'
 
 import SwapConfirm from './SwapConfirm'
 
+const GAS_ESTIMATE = 0.0001
+
 export default function Swap() {
   const { activeAccount } = useAccount()
   const { tokens } = useTokensWithBalances({ address: activeAccount?.address })
+  const { balance } = useBalance({ address: activeAccount?.address })
   const { config: swapConfig, setDeadline, setSlippage } = useSwapConfig()
   const [input, setInput] = React.useState<SwapWidgetProps['inputState']>({
     token: tokens[0].address,
@@ -28,11 +32,33 @@ export default function Swap() {
   const inputToken = useMemo(() => tokens.find((t) => t.address === input?.token), [input, tokens])
   const outputToken = useMemo(() => tokens.find((t) => t.address === output?.token), [output, tokens])
 
-  const { amountOut, priceImpact, error, isLoading } = useAmountOut(
-    input?.amount && toWei(input?.amount, inputToken?.decimals || 18),
-    input?.token,
-    output?.token
-  )
+  const {
+    amountOut,
+    priceImpact,
+    error: amountOutError,
+    isLoading,
+  } = useAmountOut(input?.amount && toWei(input?.amount, inputToken?.decimals || 18), input?.token, output?.token)
+
+  const [error, setError] = React.useState<string | undefined>(undefined)
+
+  React.useEffect(() => {
+    if (!input?.amount) return setError(undefined)
+
+    if (parseFloat(input?.amount || '0') > parseFloat(String(inputToken?.balance))) {
+      setError('Insufficient balance')
+    } else if (parseFloat(balance || '0') < GAS_ESTIMATE) {
+      setError('Insufficient gas')
+    } else if (
+      inputToken?.symbol === 'XDC' &&
+      parseFloat(input?.amount || '0') > parseFloat(String(inputToken?.balance)) - GAS_ESTIMATE
+    ) {
+      setError('Insufficient balance')
+    } else if (parseFloat(input?.amount || '0') <= 0.0001) {
+      setError('Amount too small')
+    } else {
+      setError(undefined)
+    }
+  }, [balance, input, inputToken])
 
   /**
    * * Event handlers
@@ -51,10 +77,10 @@ export default function Swap() {
       }
     },
     maxBalance: () => {
-      if (!inputToken?.balance) return
+      if (!inputToken?.balance || parseFloat(String(inputToken?.balance)) <= 0.0001) return
       let max = inputToken?.balance
       if (inputToken?.symbol === 'XDC') {
-        max = parseFloat(String(inputToken?.balance)) - 0.0001
+        max = parseFloat(String(inputToken?.balance)) - GAS_ESTIMATE
       }
       setInput((input) => ({ ...input, amount: max?.toString() || '' }))
     },
@@ -72,7 +98,7 @@ export default function Swap() {
   }
 
   const handleSubmit = async () => {
-    if (isLoading || error || !input?.amount || !amountOut) return
+    if (isLoading || error || amountOutError || !input?.amount || !amountOut) return
     setShowSwapModal(true)
   }
 
@@ -111,6 +137,8 @@ export default function Swap() {
         uiConfig={{
           buttonText: error
             ? error.replaceAll('_', ' ')
+            : amountOutError
+            ? amountOutError.replaceAll('_', ' ')
             : isLoading
             ? 'loading'
             : !activeAccount
@@ -118,13 +146,14 @@ export default function Swap() {
             : !input?.amount
             ? 'Enter an amount'
             : 'Swap',
-          buttonVariant: error
-            ? 'error'
-            : isLoading
-            ? 'loading'
-            : !input?.amount || !amountOut || !activeAccount
-            ? 'disabled'
-            : 'default',
+          buttonVariant:
+            error || amountOutError
+              ? 'error'
+              : isLoading
+              ? 'loading'
+              : !input?.amount || !amountOut || !activeAccount
+              ? 'disabled'
+              : 'default',
         }}
         handleSubmit={handleSubmit}
         handleSwitchPlaces={helpers.switchTokensPlaces}

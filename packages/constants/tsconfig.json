@@ -1,0 +1,5 @@
+{
+  "extends": "@myxdc/typescript-config/nextjs.json",
+  "include": ["."],
+  "exclude": ["node_modules"],
+}

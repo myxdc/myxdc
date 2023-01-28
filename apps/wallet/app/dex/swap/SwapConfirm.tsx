@@ -1,6 +1,5 @@
 'use client'
 import { useSwapRouter, useXRC20 } from '@myxdc/hooks/contracts/useContract'
-import { useWeb3 } from '@myxdc/hooks/contracts/useWeb3'
 import { useConfig } from '@myxdc/hooks/custom/useConfig'
 import { useSwapConfig } from '@myxdc/hooks/swap/useSwapConfig'
 import { useTokensWithBalances } from '@myxdc/hooks/tokens/useTokensWithBalances'
@@ -54,7 +53,6 @@ export default function SwapConfirm({ onClose, inputState, outputState, exchange
   const { config: swapConfig } = useSwapConfig()
   const { SWAP_ROUTER_ADDRESS, SWAP_WXDC_ADDRESS } = useConfig()
   const router = useSwapRouter()
-  const web3 = useWeb3()
 
   const token1 = useXRC20(inputState.token)
   const { activeAccount } = useAccount()

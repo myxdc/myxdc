@@ -1,9 +1,10 @@
 // @ts-nocheck
 // TODO: Add types
 
+import { config } from '@myxdc/constants/config'
 import Utils from 'web3-utils'
 
-const CHAIN_ID = Number(process.env.NEXT_PUBLIC_CHAIN_ID) || 50
+const CHAIN_ID = Number(config.CHAIN_ID) || 50
 
 /**
  * Add the missing fields to the transaction object

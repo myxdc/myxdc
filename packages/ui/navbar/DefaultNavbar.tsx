@@ -1,3 +1,4 @@
+import { useConfig } from '@myxdc/hooks/custom/useConfig'
 import Image from 'next/image'
 
 import { Container } from '../container'
@@ -18,6 +19,7 @@ function handleToggle() {
 
 export const Navbar = ({ linkComponent, activeLink }: NavbarProps) => {
   const LinkComponent = linkComponent || 'a'
+  const config = useConfig()
 
   const activeLinkClass =
     'block py-2 pl-3 pr-4 text-white rounded bg-primary-700 md:bg-transparent md:text-primary-700 md:p-0 '
@@ -39,7 +41,7 @@ export const Navbar = ({ linkComponent, activeLink }: NavbarProps) => {
             <span className="self-center hidden text-xl font-extrabold text-gray-700 whitespace-nowrap md:block">
               MyXDC
             </span>
-            <div className="p-1 ml-2 text-xs font-medium bg-gray-300 rounded-lg">alpha</div>
+            <div className="p-1 ml-2 text-xs font-medium bg-gray-300 rounded-lg">{config.STAGE}</div>
           </LinkComponent>
           <div className="flex justify-end md:order-2">
             <AccountSelector />

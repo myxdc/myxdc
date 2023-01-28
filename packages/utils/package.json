@@ -12,6 +12,7 @@
   ],
   "author": "",
   "devDependencies": {
+    "@myxdc/constants": "workspace:*",
     "@myxdc/typescript-config": "workspace:*",
     "ethers": "^5.7.2",
     "web3": "^1.8.1"

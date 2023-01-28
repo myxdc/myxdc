@@ -10,30 +10,18 @@
     "tsconfig.json"
   ],
   "globalEnv": [
-    "NEXT_PUBLIC_RPC_URL",
-    "NEXT_PUBLIC_CHAIN_ID",
-    "NEXT_PUBLIC_ROUTER_ADDRESS",
-    "NEXT_PUBLIC_FACTORY_ADDRESS",
-    "NEXT_PUBLIC_INIT_CODE_HASH"
+    "STAGE"
   ],
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**"],
-      "env": [
-        "NEXT_PUBLIC_RPC_URL",
-        "NEXT_PUBLIC_CHAIN_ID",
-        "NEXT_PUBLIC_ROUTER_ADDRESS",
-        "NEXT_PUBLIC_FACTORY_ADDRESS",
-        "NEXT_PUBLIC_INIT_CODE_HASH"
-      ]
+      "outputs": ["dist/**", ".next/**"]
     },
     "lint": {
       "dependsOn": ["^build"],
       "outputs": []
     },
     "dev": {
-      "cache": false
     }
   }
 }

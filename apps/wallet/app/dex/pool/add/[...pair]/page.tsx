@@ -2,15 +2,18 @@
 import { useQuote } from '@myxdc/hooks/swap/useQuote'
 import { useSwapConfig } from '@myxdc/hooks/swap/useSwapConfig'
 import { useUserLiquidity } from '@myxdc/hooks/swap/useUserLiquidity'
+import { useBalance } from '@myxdc/hooks/tokens/useBalance'
 import { useTokensWithBalances } from '@myxdc/hooks/tokens/useTokensWithBalances'
 import { useAccount } from '@myxdc/hooks/wallet/useAccount'
 import { LiquidityWidgetAdd } from '@myxdc/ui'
 import { LiquidityWidgetAddProps } from '@myxdc/ui/liquiditywidget/LiquidityAdd'
 import { toHumanReadable } from '@myxdc/utils/numbers/price'
 import { fromWei, toChecksumAddress, toWei } from '@myxdc/utils/web3'
-import { useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 
 import LiquidityConfirmAdd from './AddConfirm'
+
+const GAS_ESTIMATE = 0.0001
 
 export default function Page({
   params,
@@ -35,6 +38,7 @@ export default function Page({
     amount: '',
   })
   const [showConfirm, setShowConfirm] = useState(false)
+  const { balance } = useBalance({ address: activeAccount?.address })
 
   const tokenA = useMemo(
     () => tokens.find((t) => t.address.toLowerCase() === inputA?.token?.toLowerCase()),
@@ -50,10 +54,10 @@ export default function Page({
     inputB?.token
   )
   const [customQuoteB, setCustomQuoteB] = useState<string | undefined>(undefined)
-  const { error } = useUserLiquidity(activeAccount?.address, inputA?.token, inputB?.token)
+  const { error: liquidityError } = useUserLiquidity(activeAccount?.address, inputA?.token, inputB?.token)
   const { config: swapConfig } = useSwapConfig()
 
-  if (!activeAccount) return null
+  const [error, setError] = React.useState<string | undefined>(undefined)
 
   /**
    * * Event handlers
@@ -72,7 +76,7 @@ export default function Page({
       }
     },
     maxBalance: () => {
-      if (!tokenA?.balance) return
+      if (!tokenA?.balance || parseFloat(String(tokenA?.balance)) <= 0.0001) return
       // set to max minus 0.01% of the balance to avoid errors
       const max = parseFloat(String(tokenA?.balance)) - parseFloat(String(tokenA?.balance)) * 0.0001
       setInputA((input) => ({ ...input, amount: max?.toString() || '' }))
@@ -92,7 +96,7 @@ export default function Page({
       }
     },
     maxBalance: () => {
-      if (!tokenB?.balance) return
+      if (!tokenB?.balance || parseFloat(String(tokenB?.balance)) <= 0.0001) return
       // set to max minus 0.01% of the balance to avoid errors
       const max = parseFloat(String(tokenB?.balance)) - parseFloat(String(tokenB?.balance)) * 0.0001
       setInputB((input) => ({ ...input, amount: max?.toString() || '' }))
@@ -108,9 +112,9 @@ export default function Page({
       setInputB((inputB) => ({ ...inputB, token: inputA?.token, amount: inputA?.amount }))
     },
   }
-  const isNewPair = error?.message === 'PAIR_NOT_FOUND'
+  const isNewPair = liquidityError?.message === 'PAIR_NOT_FOUND'
 
-  let inputBNum
+  let inputBNum = 0
   if (isNewPair) {
     inputBNum = parseFloat(customQuoteB || '0')
   } else {
@@ -125,6 +129,31 @@ export default function Page({
 
   const inputAMinRaw = inputAMin ? toWei(inputAMin.toString(), tokenA?.decimals || 18) : undefined
   const inputBMinRaw = inputBMin ? toWei(inputBMin.toString(), tokenB?.decimals || 18) : undefined
+
+  React.useEffect(() => {
+    if (!inputA?.amount && !inputB?.amount) return setError(undefined)
+    const amountB = parseFloat(isNewPair ? `${customQuoteB}` : quotedB ? `${inputBNum}` : quotedB)
+
+    if (
+      parseFloat(inputA?.amount || '0') > parseFloat(String(tokenA?.balance)) ||
+      amountB > parseFloat(String(tokenB?.balance))
+    ) {
+      setError('Insufficient balance')
+    } else if (parseFloat(balance || '0') < GAS_ESTIMATE) {
+      setError('Insufficient gas')
+    } else if (
+      (tokenB?.symbol === 'XDC' && amountB > parseFloat(String(tokenB?.balance)) - GAS_ESTIMATE) ||
+      (tokenA?.symbol === 'XDC' && amountB > parseFloat(String(tokenA?.balance)) - GAS_ESTIMATE)
+    ) {
+      setError('Insufficient balance')
+    } else if (amountB <= 0.0001 || parseFloat(inputA?.amount || '0') <= 0.0001) {
+      setError('Amount too small')
+    } else {
+      setError(undefined)
+    }
+  }, [inputB, balance, tokenB, inputA, tokenA, quotedB, inputBNum])
+
+  if (!activeAccount) return null
 
   return (
     <>
@@ -147,9 +176,9 @@ export default function Page({
           BperA: rateBtoA ? toHumanReadable(rateBtoA, 4) : undefined,
         }}
         uiConfig={{
-          buttonText: isNewPair ? 'Create Pair' : 'Add liquidity',
-          buttonVariant: quotedB || isNewPair ? 'default' : 'disabled',
           allowInputB: isNewPair,
+          buttonText: error ? error.replaceAll('_', ' ') : isNewPair ? 'Create Pair' : 'Add liquidity',
+          buttonVariant: error || liquidityError ? 'error' : quotedB || isNewPair ? 'default' : 'disabled',
         }}
         handleSubmit={() => {
           if (!activeAccount) return

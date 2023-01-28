@@ -1,10 +1,11 @@
 // tokens
 import { default_tokens } from '@myxdc/constants'
+import { config } from '@myxdc/constants'
 import { atom } from 'jotai'
 
 import type { Token } from './types'
 
-export const tokensAtom = atom<Token[]>(default_tokens(process.env.NEXT_PUBLIC_CHAIN_ID as any))
+export const tokensAtom = atom<Token[]>(default_tokens(config.CHAIN_ID as any))
 
 // add token without duplicates
 export const addTokenAtom = atom(null, (get, set, token: Token) => {

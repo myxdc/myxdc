@@ -2,11 +2,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: false,
+  swcMinify: true,
   transpilePackages: ['@myxdc/ui'],
   experimental: {
     appDir: true,
-    serverComponentsExternalPackages: ['@myxdc/ui'],
+    // serverComponentsExternalPackages: ['@myxdc/ui'],
   },
   async rewrites() {
     return [
