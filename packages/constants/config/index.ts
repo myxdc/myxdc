@@ -1,4 +1,5 @@
 const STAGE = process.env.NEXT_PUBLIC_STAGE || 'dev'
+console.log(STAGE)
 const CHAIN_ID = (() => {
   if (STAGE === 'mainnet' || STAGE === 'beta') {
     return 50
