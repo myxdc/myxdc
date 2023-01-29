@@ -1,6 +1,6 @@
-const STAGE = process.env.STAGE || 'dev'
+const STAGE = process.env.NEXT_PUBLIC_STAGE || 'dev'
 const CHAIN_ID = (() => {
-  if (STAGE === 'live' || STAGE === 'beta') {
+  if (STAGE === 'mainnet' || STAGE === 'beta') {
     return 50
   }
   return 51

@@ -10,7 +10,7 @@
     "tsconfig.json"
   ],
   "globalEnv": [
-    "STAGE"
+    "NEXT_PUBLIC_STAGE"
   ],
   "pipeline": {
     "build": {
