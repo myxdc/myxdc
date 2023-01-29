@@ -56,7 +56,7 @@ export NODE_OPTIONS=--max_old_space_size=8192
 
 In this repository, we use a branching strategy to manage the development of MyXDC. The following branches are used:
 
-- `live`: This is the main branch where the latest stable version of MyXDC is located. It will be deployed to the mainnet at app.myxdc.org
+- `main`: This is the main branch where the latest stable version of MyXDC is located. It will be deployed to the mainnet at app.myxdc.org
 - `beta`: This branch is for testing the software by a smaller group of users before it's released to the live branch. This allows us to get feedback and identify potential issues before releasing to the general public. It will be deployed to mainnet at beta.myxdc.org
 - `testnet`: This is a mirror of the `beta` branch but for the Testnet network. It will be deployed to testnet at testnet.myxdc.org
 - `alpha`: This branch contains the latest features and updates that are still in development and are being tested internally. It will be deployed to testnet at alpha.myxdc.org
