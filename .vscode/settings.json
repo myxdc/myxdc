@@ -51,5 +51,8 @@
     "yaml": false
   },
   "cSpell.allowCompoundWords": true,
-  "workbench.colorTheme": "Tokyo Night"
+  "workbench.colorTheme": "Tokyo Night",
+  "editor.fontFamily": "`Cascadia Mono P`, `Cascadia Mono`,  'Droid Sans Mono', 'monospace', monospace",
+  "editor.fontSize": 16,
+  "editor.lineHeight": 1.5
 }

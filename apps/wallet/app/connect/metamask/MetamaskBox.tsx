@@ -29,18 +29,22 @@ export const MetamaskBox = () => {
 
   return (
     <>
-      {(isLoading || !hasMounted) && <Spinner className="mx-auto" text={isLoading ? 'Connecting...' : 'Loading...'} />}
+      {(isLoading || !hasMounted) && (
+        <div className="flex pb-6 mt-6 mb-0 w-96 max-w-lg bg-white rounded-3xl shadow-2xl aspect-square">
+          <Spinner className="!m-auto" text={isLoading ? 'Connecting...' : 'Loading...'} />
+        </div>
+      )}
       {hasMounted && accounts?.length > 0 && (
-        <div className="max-w-lg p-6 mx-4 mt-6 mb-0 space-y-6 bg-white shadow-2xl md:p-8 md:pb-10 rounded-3xl">
-          <MetaMaskIcon className="w-32 h-32 mx-auto" />
+        <div className="p-6 mt-6 mb-0 space-y-4 max-w-lg bg-white rounded-3xl shadow-2xl md:p-8">
+          <MetaMaskIcon className="mx-auto w-32 h-32" />
           <Typography variant="p" weight={600} className="pt-4 pb-4 text-center">
             You&apos;re connected to MetaMask!
           </Typography>
         </div>
       )}
       {hasMounted && !isLoading && accounts.length < 1 && (
-        <div className="max-w-lg p-6 mx-4 mt-6 mb-0 space-y-4 bg-white shadow-2xl md:p-8 rounded-3xl">
-          <MetaMaskIcon className="w-32 h-32 mx-auto" />
+        <div className="p-6 mt-6 mb-0 space-y-4 max-w-lg bg-white rounded-3xl shadow-2xl md:p-8">
+          <MetaMaskIcon className="mx-auto w-32 h-32" />
           <Typography variant="p" weight={600} className="pt-2 pb-2">
             Follow these steps to connect your account:
           </Typography>
@@ -61,7 +65,7 @@ export const MetamaskBox = () => {
           </Typography>
 
           <div className="pt-6">
-            <Button className="w-full " onClick={handleImport}>
+            <Button className="w-full" onClick={handleImport}>
               Authorize & Import Accounts
             </Button>
           </div>

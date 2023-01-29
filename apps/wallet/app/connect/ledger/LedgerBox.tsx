@@ -31,9 +31,13 @@ export const LedgerBox = () => {
 
   return (
     <>
-      {(isLoading || !hasMounted) && <Spinner className="mx-auto" text={isLoading ? 'Connecting...' : 'Loading...'} />}
+      {(isLoading || !hasMounted) && (
+        <div className="flex pb-6 mt-6 mb-0 w-96 max-w-lg bg-white rounded-3xl shadow-2xl aspect-square">
+          <Spinner className="!m-auto" text={isLoading ? 'Connecting...' : 'Loading...'} />
+        </div>
+      )}
       {hasMounted && !isLoading && (
-        <div className="max-w-lg p-6 mx-4 mt-6 mb-0 space-y-6 bg-white shadow-2xl md:p-8 rounded-3xl">
+        <div className="p-6 mt-6 mb-0 space-y-4 max-w-lg bg-white rounded-3xl shadow-2xl md:p-8">
           <LedgerIcon className="mx-auto w-28 h-28" />
           <Typography variant="p" weight={600} className="pt-4 pb-4">
             Follow these steps to connect your account:
@@ -58,7 +62,7 @@ export const LedgerBox = () => {
             <Typography variant="p" weight={600}>
               Account Index (Optional)
             </Typography>
-            <div className="px-3 py-2 text-base text-gray-700 placeholder-gray-500 border rounded-lg focus:shadow-outline w-fit">
+            <div className="px-3 py-2 text-base placeholder-gray-500 text-gray-700 rounded-lg border focus:shadow-outline w-fit">
               <span>44&apos;/550&apos;/0/0/</span>
               <input
                 type="number"
@@ -80,11 +84,11 @@ export const LedgerBox = () => {
 
           <div className="pt-4">
             {Number(input) in accounts ? (
-              <Button className="w-full text-red-900 cursor-default from-red-400 to-red-300">
+              <Button className="w-full text-red-900 from-red-400 to-red-300 cursor-default">
                 Already Imported (try another index)
               </Button>
             ) : (
-              <Button className="w-full " onClick={handleImport}>
+              <Button className="w-full" onClick={handleImport}>
                 Authorize & Import Account
               </Button>
             )}

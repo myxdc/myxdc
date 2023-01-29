@@ -140,7 +140,7 @@ export default function LiquidityConfirmRemove({
       },
       {
         style: {
-          minWidth: '460px',
+          width: '460px',
         },
         duration: 10000,
       }
@@ -155,8 +155,8 @@ export default function LiquidityConfirmRemove({
 
   if (loading) {
     return (
-      <div className="fixed inset-0 z-20 flex items-center justify-center overflow-y-auto transition-opacity bg-gray-800 bg-opacity-60 backdrop-filter backdrop-blur-sm">
-        <div className="flex items-center justify-center w-full max-w-md px-4 py-4 bg-white shadow-lg rounded-3xl square">
+      <div className="flex overflow-y-auto fixed inset-0 z-20 justify-center items-center bg-gray-800 bg-opacity-60 backdrop-filter backdrop-blur-sm transition-opacity">
+        <div className="flex justify-center items-center px-4 py-4 w-full max-w-md bg-white rounded-3xl shadow-lg square">
           <Spinner text="Removing" />
         </div>
       </div>
@@ -165,7 +165,7 @@ export default function LiquidityConfirmRemove({
 
   return (
     <div
-      className="fixed inset-0 z-20 flex items-center justify-center overflow-y-auto transition-opacity bg-gray-800 bg-opacity-60 backdrop-filter backdrop-blur-sm"
+      className="flex overflow-y-auto fixed inset-0 z-20 justify-center items-center bg-gray-800 bg-opacity-60 backdrop-filter backdrop-blur-sm transition-opacity"
       onClick={(e) => {
         e.target === e.currentTarget && onClose()
       }}
@@ -173,8 +173,8 @@ export default function LiquidityConfirmRemove({
       role="dialog"
       aria-modal="true"
     >
-      <div className="w-full max-w-md px-4 py-4 bg-white shadow-lg rounded-3xl">
-        <div className="flex items-center justify-between">
+      <div className="px-4 py-4 w-full max-w-md bg-white rounded-3xl shadow-lg">
+        <div className="flex justify-between items-center">
           <Typography variant="h4" weight={600} as="h2">
             Confirm Remove Liquidity
           </Typography>

@@ -6,7 +6,12 @@ export default function Toaster() {
   return (
     <HotToaster>
       {(t: any) => (
-        <ToastBar toast={t}>
+        <ToastBar
+          toast={t}
+          style={{
+            maxWidth: '90vw',
+          }}
+        >
           {({ icon, message }) => (
             <>
               {icon}
