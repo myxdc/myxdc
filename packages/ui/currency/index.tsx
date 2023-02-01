@@ -7,10 +7,11 @@ import { Skeleton } from '../animated'
 
 interface CurrencyProps {
   currency?: string
+  className?: string
   [key: string]: unknown
 }
 
-export const Currency = ({ currency, ...rest }: CurrencyProps) => {
+export const Currency = ({ currency, className, ...rest }: CurrencyProps) => {
   const [exists, setExists] = useState(true)
   const url = `/assets/img/tokens/${currency?.toUpperCase()}.png`
 
@@ -22,6 +23,7 @@ export const Currency = ({ currency, ...rest }: CurrencyProps) => {
         height={26}
         xmlSpace="preserve"
         viewBox="0 0 337.963 337.958"
+        className={className}
         {...rest}
       >
         <g>
@@ -43,9 +45,8 @@ export const Currency = ({ currency, ...rest }: CurrencyProps) => {
         alt={currency}
         width={26}
         height={26}
-        className="rounded-full bg-primary-200"
+        className={'rounded-full bg-white ' + className}
         onError={(e) => {
-          console.log(e)
           setExists(false)
         }}
         {...rest}
@@ -53,7 +54,15 @@ export const Currency = ({ currency, ...rest }: CurrencyProps) => {
     )
   } else {
     return (
-      <svg width={26} height={26} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...rest}>
+      <svg
+        width={26}
+        height={26}
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className={className}
+        {...rest}
+      >
         <path
           fillRule="evenodd"
           clipRule="evenodd"

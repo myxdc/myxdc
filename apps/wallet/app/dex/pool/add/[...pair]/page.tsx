@@ -178,7 +178,7 @@ export default function Page({
         uiConfig={{
           allowInputB: isNewPair,
           buttonText: error ? error.replaceAll('_', ' ') : isNewPair ? 'Create Pair' : 'Add liquidity',
-          buttonVariant: error || liquidityError ? 'error' : quotedB || isNewPair ? 'default' : 'disabled',
+          buttonVariant: error ? 'error' : quotedB || isNewPair ? 'default' : 'disabled',
         }}
         handleSubmit={() => {
           if (!activeAccount) return

@@ -43,7 +43,11 @@ export const useTokensWithBalances = ({
             balance: wei ? balance : fromWei(balance, token.decimals || 18),
           }
         })
-      )
+      ).catch((e: any) => {
+        console.error(e)
+        throw e
+      })
+
       let coinGeckoIds = ''
       balances.forEach((token) => {
         if (token.coinGeckoId && token.coinGeckoId !== '') {
