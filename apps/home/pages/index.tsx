@@ -1,7 +1,9 @@
+import { CallToAction } from 'components/CallToAction'
 import { Features } from 'components/Features'
+import { Footer } from 'components/Footer'
 import Hero from 'components/Hero'
-import { MainnetLaunch } from 'components/MainnetLaunch'
 import Navbar from 'components/Navbar'
+import { Sections } from 'components/Sections'
 import Head from 'next/head'
 
 export default function Home() {
@@ -18,8 +20,10 @@ export default function Home() {
       </Head>
       <Navbar />
       <Hero />
-      <MainnetLaunch />
       <Features />
+      <Sections />
+      <CallToAction />
+      <Footer />
     </>
   )
 }

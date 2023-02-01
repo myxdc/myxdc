@@ -1,22 +1,23 @@
 import Link from 'next/link'
+
 import Logo from './Logo'
 
 const Navbar = () => {
   return (
-    <nav className="top-0 z-20 px-4 py-4 transition duration-200 bg-gray-100 border-b border-gray-200 backdrop-filter backdrop-blur bg-opacity-30">
-      <div className="container flex items-center w-full py-4 mx-auto">
+    <nav className="top-0 z-20 bg-gray-100 bg-opacity-30 backdrop-filter backdrop-blur transition duration-200">
+      <div className="container flex flex-wrap justify-between px-8 py-8 mx-auto mt-0 w-full max-w-screen-xl">
         <Link href="/" className="flex items-center">
           <Logo />
         </Link>
-        <Link href="/help" className="flex items-center ml-auto mr-8 text-gray-700">
+        <Link href="/help" className="flex items-center mr-8 ml-auto text-gray-700">
           Need help?
         </Link>
         <div className="">
           <Link
-            href="https://testnet.myxdc.org/"
-            className="inline-block px-4 py-2 text-sm font-semibold text-gray-300 bg-gray-800 rounded-lg hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-700 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 "
+            href="https://app.myxdc.org/"
+            className="inline-block px-6 py-3 text-sm font-semibold text-white rounded-full transition-colors bg-primary-600 hover:bg-primary-700"
           >
-            Enter App
+            Launch App
           </Link>
         </div>
       </div>

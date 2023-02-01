@@ -1,4 +1,5 @@
 import { Container } from '@myxdc/ui'
+import { Footer } from 'components/Footer'
 import HelpCenterNavbar from 'components/HelpCenterNavbar'
 import Head from 'next/head'
 import React from 'react'
@@ -13,7 +14,8 @@ export default function HelpCenterLayout({ children }: any) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <HelpCenterNavbar />
-      <Container>{children}</Container>
+      <Container className="mb-8">{children}</Container>
+      <Footer />
     </>
   )
 }

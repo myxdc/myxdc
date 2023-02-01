@@ -1,3 +1,4 @@
+import { Footer } from 'components/Footer'
 import Navbar from 'components/Navbar'
 import { PrivacyPolicy } from 'components/PrivacyPolicy'
 import Head from 'next/head'
@@ -13,6 +14,7 @@ export default function PP() {
       </Head>
       <Navbar />
       <PrivacyPolicy />
+      <Footer />
     </>
   )
 }
