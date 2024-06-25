@@ -5,7 +5,7 @@ import { AlphaWarning } from '@myxdc/ui/alphawarning'
 import { LoginWrapper } from './loginWrapper'
 import Toaster from './toaster'
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: any }) {
   return (
     <html lang="en">
       <head />

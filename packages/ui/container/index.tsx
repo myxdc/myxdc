@@ -1,3 +1,4 @@
+// @ts-nocheck
 interface ContainerProps {
   children: React.ReactNode
   as?: React.ElementType

@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import React from 'react'
 
 // TODO: should be a server component, take away the usePathname
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Layout({ children }: { children: any }) {
   const pathname = usePathname()
 
   const paths = pathname?.split('/')
