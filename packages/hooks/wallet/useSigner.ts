@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import { ethers } from 'ethers'
 
 import { useWeb3 } from '../contracts/useWeb3'
 import { txObj } from './types'
@@ -20,34 +21,37 @@ export const useSigner = ({ type }: { type?: 'metamask' | 'ledger' | 'local' }) 
         ...tx,
       }
       // 1. calculate gas if not provided
-      if (!txObject.gas) {
+      if (!txObject.gasLimit) {
         try {
-          txObject.gas = (await Web3.eth.estimateGas(txObject)).toString()
+          txObject.gasLimit = ethers.utils.hexlify(await Web3.eth.estimateGas(txObject))
         } catch (e) {
           console.log(e)
-          txObject.gas = '1000000'
+          txObject.gasLimit = ethers.utils.hexlify('1000000')
         }
       }
-      // 2. set the gasPrice if not provided
-      if (!txObject.gasPrice) {
-        txObject.gasPrice = '250000000'
-      }
+      // // 2. set the gasPrice if not provided
+      // if (!txObject.gasPrice) {
+      //   txObject.gasPrice = ethers.utils.hexlify(await Web3.eth.getGasPrice())
+      // }
+      //
+
       // 3. calculate the nonce if not provided
-      if (!txObject.nonce) {
-        txObject.nonce = (await Web3.eth.getTransactionCount(accountId)).toString()
-      }
-      // 4. set the value if not provided
+      // if (!txObject.nonce) {
+      //   txObject.nonce = (await Web3.eth.getTransactionCount(accountId)).toString()
+      // }
+      // // 4. set the value if not provided
       if (!txObject.value) {
-        txObject.value = '0'
+        txObject.value = ethers.utils.parseEther('0.0')
       }
       // 5. set the from address if not provided
-      if (!txObject.from) {
-        txObject.from = accountId
-      }
-      // 6. set data if not provided
+      // if (!txObject.from) {
+      // txObject.from = accountId
+      // }
+      // // 6. set data if not provided
       if (!txObject.data) {
         txObject.data = '0x'
       }
+      console.log('obkect', txObject)
       if (type === 'metamask') {
         return metaMaskSigner(txObject, accountId)
       } else if (type === 'ledger') {
