@@ -11,6 +11,7 @@ import { AddressInput, CurrencyInput, FormButton, Spinner } from '@myxdc/ui'
 import { isAddress, toChecksumAddress, toWei } from '@myxdc/utils/web3'
 import React, { useEffect, useMemo, useState } from 'react'
 import toast from 'react-hot-toast'
+import { ethers } from 'ethers'
 
 export default function Page() {
   const { EXPLORER_URL } = useConfig()
@@ -61,8 +62,8 @@ export default function Page() {
     if (selectedToken!.symbol === 'XDC') {
       tx = {
         to: toChecksumAddress(to),
-        value: toWei(amount, selectedToken!.decimals || 18),
-        from: fromAddress,
+        value: ethers.utils.parseEther(amount),
+        // from: fromAddress,
       }
     } else {
       const method = new Web3.eth.Contract(
@@ -72,7 +73,7 @@ export default function Page() {
       tx = {
         to: toChecksumAddress(selectedToken!.address),
         data: method.encodeABI(),
-        from: fromAddress,
+        // from: fromAddress,
       }
     }
 

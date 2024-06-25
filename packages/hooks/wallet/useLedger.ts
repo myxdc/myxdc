@@ -65,15 +65,17 @@ export const useLedger = () => {
 
   const signTransaction = React.useCallback(
     async (tx: txObj, accountId: string) => {
-      if (CHAIN_ID == 51) {
-        throw new Error('Ledger only supports XDC Mainnet')
-      }
+      // if (CHAIN_ID == 51) {
+      //   throw new Error('Ledger only supports XDC Mainnet')
+      // }
       const index = Object.values(accounts).indexOf(accountId)
       let ledger = Ledger
-      if (!Ledger) {
+      if (!ledger) {
         ledger = await connectLedger()
       }
+      console.log('2ttt', tx)
       const rawTx = ethers.utils.serializeTransaction(tx).substring(2)
+      console.log('raw', rawTx)
       const signed = await ledger!.signTransaction(`44'/'/550'/0/0/${index}`, rawTx, null)
       const signature = {
         r: '0x' + signed.r,
