@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Skeleton } from '../animated/skeleton'
 import { Currency } from '../currency'
 

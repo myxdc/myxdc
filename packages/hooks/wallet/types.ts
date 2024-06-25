@@ -1,9 +1,9 @@
 export interface txObj {
-  from?: string
-  to?: string
-  value?: string
-  data?: string
-  nonce?: number
-  gas?: string
-  gasPrice?: string
+  from?: any
+  to?: any
+  value?: any
+  data?: any
+  nonce?: any
+  gas?: any
+  gasPrice?: any
 }

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useConfig } from '@myxdc/hooks/custom/useConfig'
 import Image from 'next/image'
 

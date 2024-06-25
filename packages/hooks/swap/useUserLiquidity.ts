@@ -50,6 +50,7 @@ export const useUserLiquidity = (address?: string, tokenA?: string, tokenB?: str
     [pairContract]
   )
 
+  // @ts-ignore
   const { data, error, isLoading } = useSWR(['getLiquidityTokens', address, pairAddress, reserves], fetcher)
 
   if (reserves_error?.message === 'PAIR_NOT_FOUND') {

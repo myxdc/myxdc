@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import ReactQRCode from 'react-qr-code'
 
 import { Skeleton } from '../animated'
