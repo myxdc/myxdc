@@ -70,17 +70,15 @@ export const useLedger = () => {
       if (CHAIN_ID == 51) {
         throw new Error('Ledger currently only supports XDC Mainnet')
       }
+      if (!tx.chainId) {
+        tx.chainId = 50
+      }
       const index = Object.values(accounts).indexOf(accountId)
       let ledger = Ledger
       if (!ledger) {
         ledger = await connectLedger()
       }
-      const txHash = utils
-        .serializeTransaction({
-          ...tx,
-          chainId: 50,
-        })
-        .substring(2)
+      const txHash = utils.serializeTransaction(tx).substring(2)
 
       let signed = {
         r: '',
@@ -108,12 +106,19 @@ export const useLedger = () => {
         throw e
       }
 
-      const signature = {
-        r: '0x' + signed.r,
-        s: '0x' + signed.s,
-        v: parseInt(signed.v),
+      const rv = parseInt(signed.v, 16)
+      let cv = tx.chainId * 2 + 35
+      if (rv !== cv && (rv & cv) !== rv) {
+        cv += 1
       }
-      const signedTx = ethers.utils.serializeTransaction({ ...tx, chainId: 50 }, signature).substring(2)
+
+      const signedTx = ethers.utils
+        .serializeTransaction(tx, {
+          r: '0x' + signed.r,
+          s: '0x' + signed.s,
+          v: cv,
+        })
+        .substring(2)
 
       return await Web3.eth.sendSignedTransaction('0x' + signedTx)
     },
