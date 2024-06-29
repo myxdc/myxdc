@@ -26,30 +26,34 @@ export const useSigner = ({ type }: { type?: 'metamask' | 'ledger' | 'local' }) 
           txObject.gasLimit = ethers.utils.hexlify(await Web3.eth.estimateGas(txObject))
         } catch (e) {
           console.log(e)
-          txObject.gasLimit = ethers.utils.hexlify('1000000')
+          txObject.gasLimit = ethers.utils.parseUnits('250000', 'gwei')
         }
       }
       // // 2. set the gasPrice if not provided
-      // if (!txObject.gasPrice) {
-      //   txObject.gasPrice = ethers.utils.hexlify(await Web3.eth.getGasPrice())
-      // }
-      //
+      if (!txObject.gasPrice) {
+        // txObject.gasPrice = ethers.utils.parseUnits('0.25', 'gwei')
+      }
 
       // 3. calculate the nonce if not provided
-      // if (!txObject.nonce) {
-      //   txObject.nonce = (await Web3.eth.getTransactionCount(accountId)).toString()
-      // }
+      if (!txObject.nonce) {
+        txObject.nonce = await Web3.eth.getTransactionCount(accountId)
+      }
+
       // // 4. set the value if not provided
       if (!txObject.value) {
-        txObject.value = ethers.utils.parseEther('0.0')
+        txObject.value = ethers.utils.parseEther('0')
       }
+
       // 5. set the from address if not provided
-      // if (!txObject.from) {
-      // txObject.from = accountId
-      // }
+      if (!txObject.from) {
+        // txObject.from = accountId
+      }
       // // 6. set data if not provided
       if (!txObject.data) {
-        txObject.data = '0x'
+      }
+
+      if (!txObject.type) {
+        // txObject.type = 1
       }
       console.log('obkect', txObject)
       if (type === 'metamask') {

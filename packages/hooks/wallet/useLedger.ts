@@ -11,6 +11,8 @@ import { useConfig } from '../custom/useConfig'
 import { ledgerAccountsAtom, writeActiveAccountAtom } from './state'
 import { txObj } from './types'
 
+import { utils } from 'ethers'
+
 export const useLedger = () => {
   const Web3 = useWeb3()
   const [accounts, setAccounts] = useAtom(ledgerAccountsAtom)
@@ -65,24 +67,58 @@ export const useLedger = () => {
 
   const signTransaction = React.useCallback(
     async (tx: txObj, accountId: string) => {
-      // if (CHAIN_ID == 51) {
-      //   throw new Error('Ledger only supports XDC Mainnet')
-      // }
+      if (CHAIN_ID == 51) {
+        throw new Error('Ledger currently only supports XDC Mainnet')
+      }
+      if (!tx.chainId) {
+        tx.chainId = 50
+      }
       const index = Object.values(accounts).indexOf(accountId)
       let ledger = Ledger
       if (!ledger) {
         ledger = await connectLedger()
       }
-      console.log('2ttt', tx)
-      const rawTx = ethers.utils.serializeTransaction(tx).substring(2)
-      console.log('raw', rawTx)
-      const signed = await ledger!.signTransaction(`44'/'/550'/0/0/${index}`, rawTx, null)
-      const signature = {
-        r: '0x' + signed.r,
-        s: '0x' + signed.s,
-        v: parseInt(signed.v),
+      const txHash = utils.serializeTransaction(tx).substring(2)
+
+      let signed = {
+        r: '',
+        s: '',
+        v: '',
       }
-      const signedTx = ethers.utils.serializeTransaction(tx, signature)
+      try {
+        signed = await ledger.clearSignTransaction(
+          `44'/550'/0/0/${index}`,
+          txHash,
+          {
+            nft: false,
+            externalPlugins: false,
+            erc20: false,
+            domains: [],
+          },
+          true
+        )
+      } catch (e: any) {
+        if (e.message.includes('0x6b0c')) {
+          throw new Error('Ledger is locked, please unlock it and try again')
+        } else if (e.message.includes('0x6511')) {
+          throw new Error('Open XDC app on Ledger and try again')
+        }
+        throw e
+      }
+
+      const rv = parseInt(signed.v, 16)
+      let cv = tx.chainId * 2 + 35
+      if (rv !== cv && (rv & cv) !== rv) {
+        cv += 1
+      }
+
+      const signedTx = ethers.utils
+        .serializeTransaction(tx, {
+          r: '0x' + signed.r,
+          s: '0x' + signed.s,
+          v: cv,
+        })
+        .substring(2)
 
       return await Web3.eth.sendSignedTransaction('0x' + signedTx)
     },

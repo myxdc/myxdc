@@ -1,9 +1,3 @@
-export interface txObj {
-  from?: any
-  to?: any
-  value?: any
-  data?: any
-  nonce?: any
-  gas?: any
-  gasPrice?: any
-}
+import { UnsignedTransaction } from 'ethers'
+
+export interface txObj extends UnsignedTransaction {}

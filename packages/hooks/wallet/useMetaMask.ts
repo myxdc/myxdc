@@ -51,7 +51,7 @@ export const useMetaMask = () => {
   }, [])
 
   const signTransaction = React.useCallback(async (tx: txObj, accountId: string) => {
-    tx.value = tx.value ? parseInt(tx.value).toString(16) : '0x0'
+    tx.value = tx.value ? tx.value.toString(16) : '0x0'
     console.log(tx)
 
     const txHash = await window.ethereum.request({
