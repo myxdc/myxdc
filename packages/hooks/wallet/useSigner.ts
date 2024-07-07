@@ -29,9 +29,10 @@ export const useSigner = ({ type }: { type?: 'metamask' | 'ledger' | 'local' }) 
           txObject.gasLimit = ethers.utils.parseUnits('250000', 'gwei')
         }
       }
-      // // 2. set the gasPrice if not provided
+
+      // 2. set the gasPrice if not provided
       if (!txObject.gasPrice) {
-        // txObject.gasPrice = ethers.utils.parseUnits('0.25', 'gwei')
+        txObject.gasPrice = Web3.utils.toHex(await Web3.eth.getGasPrice())
       }
 
       // 3. calculate the nonce if not provided
