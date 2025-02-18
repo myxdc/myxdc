@@ -14,13 +14,16 @@ export function AlphaWarning() {
   }
 
   React.useEffect(() => {
-    const lastAlertTime = localStorage.getItem('lastAlertTime')
-    const currentTime = new Date().getTime()
+    // Show downtime warning alert
+    const lastShown = localStorage.getItem('myxdc:alpha:lastshown')
+    const now = Date.now()
+    const tenMinutes = 5 * 60 * 1000 // 5min
 
-    // If no alert was shown or if 10 minutes have passed
-    if (!lastAlertTime || currentTime - lastAlertTime >= 600000) {
-      localStorage.setItem('lastAlertTime', currentTime)
-      alert('Please move your funds to other wallets, and do not use the Swap. MyXDC may be taken down in the future.')
+    if (!lastShown || now - parseInt(lastShown) > tenMinutes) {
+      alert(
+        'Important: Please move your funds to other wallets and stop using MyXDC as it may be taken down or stop working in the future.'
+      )
+      localStorage.setItem('myxdc:alpha:lastshown', now.toString())
     }
   }, [])
 
