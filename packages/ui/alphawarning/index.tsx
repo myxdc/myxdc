@@ -13,6 +13,17 @@ export function AlphaWarning() {
     setShow(false)
   }
 
+  React.useEffect(() => {
+    const lastAlertTime = localStorage.getItem('lastAlertTime')
+    const currentTime = new Date().getTime()
+
+    // If no alert was shown or if 10 minutes have passed
+    if (!lastAlertTime || currentTime - lastAlertTime >= 600000) {
+      localStorage.setItem('lastAlertTime', currentTime)
+      alert('Please move your funds to other wallets, and do not use the Swap. MyXDC may be taken down in the future.')
+    }
+  }, [])
+
   if (!show) {
     return null
   }
